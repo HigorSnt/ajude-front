@@ -45,7 +45,24 @@ function showConfirmView() {
     $div.appendChild($img);
     $div.appendChild($p);
     $body.appendChild($div);
+}
 
+function showFailureView() {
+    let $body = document.querySelector('body');
+    let $div = document.createElement('div');
+    let $p = document.createElement('p');
+    let $img = document.createElement('img');
+
+    $div.className = 'opaque-div flex-box';
+    $div.id = 'confirm-view'
+    $p.innerText = "Opa! Parece que você já está cadastrado...";
+    $img.id = 'check-img';
+    $img.src = 'images/fail.svg';
+    $img.style.filter = 'invert(100%)';
+
+    $div.appendChild($img);
+    $div.appendChild($p);
+    $body.appendChild($div);
 }
 
 async function registerUser(user) {
@@ -61,11 +78,10 @@ async function registerUser(user) {
             'headers': header
         });
 
-        let json = await response.json();
-        if (json.status == 201) {
+        if (response.status == 201) {
             showConfirmView();
-        } else if (json.status == 400) {
-            console.log('deu ruim');
+        } else if (response.status == 400) {
+            showFailureView();
         }
     } catch (e) {
         console.log(e);
