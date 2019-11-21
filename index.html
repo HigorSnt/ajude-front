@@ -7,7 +7,7 @@
     <title>AJuDE</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link rel='stylesheet' type='text/css' media='screen' href='css/main.css'>
-    <script src='js/main.js'></script>
+    <script src='js/main.js' type="module"></script>
 </head>
 
 <body>
@@ -20,27 +20,27 @@
     <section id="section-register-user" class="flex-box">
         <div id="div-register-user" class="center flex-box">
             <div>
-                <input type="text" placeholder="Primeiro nome">
+                <input type="text" placeholder="Primeiro nome" required="required" id="user-first-name">
             </div>
 
             <div>
-                <input type="text" placeholder="Último nome">
+                <input type="text" placeholder="Último nome" required="required" id="user-last-name">
             </div>
 
             <div>
-                <input type="email" placeholder="Email">
+                <input type="email" placeholder="Email" required="required" id="user-email">
             </div>
 
             <div>
-                <input type="text" placeholder="Número do cartão de crédito">
+                <input type="text" placeholder="Número do cartão de crédito" required="required" id="user-credit-card">
             </div>
 
             <div>
-                <input type="password" placeholder="Senha">
+                <input type="password" placeholder="Senha" required="required" id="user-password">
             </div>
 
             <div>
-                <button type="submit">Cadastrar</button>
+                <button type="submit" id="register-button">Cadastrar</button>
             </div>
         </div>
     </section>

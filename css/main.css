@@ -8,10 +8,14 @@ header {
     box-shadow: 0 .1em .3em #808080;
     width: 100%;
     height: 5em;
+    position: fixed;
+    z-index: 4;
+    top: 0;
 }
 
 #section-register-user {
-    margin-top: 4em;
+    margin-top: 8em;
+    position: relative;
 }
 
 #div-register-user {
@@ -45,7 +49,16 @@ header {
 
 #div-register-user button:hover {
     cursor: pointer;
-    background-color:  	#FF4500;
+    background-color: #FF4500;
+}
+
+#check-img {
+    width: 5%;
+    height: 5%;
+}
+
+#confirm-view {
+    flex-direction: column;
 }
 
 /* Reuse Classes */
@@ -58,4 +71,18 @@ header {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.opaque-div {
+    position: absolute;
+    overflow: auto;
+	left: 0;
+	top: 0;
+    width: 100%;
+    min-height: 100%;
+    height: auto;
+	z-index: 1;
+    background-color: rgba(0, 0, 0, 0.9);
+    color: white;
+    font-size: 1.5em;
 }
