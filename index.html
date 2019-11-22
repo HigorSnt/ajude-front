@@ -13,14 +13,25 @@
 <body>
 
     <header class="flex-box">
-        <div class="center">
-            <img src="images/ajude!.svg" alt="logo" width="100px" height="100px">
+        <div class="" id="logo">
+            <a href="">
+                <img src="images/ajude!.svg" alt="logo" width="100px" height="100px">
+            </a>
         </div>
+
+        <nav class="flex-box flex-box-row" id="menu">
+            <ul class="flex-box flex-box-row">
+                <li><a href="#">Login</a></li>
+                <li><a href="#user-register" id="sign-up">Sign Up</a></li>
+            </ul>
+        </nav>
     </header>
 
-    <div id="viewer">
-        <!--<section id="section-register-user" class="flex-box">
-            <div id="div-register-user" class="center flex-box">
+    <div id="viewer"></div>
+
+    <template id="view-user-register">
+        <section id="section-register-user" class="flex-box flex-box-center flex-box-justify-center">
+            <div id="div-register-user" class="center flex-box flex-box-center flex-box-justify-center">
                 <div>
                     <input type="text" placeholder="Primeiro nome" required="required" id="user-first-name">
                 </div>
@@ -34,7 +45,8 @@
                 </div>
 
                 <div>
-                    <input type="text" placeholder="Número do cartão de crédito" required="required" id="user-credit-card">
+                    <input type="text" placeholder="Número do cartão de crédito" required="required"
+                        id="user-credit-card">
                 </div>
 
                 <div>
@@ -45,14 +57,9 @@
                     <button type="submit" id="register-button">Cadastrar</button>
                 </div>
             </div>
-        </section>-->
-        <div id="box">
-        </div>
-    </div>
-
-
+        </section>
+    </template>
 
 </body>
 
-<script src="js/main.js"></script>
 </html>
