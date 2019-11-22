@@ -46,7 +46,7 @@ function showConfirmView() {
     let $p = document.createElement('p');
     let $img = document.createElement('img');
 
-    $div.className = 'opaque-div flex-box';
+    $div.className = 'opaque-div flex-box flex-box-justify-center flex-box-align-center flex-box-column';
     $div.id = 'flex-box-column'
     $p.innerText = "Você agora está cadastrado!";
     $img.id = 'check-img';
@@ -64,7 +64,7 @@ function showFailureView() {
     let $p = document.createElement('p');
     let $img = document.createElement('img');
 
-    $div.className = 'opaque-div flex-box';
+    $div.className = 'opaque-div flex-box flex-box-justify-center flex-box-align-center flex-box-column';
     $div.id = 'flex-box-column'
     $p.innerText = "Opa! Parece que você já está cadastrado...";
     $img.id = 'check-img';
