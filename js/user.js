@@ -1,4 +1,4 @@
-export default class User {
+class User {
     constructor(firstName, lastName, email, creditCardNumber, password) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -7,3 +7,12 @@ export default class User {
         this.password = password;
     }
 }
+
+class Login {
+    constructor(email, password) {
+        this.email = email;
+        this.password = password;
+    }
+}
+
+export { User, Login };

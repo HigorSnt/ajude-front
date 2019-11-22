@@ -21,7 +21,7 @@
 
         <nav class="flex-box flex-box-row" id="menu">
             <ul class="flex-box flex-box-row">
-                <li><a href="#">Login</a></li>
+                <li><a href="#login">Login</a></li>
                 <li><a href="#user-register" id="sign-up">Sign Up</a></li>
             </ul>
         </nav>
@@ -33,31 +33,56 @@
         <section id="section-register-user" class="flex-box flex-box-center flex-box-justify-center">
             <div id="div-register-user" class="center flex-box flex-box-center flex-box-justify-center">
                 <div>
-                    <input type="text" placeholder="Primeiro nome" required="required" id="user-first-name">
+                    <input type="text" placeholder="Primeiro nome" required="required" 
+                    id="user-first-name" class="input-form">
                 </div>
 
                 <div>
-                    <input type="text" placeholder="Último nome" required="required" id="user-last-name">
+                    <input type="text" placeholder="Último nome" required="required" 
+                    id="user-last-name" class="input-form">
                 </div>
 
                 <div>
-                    <input type="email" placeholder="Email" required="required" id="user-email">
+                    <input type="email" placeholder="Email" required="required" 
+                    id="user-email" class="input-form">
                 </div>
 
                 <div>
                     <input type="text" placeholder="Número do cartão de crédito" required="required"
-                        id="user-credit-card">
+                        id="user-credit-card" class="input-form">
                 </div>
 
                 <div>
-                    <input type="password" placeholder="Senha" required="required" id="user-password">
+                    <input type="password" placeholder="Senha" required="required" 
+                    id="user-password" class="input-form">
                 </div>
 
                 <div>
-                    <button type="submit" id="register-button">Cadastrar</button>
+                    <button type="submit" class="confirm-btn">Cadastrar</button>
                 </div>
             </div>
         </section>
+    </template>
+
+    <template id="view-login">
+        <section id="section-login-user" class="flex-box flex-box-center flex-box-justify-center">
+            <div id="div-login" class="center flex-box flex-box-center flex-box-justify-center">
+                <div>
+                    <input type="email" placeholder="Email" required="required" 
+                    id="user-email" class="input-form">
+                </div>
+
+                <div>
+                    <input type="password" placeholder="Senha" required="required" 
+                    id="user-password" class="input-form">
+                </div>
+
+                <div>
+                    <button type="submit" class="confirm-btn">Cadastrar</button>
+                </div>
+            </div>
+        </section>
+
     </template>
 
 </body>
