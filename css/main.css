@@ -200,6 +200,7 @@ button:hover {
 
 .center {
     text-align: center;
+    width: 30em;
 }
 
 .flex-box {
@@ -210,6 +211,17 @@ button:hover {
     align-items: center;
 }
 
+#logged-menu{
+    border-radius: 15px;
+    background-color: #0091ff;
+    margin: 2em;
+    display: inline;
+}
+
+#logged-menu .ul{
+    margin: 2em;
+}
+
 .
 x-justify-center {
     justify-content: center;
@@ -217,6 +229,7 @@ x-justify-center {
 
 .flex-box-row {
     flex-direction: row;
+    margin: 1em;
 }
 
 .flex-box-column {

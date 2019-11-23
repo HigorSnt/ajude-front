@@ -45,16 +45,17 @@ function viewHome(tittle) {
 
     let $nav = document.querySelector('#nav');
     let $searchBtn = document.querySelector('#search-btn');
+    let $h2 = $viewer.querySelector('#tittle');
 
     if (sessionStorage === undefined || sessionStorage.getItem('token') == null) {
         $nav.innerHTML = $unloggedTemplate.innerHTML;
+        $h2.innerText = tittle;
+        $searchBtn.addEventListener('click', () => window.setTimeout("location.href = '/#login'", 0));
     } else {
         $nav.innerHTML = $loggedTemplate.innerHTML;
+        $h2.innerText = tittle;
+        $searchBtn.addEventListener('click', searchCampaigns);
     }
-
-    let $h2 = $viewer.querySelector('#tittle');
-    $h2.innerText = tittle;
-    $searchBtn.addEventListener('click', searchCampaigns);
 }
 
 export function showConfirmView(message) {
