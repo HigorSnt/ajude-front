@@ -1,4 +1,5 @@
 import {$viewer, url} from './main.js';
+import {viewHome} from "./main.js";
 export {searchCampaigns};
 
 async function listingCampaigns(substring) {
@@ -131,21 +132,22 @@ async function searchCampaigns() {
     let campaignsString = JSON.stringify(campaigns);
     let campaignsJSON = JSON.parse(campaignsString);
 
-    campaignsJSON.forEach( c => {
-        console.log(c.shortName);
-        $campaign = document.createElement('div');
-        $campaign.innerHTML =
-            `<div id="listing">
-                 <h3 id="name">${c.shortName}</h3>
-                 <div id="comment">${c.description}</div>
-                 <ul id="info">
-                    <li>Goal: ${c.goal}</li>
-                    <li>Deadline: ${c.deadline}</li>
-                    <li> <a href="/campaign/${c.urlIdentifier}">Ver mais</a> </li>
-                </ul>
-             </div>`;
-        $viewer.appendChild($campaign);
-    })
+    if(campaignsJSON[0].status != 404){
+        campaignsJSON.forEach( c => {
+            $campaign = document.createElement('div');
+            $campaign.innerHTML =
+                `<div id="listing">
+                     <h3 id="name">${c.shortName}</h3>
+                     <div id="comment">${c.description}</div>
+                     <ul id="info">
+                        <li>Goal: ${c.goal}</li>
+                        <li>Deadline: ${c.deadline}</li>
+                        <li> <a href="/campaign/${c.urlIdentifier}">Ver mais</a> </li>
+                    </ul>
+                 </div>`;
+            $viewer.appendChild($campaign);
+        })
+    }
 
 
 }
