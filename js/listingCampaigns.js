@@ -20,11 +20,9 @@ async function listingCampaigns(substring) {
         'headers': header
     }).then(r => r.json());
 
-    console.log(data);
     return data;
 }
 
-let $campaign
 // async function fetch_templates(){
 //     let template = await fetch('/html/listingCampaignsTemplate.html').then(r => r.text());
 //
@@ -36,11 +34,15 @@ let $campaign
 //     $outraDiv.innerHTML = $template.innerHTML;
 //
 // }
+let $campaign = document.createElement('div');
+$campaign.id = "campaign";
 
 async function searchCampaigns() {
     let $search = document.querySelector('#input-search');
     let substring = $search.value;
     let campaigns = await Promise.all([listingCampaigns(substring)]);
+    let $h2 = $viewer.querySelector('#tittle');
+    $h2.innerText = "Listagem de Campanhas";
 
     // let campaigns = [
     //     {
@@ -132,9 +134,11 @@ async function searchCampaigns() {
     let campaignsString = JSON.stringify(campaigns);
     let campaignsJSON = JSON.parse(campaignsString);
 
-    if(campaignsJSON[0].status != 404){
+
+    if(sessionStorage.getItem("token") != null && campaignsJSON[0].message != "NOT FOUND"){
+
         campaignsJSON.forEach( c => {
-            $campaign = document.createElement('div');
+
             $campaign.innerHTML =
                 `<div id="listing">
                      <h3 id="name">${c.shortName}</h3>
@@ -147,6 +151,13 @@ async function searchCampaigns() {
                  </div>`;
             $viewer.appendChild($campaign);
         })
+
+    }
+    else{
+        $viewer.appendChild($campaign);
+        $campaign = $viewer.querySelector("#campaign");
+        $campaign.innerHTML = '';
+        viewHome("Nenhuma campanha com esse nome");
     }
 
 

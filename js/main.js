@@ -29,7 +29,7 @@ async function viewerChange() {
 
     if ([''].includes(hash)) {
         await Promise.all([fetch_login_templates()]);
-        viewHome();
+        viewHome("Listagem de Campanhas");
     } else if (['#user-register'].includes(hash)) {
         viewUserRegister();
     } else if (['#login'].includes(hash)) {
@@ -41,7 +41,8 @@ async function viewerChange() {
     }
 }
 
-function viewHome() {
+function viewHome(tittle) {
+
     let $nav = document.querySelector('#nav');
     let $searchBtn = document.querySelector('#search-btn');
 
@@ -51,9 +52,8 @@ function viewHome() {
         $nav.innerHTML = $loggedTemplate.innerHTML;
     }
 
-    let $h2 = document.createElement('h2');
-    $h2.innerText = "Listagem de Campanhas";
-    $viewer.appendChild($h2);
+    let $h2 = $viewer.querySelector('#tittle');
+    $h2.innerText = tittle;
     $searchBtn.addEventListener('click', searchCampaigns);
 }
 
@@ -97,7 +97,7 @@ export function showFailureView(message) {
     $div.appendChild($p);
     $viewer.appendChild($div);
 
-    window.setTimeout("location.href = '/'", 10000);
+    window.setTimeout("location.href = '/'", 500);
 }
 
 function logout() {
