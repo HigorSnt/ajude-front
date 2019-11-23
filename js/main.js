@@ -1,4 +1,4 @@
-import { User, Login } from './objects.js';
+import { User, Login, Campaign } from './entities.js';
 
 let url = 'https://apiajude.herokuapp.com/api';
 let $viewer = document.querySelector('#viewer');
@@ -17,6 +17,8 @@ function viewerChange() {
         viewLogin();
     } else if (['#logout'].includes(hash)) {
         logout();
+    } else if (['#campaign-register'].includes(hash)) {
+        viewCampaignRegister();
     }
 }
 
@@ -50,14 +52,44 @@ function createUser() {
     }
 }
 
-function showConfirmView() {
+function registerCampaign() {
+    let shortNameInput = document.querySelector("#campaign-short-name");
+    let descriptionInput = document.querySelector("#campaign-description");
+    let deadlineInput = document.querySelector("#campaign-deadline");
+    let goalInput = document.querySelector("#campaign-goal");
+
+    let values = [shortNameInput.value, descriptionInput.value, deadlineInput.value, goalInput.value];
+
+    if (!values.includes("")) {
+        let urlIdentifier = genereteUrlIdentifier(shortNameInput.value);
+        let deadline = normalizeDate(deadlineInput.value)
+        let c = new Campaign(
+            values[0],
+            urlIdentifier,
+            values[1],
+            deadline,
+            values[3]
+        );
+
+        /*shortNameInput.value = "";
+        descriptionInput.value = "";
+        deadlineInput.value = "";
+        goalInput.value = "";
+        */
+        fetchRegisterCampaign(c);
+    } else {
+        alert("TODOS OS CAMPOS DEVEM SER PREENCHIDOS");
+    }
+}
+
+function showConfirmView(message) {
     let $div = document.createElement('div');
     let $p = document.createElement('p');
     let $img = document.createElement('img');
 
     $div.className = 'opaque-div flex-box flex-box-justify-center flex-box-align-center flex-box-column';
     $div.id = 'flex-box-column';
-    $p.innerText = "Você agora está cadastrado!";
+    $p.innerText = message;
     $p.style.paddingTop = '1em';
     $img.id = 'attention-img';
     $img.src = 'images/check.svg';
@@ -76,14 +108,14 @@ function showConfirmView() {
     window.setTimeout("location.href = '/'", 500);
 }
 
-function showFailureView() {
+function showFailureView(message) {
     let $div = document.createElement('div');
     let $p = document.createElement('p');
     let $img = document.createElement('img');
 
     $div.className = 'opaque-div flex-box flex-box-justify-center flex-box-align-center flex-box-column';
     $div.id = 'flex-box-column';
-    $p.innerText = "Opa! Parece que você já está cadastrado...";
+    $p.innerText = message;
     $p.style.paddingTop = '1em';
     $img.id = 'attention-img';
     $img.src = 'images/fail.svg';
@@ -100,18 +132,6 @@ function showFailureView() {
     $viewer.appendChild($div);
 
     window.setTimeout("location.href = '/'", 500);
-}
-
-function viewHome() {
-    let $header;
-
-    if (sessionStorage.getItem('token') === null) {
-        $header = document.querySelector('#header-not-user-logged');
-    } else {
-        $header = document.querySelector('#header-user-logged');
-    }
-
-    $viewer.innerHTML = $header.innerHTML;
 }
 
 function viewUserRegister() {
@@ -155,6 +175,20 @@ function viewHasNoPermission() {
     $viewer.appendChild($div);
 }
 
+function viewCampaignRegister() {
+
+    if (sessionStorage.getItem('token') != null) {
+        let $header = document.querySelector("#header-user-logged");
+        let $template = document.querySelector('#view-campaign-register');
+        $viewer.innerHTML = $header.innerHTML + $template.innerHTML;
+
+        let $registerCampaignBtn = document.querySelector('.confirm-btn');
+        $registerCampaignBtn.addEventListener('click', registerCampaign);
+    } else {
+        viewHasNoPermission();
+    }
+}
+
 function login() {
     let emailInput = document.querySelector("#user-email");
     let passwordInput = document.querySelector("#user-password");
@@ -183,6 +217,49 @@ function logout() {
     window.setTimeout("location.href = '/'", 0);
 }
 
+function genereteUrlIdentifier(shortName) {
+    let urlIdentifier = shortName.toLowerCase();
+    urlIdentifier = urlIdentifier.normalize('NFD').replace(/[^0-9a-zA-Z\u0300-\u036f]/g, ' ');
+    urlIdentifier = urlIdentifier.replace(/  +/g, ' ');
+    urlIdentifier = urlIdentifier.trim();
+    urlIdentifier = urlIdentifier.replace(/ /g, "-");
+    urlIdentifier = urlIdentifier.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+    return urlIdentifier;
+}
+
+function normalizeDate(date) {
+    let l = date.split('-');
+    return l[2] + '-' + l[1] + '-' + l[0];
+}
+
+async function fetchRegisterCampaign(campaign) {
+    try {
+        let body = JSON.stringify(campaign);
+        let header = {
+            'Access-Control-Allow-Origin': '*',
+            'Content-Type': 'application/json;charset=utf-8',
+            'Authorization': 'Bearer ' + sessionStorage.getItem("token")
+        }
+
+        let response = await fetch(url + '/campaign/register', {
+            'method': 'POST',
+            'body': body,
+            'headers': header,
+        });
+
+        if (response.status == 201) {
+            showConfirmView("Campanha Cadastrada com sucesso")
+            // TODO Link pra acessar a campanha
+
+        } else if (response.status == 400) {
+            showFailureView("Erro ao cadastrar campanha");
+        }
+
+    } catch (e) {
+        console.log(e);
+    }
+}
+
 async function fetchRegisterUser(user) {
     try {
         let body = JSON.stringify(user);
@@ -196,10 +273,10 @@ async function fetchRegisterUser(user) {
             'headers': header
         });
 
-        if (response.status === 201) {
-            showConfirmView();
-        } else if (response.status === 400) {
-            showFailureView();
+        if (response.status == 201) {
+            showConfirmView("Você agora está cadastrado!");
+        } else if (response.status == 400) {
+            showFailureView('Opa! Parece que você já está cadastrado...');
         }
     } catch (e) {
         console.log(e);
@@ -219,7 +296,7 @@ async function fetchLogin(userCredentials) {
             'headers': header
         });
 
-        if (response.status === 200) {
+        if (response.status == 200) {
             let json = await response.json();
 
             sessionStorage.setItem('token', json.token);
@@ -233,6 +310,19 @@ async function fetchLogin(userCredentials) {
         console.log(error);
     }
 }
+
+function viewHome() {
+    let $header;
+
+    if (sessionStorage.getItem('token') === null) {
+        $header = document.querySelector('#header-not-user-logged');
+    } else {
+        $header = document.querySelector('#header-user-logged');
+    }
+
+    $viewer.innerHTML = $header.innerHTML;
+}
+
 
 /*
 let $listingCampaignsTemplate, $home;
