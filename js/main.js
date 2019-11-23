@@ -1,4 +1,8 @@
-import { User, Login, Campaign } from './entities.js';
+import {viewLogin} from './login.js'
+import {viewUserRegister} from './registerUser.js'
+import {viewCampaignRegister} from "./registerCampaign.js";
+import {searchCampaigns} from "./listingCampaigns.js";
+export {$viewer, url, viewHome};
 
 let url = 'https://apiajude.herokuapp.com/api';
 let $viewer = document.querySelector('#viewer');
@@ -6,83 +10,55 @@ let $viewer = document.querySelector('#viewer');
 window.onload = viewerChange;
 window.addEventListener('hashchange', viewerChange);
 
-function viewerChange() {
+let $loggedTemplate, $unloggedTemplate;
+async function fetch_login_templates() {
+    let unlogged = await fetch('/html/navUnloggedUser.html').then(r => r.text());
+    let logged = await (fetch('/html/navLoggedUser.html').then(r => r.text()));
+
+    let div = document.createElement("div");
+
+    div.innerHTML = logged;
+    $loggedTemplate = div.querySelector("#logged-menu");
+
+    div.innerHTML = unlogged;
+    $unloggedTemplate = div.querySelector("#menu");
+}
+
+async function viewerChange() {
     let hash = location.hash;
 
     if ([''].includes(hash)) {
+        await Promise.all([fetch_login_templates()]);
         viewHome();
     } else if (['#user-register'].includes(hash)) {
         viewUserRegister();
     } else if (['#login'].includes(hash)) {
         viewLogin();
-    } else if (['#logout'].includes(hash)) {
-        logout();
     } else if (['#campaign-register'].includes(hash)) {
         viewCampaignRegister();
+    } else if (['#logout'].includes(hash)) {
+        logout();
     }
 }
 
-function createUser() {
-    let firstNameInput = document.querySelector("#user-first-name");
-    let lastNameInput = document.querySelector("#user-last-name");
-    let emailInput = document.querySelector("#user-email");
-    let creditCardInput = document.querySelector("#user-credit-card");
-    let passwordInput = document.querySelector("#user-password");
+function viewHome() {
+    let $nav = document.querySelector('#nav');
+    let $searchBtn = document.querySelector('#search-btn');
 
-    let values = [firstNameInput.value, lastNameInput.value, emailInput.value, creditCardInput.value, passwordInput.value];
-
-    if (!values.includes("")) {
-        let u = new User(
-            values[0],
-            values[1],
-            values[2],
-            values[3],
-            values[4]
-        );
-
-        firstNameInput.value = "";
-        lastNameInput.value = "";
-        emailInput.value = "";
-        creditCardInput.value = "";
-        passwordInput.value = "";
-
-        fetchRegisterUser(u);
+    if (sessionStorage === undefined || sessionStorage.getItem('token') == null) {
+        $nav.innerHTML = $unloggedTemplate.innerHTML;
     } else {
-        alert("TODOS OS CAMPOS DEVEM SER PREENCHIDOS");
+        $nav.innerHTML = $loggedTemplate.innerHTML;
     }
+
+    let $h2 = document.createElement('h2');
+    $h2.innerText = "Listagem de Campanhas";
+    $viewer.appendChild($h2);
+    $searchBtn.addEventListener('click', searchCampaigns);
 }
 
-function registerCampaign() {
-    let shortNameInput = document.querySelector("#campaign-short-name");
-    let descriptionInput = document.querySelector("#campaign-description");
-    let deadlineInput = document.querySelector("#campaign-deadline");
-    let goalInput = document.querySelector("#campaign-goal");
 
-    let values = [shortNameInput.value, descriptionInput.value, deadlineInput.value, goalInput.value];
-
-    if (!values.includes("")) {
-        let urlIdentifier = genereteUrlIdentifier(shortNameInput.value);
-        let deadline = normalizeDate(deadlineInput.value)
-        let c = new Campaign(
-            values[0],
-            urlIdentifier,
-            values[1],
-            deadline,
-            values[3]
-        );
-
-        /*shortNameInput.value = "";
-        descriptionInput.value = "";
-        deadlineInput.value = "";
-        goalInput.value = "";
-        */
-        fetchRegisterCampaign(c);
-    } else {
-        alert("TODOS OS CAMPOS DEVEM SER PREENCHIDOS");
-    }
-}
-
-function showConfirmView(message) {
+export function showConfirmView(message) {
     let $div = document.createElement('div');
     let $p = document.createElement('p');
     let $img = document.createElement('img');
@@ -95,12 +71,6 @@ function showConfirmView(message) {
     $img.src = 'images/check.svg';
     $img.style.filter = 'invert(100%)';
 
-    let $template = document.querySelector('#header-not-user-logged');
-    $viewer.innerHTML = $template.innerHTML;
-    let $iptSearchCampaigns = $viewer.querySelector('#search-campaigns');
-    let $header = document.querySelector('header');
-    $header.removeChild($iptSearchCampaigns);
-
     $div.appendChild($img);
     $div.appendChild($p);
     $viewer.appendChild($div);
@@ -108,7 +78,7 @@ function showConfirmView(message) {
     window.setTimeout("location.href = '/'", 500);
 }
 
-function showFailureView(message) {
+export function showFailureView(message) {
     let $div = document.createElement('div');
     let $p = document.createElement('p');
     let $img = document.createElement('img');
@@ -134,82 +104,6 @@ function showFailureView(message) {
     window.setTimeout("location.href = '/'", 500);
 }
 
-function viewUserRegister() {
-    let $template = document.querySelector('#view-user-register');
-    $viewer.innerHTML = $template.innerHTML;
-
-    let $registerUserBtn = document.querySelector('.confirm-btn');
-    $registerUserBtn.addEventListener('click', createUser);
-}
-
-function viewLogin() {
-    let $template = document.querySelector('#view-login');
-    $viewer.innerHTML = $template.innerHTML;
-
-    let $loginBtn = document.querySelector('.confirm-btn');
-    $loginBtn.addEventListener('click', login);
-}
-
-function viewHasNoPermission() {
-    let $div = document.createElement('div');
-    let $p = document.createElement('p');
-    let $img = document.createElement('img');
-
-    $div.className = 'opaque-div flex-box flex-box-justify-center flex-box-align-center flex-box-column';
-    $div.id = 'flex-box-column';
-    $p.innerText = "É necessário realizar login para ter acesso à esse conteúdo...";
-    $p.style.paddingTop = '1em';
-    $img.id = 'attention-img';
-
-    $img.src = 'images/crying-face.svg';
-    $img.style.filter = 'invert(100%)';
-
-    let $template = document.querySelector('#header-not-user-logged');
-    $viewer.innerHTML = $template.innerHTML;
-    let $iptSearchCampaigns = $viewer.querySelector('#search-campaigns');
-    let $header = document.querySelector('header');
-    $header.removeChild($iptSearchCampaigns);
-
-    $div.appendChild($img);
-    $div.appendChild($p);
-    $viewer.appendChild($div);
-}
-
-function viewCampaignRegister() {
-
-    if (sessionStorage.getItem('token') != null) {
-        let $header = document.querySelector("#header-user-logged");
-        let $template = document.querySelector('#view-campaign-register');
-        $viewer.innerHTML = $header.innerHTML + $template.innerHTML;
-
-        let $registerCampaignBtn = document.querySelector('.confirm-btn');
-        $registerCampaignBtn.addEventListener('click', registerCampaign);
-    } else {
-        viewHasNoPermission();
-    }
-}
-
-function login() {
-    let emailInput = document.querySelector("#user-email");
-    let passwordInput = document.querySelector("#user-password");
-
-    let values = [emailInput.value, passwordInput.value];
-
-    if (!values.includes("")) {
-        let l = new Login(
-            values[0],
-            values[1]
-        );
-
-        emailInput.value = "";
-        passwordInput.value = "";
-
-        fetchLogin(l);
-    } else {
-        alert("TODOS OS CAMPOS DEVEM SER PREENCHIDOS");
-    }
-}
-
 function logout() {
     sessionStorage.removeItem('token');
     sessionStorage.removeItem('userEmail');
@@ -217,154 +111,4 @@ function logout() {
     window.setTimeout("location.href = '/'", 0);
 }
 
-function genereteUrlIdentifier(shortName) {
-    let urlIdentifier = shortName.toLowerCase();
-    urlIdentifier = urlIdentifier.normalize('NFD').replace(/[^0-9a-zA-Z\u0300-\u036f]/g, ' ');
-    urlIdentifier = urlIdentifier.replace(/  +/g, ' ');
-    urlIdentifier = urlIdentifier.trim();
-    urlIdentifier = urlIdentifier.replace(/ /g, "-");
-    urlIdentifier = urlIdentifier.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
-    return urlIdentifier;
-}
 
-function normalizeDate(date) {
-    let l = date.split('-');
-    return l[2] + '-' + l[1] + '-' + l[0];
-}
-
-async function fetchRegisterCampaign(campaign) {
-    try {
-        let body = JSON.stringify(campaign);
-        let header = {
-            'Access-Control-Allow-Origin': '*',
-            'Content-Type': 'application/json;charset=utf-8',
-            'Authorization': 'Bearer ' + sessionStorage.getItem("token")
-        }
-
-        let response = await fetch(url + '/campaign/register', {
-            'method': 'POST',
-            'body': body,
-            'headers': header,
-        });
-
-        if (response.status == 201) {
-            showConfirmView("Campanha Cadastrada com sucesso")
-            // TODO Link pra acessar a campanha
-
-        } else if (response.status == 400) {
-            showFailureView("Erro ao cadastrar campanha");
-        }
-
-    } catch (e) {
-        console.log(e);
-    }
-}
-
-async function fetchRegisterUser(user) {
-    try {
-        let body = JSON.stringify(user);
-        let header = {
-            'Content-Type': 'application/json;charset=utf-8'
-        };
-
-        let response = await fetch(url + '/user', {
-            'method': 'POST',
-            'body': body,
-            'headers': header
-        });
-
-        if (response.status == 201) {
-            showConfirmView("Você agora está cadastrado!");
-        } else if (response.status == 400) {
-            showFailureView('Opa! Parece que você já está cadastrado...');
-        }
-    } catch (e) {
-        console.log(e);
-    }
-}
-
-async function fetchLogin(userCredentials) {
-    try {
-        let body = JSON.stringify(userCredentials);
-        let header = {
-            'Content-Type': 'application/json;charset=utf-8'
-        };
-
-        let response = await fetch(url + "/auth/login", {
-            'method': 'POST',
-            'body': body,
-            'headers': header
-        });
-
-        if (response.status == 200) {
-            let json = await response.json();
-
-            sessionStorage.setItem('token', json.token);
-            sessionStorage.setItem('userEmail', userCredentials.email);
-
-            window.setTimeout("location.href = '/'", 0);
-        } else {
-            alert("DADOS INCORRETOS OU USUÁRIO INEXISTENTE!");
-        }
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-function viewHome() {
-    let $header;
-
-    if (sessionStorage.getItem('token') === null) {
-        $header = document.querySelector('#header-not-user-logged');
-    } else {
-        $header = document.querySelector('#header-user-logged');
-    }
-
-    $viewer.innerHTML = $header.innerHTML;
-}
-
-
-/*
-let $listingCampaignsTemplate, $home;
-async function fetch_templates() {
-    let listingCampaignsTemplate = await (fetch('/html/listingCampaignsTemplate.html').then(r => r.text()));
-    let home = await (fetch('/html/homeTemplate.html').then(r => r.text()));
-
-    let div = document.createElement("div");
-
-    div.innerHTML = listingCampaignsTemplate;
-    $listingCampaignsTemplate = div.querySelector('#listing-campaigns');
-
-    div.innerHTML = home;
-    $home = div.querySelector('#home');
-}
-
-(async function main() {
-
-    await Promise.all([fetch_templates()]);
-    let hash = location.hash;
-
-    $box.innerHTML = "";
-
-    if (["", "#home"].includes(hash)) {
-        home();
-    }
-    else if (["#listagem"].includes(hash)) {
-        listingCampaigns();
-    }
-
-}());
-
-
-function home() {
-    $box.innerHTML = $home.innerHTML;
-    let $a = document.querySelector('a');
-    $a.addEventListener('click', listingCampaigns);
-}
-
-function listingCampaigns() {
-    $box.innerHTML = $listingCampaignsTemplate.innerHTML;
-    let $a = document.querySelector('a');
-    $a.addEventListener('click', home);
-}
-*/
