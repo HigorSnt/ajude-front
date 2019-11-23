@@ -10,7 +10,7 @@ function viewerChange() {
     let hash = location.hash;
 
     if ([''].includes(hash)) {
-        showFailureView()
+        viewHome();
     } else if (['#user-register'].includes(hash)) {
         viewUserRegister();
     } else if (['#login'].includes(hash)) {
@@ -51,21 +51,27 @@ function createUser() {
 }
 
 function showConfirmView() {
-    let $body = document.querySelector('body');
     let $div = document.createElement('div');
     let $p = document.createElement('p');
     let $img = document.createElement('img');
 
     $div.className = 'opaque-div flex-box flex-box-justify-center flex-box-align-center flex-box-column';
-    $div.id = 'flex-box-column'
+    $div.id = 'flex-box-column';
     $p.innerText = "Você agora está cadastrado!";
-    $img.id = 'check-img';
+    $p.style.paddingTop = '1em';
+    $img.id = 'attention-img';
     $img.src = 'images/check.svg';
     $img.style.filter = 'invert(100%)';
 
+    let $template = document.querySelector('#header-not-user-logged');
+    $viewer.innerHTML = $template.innerHTML;
+    let $iptSearchCampaigns = $viewer.querySelector('#search-campaigns');
+    let $header = document.querySelector('header');
+    $header.removeChild($iptSearchCampaigns);
+
     $div.appendChild($img);
     $div.appendChild($p);
-    $body.appendChild($div);
+    $viewer.appendChild($div);
 
     window.setTimeout("location.href = '/'", 500);
 }
@@ -76,17 +82,24 @@ function showFailureView() {
     let $img = document.createElement('img');
 
     $div.className = 'opaque-div flex-box flex-box-justify-center flex-box-align-center flex-box-column';
-    $div.id = 'flex-box-column'
+    $div.id = 'flex-box-column';
     $p.innerText = "Opa! Parece que você já está cadastrado...";
-    $img.id = 'check-img';
+    $p.style.paddingTop = '1em';
+    $img.id = 'attention-img';
     $img.src = 'images/fail.svg';
     $img.style.filter = 'invert(100%)';
+
+    let $template = document.querySelector('#header-not-user-logged');
+    $viewer.innerHTML = $template.innerHTML;
+    let $iptSearchCampaigns = $viewer.querySelector('#search-campaigns');
+    let $header = document.querySelector('header');
+    $header.removeChild($iptSearchCampaigns);
 
     $div.appendChild($img);
     $div.appendChild($p);
     $viewer.appendChild($div);
 
-    //window.setTimeout("location.href = '/'", 500);
+    window.setTimeout("location.href = '/'", 500);
 }
 
 function viewHome() {
@@ -118,18 +131,16 @@ function viewLogin() {
 }
 
 function viewHasNoPermission() {
-    let $body = document.querySelector('body');
     let $div = document.createElement('div');
     let $p = document.createElement('p');
     let $img = document.createElement('img');
 
-    $div.id = 'opaque-div flex-box flex-box-justify-center flex-box-align-center flex-box-column';
+    $div.className = 'opaque-div flex-box flex-box-justify-center flex-box-align-center flex-box-column';
+    $div.id = 'flex-box-column';
     $p.innerText = "É necessário realizar login para ter acesso à esse conteúdo...";
-    $p.style.fontSize = '1.5em';
-    $p.style.color = 'white';
-    $img.id = 'emoji-img';
-    $img.style.width = '30%';
-    $img.style.height = '30%';
+    $p.style.paddingTop = '1em';
+    $img.id = 'attention-img';
+
     $img.src = 'images/crying-face.svg';
     $img.style.filter = 'invert(100%)';
 
@@ -142,28 +153,6 @@ function viewHasNoPermission() {
     $div.appendChild($img);
     $div.appendChild($p);
     $viewer.appendChild($div);
-    /*
-    let $div = document.createElement('div');
-    let $p = document.createElement('p');
-    let $img = document.createElement('img');
-
-    $div.id = 'flex-box flex-box-justify-center flex-box-align-center flex-box-column';
-    $p.innerText = "É necessário realizar login para ter acesso à esse conteúdo...";
-    $p.style.fontSize = '1.5em';
-    $img.id = 'emoji-img';
-    $img.style.width = '30%';
-    $img.style.height = '30%';
-    $img.src = 'images/crying-face.svg';
-
-    let $template = document.querySelector('#header-not-user-logged');
-    $viewer.innerHTML = $template.innerHTML;
-    let $iptSearchCampaigns = $viewer.querySelector('#search-campaigns');
-    let $header = document.querySelector('header');
-    $header.removeChild($iptSearchCampaigns);
-
-    $div.appendChild($img);
-    $div.appendChild($p);
-    $viewer.appendChild($div);*/
 }
 
 function login() {
