@@ -1,5 +1,4 @@
-import { User, Login } from './user.js';
-import { Campaign } from './campaign.js';
+import './objects.js';
 
 let url = 'https://apiajude.herokuapp.com/api';
 let $viewer = document.querySelector('#viewer');
@@ -11,16 +10,18 @@ function viewerChange() {
     let hash = location.hash;
 
     if ([''].includes(hash)) {
-        $viewer.innerHTML = '';
+        showFailureView('???')
     } else if (['#user-register'].includes(hash)) {
         viewUserRegister();
     } else if (['#login'].includes(hash)) {
         viewLogin();
+    } else if (['#logout'].includes(hash)) {
+        logout();
     } else if (['#campaign-register'].includes(hash)){
         viewCampaignRegister();
     }
 }
-
+    
 function createUser() {
     let firstNameInput = document.querySelector("#user-first-name");
     let lastNameInput = document.querySelector("#user-last-name");
@@ -97,9 +98,11 @@ function showConfirmView(message) {
     $div.appendChild($img);
     $div.appendChild($p);
     $body.appendChild($div);
+
+    window.setTimeout("location.href = '/'", 500);
 }
 
-function showFailureView() {
+function showFailureView(message) {
     let $body = document.querySelector('body');
     let $div = document.createElement('div');
     let $p = document.createElement('p');
@@ -107,7 +110,7 @@ function showFailureView() {
 
     $div.className = 'opaque-div flex-box flex-box-justify-center flex-box-align-center flex-box-column';
     $div.id = 'flex-box-column'
-    $p.innerText = "Opa! Parece que você já está cadastrado...";
+    $p.innerText = message;
     $img.id = 'check-img';
     $img.src = 'images/fail.svg';
     $img.style.filter = 'invert(100%)';
@@ -197,7 +200,7 @@ async function fetchRegisterCampaign(campaign){
             // TODO Link pra acessar a campanha
         
         } else if (response.status == 400) {
-            showFailureView();
+            showFailureView("Erro ao cadastrar campanha");
         }
 
     } catch (e) {
@@ -221,7 +224,7 @@ async function fetchRegisterUser(user) {
         if (response.status == 201) {
             showConfirmView("Você agora está cadastrado!");
         } else if (response.status == 400) {
-            showFailureView();
+            showFailureView('Opa! Parece que você já está cadastrado...');
         }
     } catch (e) {
         console.log(e);
@@ -253,6 +256,68 @@ async function fetchLogin(userCredentials) {
         console.log(error);
     }
 }
+
+function viewHome() {
+    let $header;
+
+    if (sessionStorage.getItem('token') === null) {
+        $header = document.querySelector('#header-not-user-logged');
+    } else {
+        $header = document.querySelector('#header-user-logged');
+    }
+
+    $viewer.innerHTML = $header.innerHTML;
+}	
+
+function viewHasNoPermission() {
+    let $body = document.querySelector('body');
+    let $div = document.createElement('div');
+    let $p = document.createElement('p');
+    let $img = document.createElement('img');
+
+    $div.id = 'opaque-div flex-box flex-box-justify-center flex-box-align-center flex-box-column';
+    $p.innerText = "É necessário realizar login para ter acesso à esse conteúdo...";
+    $p.style.fontSize = '1.5em';
+    $p.style.color = 'white';
+    $img.id = 'emoji-img';
+    $img.style.width = '30%';
+    $img.style.height = '30%';
+    $img.src = 'images/crying-face.svg';
+    $img.style.filter = 'invert(100%)';
+
+    let $template = document.querySelector('#header-not-user-logged');
+    $viewer.innerHTML = $template.innerHTML;
+    let $iptSearchCampaigns = $viewer.querySelector('#search-campaigns');
+    let $header = document.querySelector('header');
+    $header.removeChild($iptSearchCampaigns);
+
+    $div.appendChild($img);
+    $div.appendChild($p);
+    $viewer.appendChild($div);
+    /*
+    let $div = document.createElement('div');
+    let $p = document.createElement('p');
+    let $img = document.createElement('img');
+
+    $div.id = 'flex-box flex-box-justify-center flex-box-align-center flex-box-column';
+    $p.innerText = "É necessário realizar login para ter acesso à esse conteúdo...";
+    $p.style.fontSize = '1.5em';
+    $img.id = 'emoji-img';
+    $img.style.width = '30%';
+    $img.style.height = '30%';
+    $img.src = 'images/crying-face.svg';
+
+    let $template = document.querySelector('#header-not-user-logged');
+    $viewer.innerHTML = $template.innerHTML;
+    let $iptSearchCampaigns = $viewer.querySelector('#search-campaigns');
+    let $header = document.querySelector('header');
+    $header.removeChild($iptSearchCampaigns);
+
+    $div.appendChild($img);
+    $div.appendChild($p);
+    $viewer.appendChild($div);*/
+}
+
 
 /*
 let $listingCampaignsTemplate, $home;
