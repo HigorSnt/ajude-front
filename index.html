@@ -11,40 +11,92 @@
 </head>
 
 <body>
-
-    <header class="flex-box">
-        <div class="" id="logo">
-            <a href="">
-                <img src="images/ajude!.svg" alt="logo" width="100px" height="100px">
-            </a>
-        </div>
-
-        <nav class="flex-box flex-box-row" id="menu">
-            <ul class="flex-box flex-box-row">
-                <li><a href="#login">Login</a></li>
-                <li><a href="#user-register" id="sign-up">Sign Up</a></li>
-            </ul>
-        </nav>
-    </header>
-
     <div id="viewer"></div>
 
+    <template id="header-not-user-logged">
+        <header class="flex-box">
+            <div id="logo">
+                <a href="">
+                    <img src="images/ajude!.svg" alt="logo" width="100px" height="100px">
+                </a>
+            </div>
+
+            <div id="search-campaigns" class="flex-box flex-box-align-center flex-box-justify-center">
+                <input type="text" id="input-search" placeholder="Buscar Campanhas">
+
+                <a href="" id="search-btn">
+                    <img src="images/search.svg" alt="search">
+                </a>
+            </div>
+
+            <nav class="flex-box flex-box-row" id="menu">
+                <ul class="flex-box flex-box-row">
+                    <li><a href="#login">Login</a></li>
+                    <li><a href="#user-register" id="sign-up">Sign Up</a></li>
+                </ul>
+            </nav>
+        </header>
+    </template>
+
+    <template id="header-user-logged">
+        <header class="flex-box">
+            <div id="logo">
+                <a href="">
+                    <img src="images/ajude!.svg" alt="logo" width="100px" height="100px">
+                </a>
+            </div>
+
+            <div id="search-campaigns" class="flex-box flex-box-align-center flex-box-justify-center">
+                <input type="text" id="input-search" placeholder="Buscar Campanhas">
+
+                <a href="" id="search-btn">
+                    <img src="images/search.svg" alt="search">
+                </a>
+            </div>
+
+            <nav class="flex-box flex-box-row" id="user-menu">
+                <div class="dropdown">
+                    <img src="images/account.svg" alt="user" width="50px" height="50px" class="drop-image">
+                    <div class="dropdown-content">
+                        <a href="#">Perfil</a>
+                        <a href="#">Link 2</a>
+                        <a href="#logout">Logout</a>
+                    </div>
+                </div>
+            </nav>
+        </header>
+    </template>
+
     <template id="view-user-register">
+
+        <header class="flex-box">
+            <div class="" id="logo">
+                <a href="">
+                    <img src="images/ajude!.svg" alt="logo" width="100px" height="100px">
+                </a>
+            </div>
+
+            <nav class="flex-box flex-box-row" id="menu">
+                <ul class="flex-box flex-box-row">
+                    <li><a href="#login">Login</a></li>
+                </ul>
+            </nav>
+        </header>
+
         <section id="section-register-user" class="flex-box flex-box-center flex-box-justify-center">
             <div id="div-register-user" class="center flex-box flex-box-center flex-box-justify-center">
                 <div>
-                    <input type="text" placeholder="Primeiro nome" required="required" 
-                    id="user-first-name" class="input-form">
+                    <input type="text" placeholder="Primeiro nome" required="required" id="user-first-name"
+                        class="input-form">
                 </div>
 
                 <div>
-                    <input type="text" placeholder="Último nome" required="required" 
-                    id="user-last-name" class="input-form">
+                    <input type="text" placeholder="Último nome" required="required" id="user-last-name"
+                        class="input-form">
                 </div>
 
                 <div>
-                    <input type="email" placeholder="Email" required="required" 
-                    id="user-email" class="input-form">
+                    <input type="email" placeholder="Email" required="required" id="user-email" class="input-form">
                 </div>
 
                 <div>
@@ -53,8 +105,8 @@
                 </div>
 
                 <div>
-                    <input type="password" placeholder="Senha" required="required" 
-                    id="user-password" class="input-form">
+                    <input type="password" placeholder="Senha" required="required" id="user-password"
+                        class="input-form">
                 </div>
 
                 <div>
@@ -65,17 +117,31 @@
     </template>
 
     <template id="view-login">
+
+        <header class="flex-box">
+            <div class="" id="logo">
+                <a href="">
+                    <img src="images/ajude!.svg" alt="logo" width="100px" height="100px">
+                </a>
+            </div>
+
+            <nav class="flex-box flex-box-row" id="menu">
+                <ul class="flex-box flex-box-row">
+                    <li><a href="#user-register" id="sign-up">Sign Up</a></li>
+                </ul>
+            </nav>
+        </header>
+
         <section id="section-login-user" class="flex-box flex-box-center flex-box-justify-center">
             <div id="div-login" class="center flex-box flex-box-center flex-box-justify-center">
                 
                 <div>
-                    <input type="email" placeholder="Email" required="required" 
-                    id="user-email" class="input-form">
+                    <input type="email" placeholder="Email" required="required" id="user-email" class="input-form">
                 </div>
 
                 <div>
-                    <input type="password" placeholder="Senha" required="required" 
-                    id="user-password" class="input-form">
+                    <input type="password" placeholder="Senha" required="required" id="user-password"
+                        class="input-form">
                 </div>
 
                 <div>
