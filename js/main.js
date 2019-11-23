@@ -1,4 +1,5 @@
 import { User, Login } from './user.js';
+import { Campaign } from './campaign.js';
 
 let url = 'https://apiajude.herokuapp.com/api';
 let $viewer = document.querySelector('#viewer');
@@ -15,6 +16,8 @@ function viewerChange() {
         viewUserRegister();
     } else if (['#login'].includes(hash)) {
         viewLogin();
+    } else if (['#campaign-register'].includes(hash)){
+        viewCampaignRegister();
     }
 }
 
@@ -48,7 +51,37 @@ function createUser() {
     }
 }
 
-function showConfirmView() {
+function registerCampaign() {
+    let shortNameInput = document.querySelector("#campaign-short-name");
+    let descriptionInput = document.querySelector("#campaign-description");
+    let deadlineInput = document.querySelector("#campaign-deadline");
+    let goalInput = document.querySelector("#campaign-goal");
+
+    let values = [shortNameInput.value, descriptionInput.value, deadlineInput.value, goalInput.value];
+
+    if (!values.includes("")) {
+        let urlIdentifier = genereteUrlIdentifier(shortNameInput.value);
+        let deadline = normalizeDate(deadlineInput.value)
+        let c = new Campaign(
+            values[0],
+            urlIdentifier,
+            values[1],
+            deadline,
+            values[3]
+        );
+
+        /*shortNameInput.value = "";
+        descriptionInput.value = "";
+        deadlineInput.value = "";
+        goalInput.value = "";
+        */
+        fetchRegisterCampaign(c);
+    } else {
+        alert("TODOS OS CAMPOS DEVEM SER PREENCHIDOS");
+    }
+}
+
+function showConfirmView(message) {
     let $body = document.querySelector('body');
     let $div = document.createElement('div');
     let $p = document.createElement('p');
@@ -56,7 +89,7 @@ function showConfirmView() {
 
     $div.className = 'opaque-div flex-box flex-box-justify-center flex-box-align-center flex-box-column';
     $div.id = 'flex-box-column'
-    $p.innerText = "Você agora está cadastrado!";
+    $p.innerText = message;
     $img.id = 'check-img';
     $img.src = 'images/check.svg';
     $img.style.filter = 'invert(100%)';
@@ -100,6 +133,14 @@ function viewLogin() {
     $loginBtn.addEventListener('click', login);
 }
 
+function viewCampaignRegister(){
+    let $template = document.querySelector('#view-campaign-register');
+    $viewer.innerHTML = $template.innerHTML;
+
+    let $registerCampaignBtn = document.querySelector('.confirm-btn');
+    $registerCampaignBtn.addEventListener('click', registerCampaign)
+}
+
 function login() {
     let emailInput = document.querySelector("#user-email");
     let passwordInput = document.querySelector("#user-password");
@@ -121,6 +162,49 @@ function login() {
     }
 }
 
+function genereteUrlIdentifier(shortName){ 
+    let urlIdentifier = shortName.toLowerCase();
+    urlIdentifier = urlIdentifier.normalize('NFD').replace(/[^0-9a-zA-Z\u0300-\u036f]/g, ' ');    
+    urlIdentifier = urlIdentifier.replace(/  +/g, ' ');
+    urlIdentifier = urlIdentifier.trim();
+    urlIdentifier = urlIdentifier.replace(/ /g, "-");
+    urlIdentifier = urlIdentifier.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+    return urlIdentifier;
+}
+
+function normalizeDate(date){
+    let l = date.split('-');
+    return l[2] + '-' + l[1] + '-' + l[0];
+}
+
+async function fetchRegisterCampaign(campaign){
+    try{
+        let body = JSON.stringify(campaign);
+        let header = {
+            'Access-Control-Allow-Origin': '*',
+            'Content-Type': 'application/json;charset=utf-8',
+            'Authorization': 'Bearer ' + sessionStorage.getItem("token")
+        }
+        
+        let response = await fetch(url + '/campaign/register',{
+            'method': 'POST',
+            'body': body,
+            'headers': header,
+        });
+
+        if (response.status == 201){
+            showConfirmView("Campanha Cadastrada com sucesso")
+            // TODO Link pra acessar a campanha
+        
+        } else if (response.status == 400) {
+            showFailureView();
+        }
+
+    } catch (e) {
+        console.log(e);
+    }
+}
+
 async function fetchRegisterUser(user) {
     try {
         let body = JSON.stringify(user);
@@ -135,7 +219,7 @@ async function fetchRegisterUser(user) {
         });
 
         if (response.status == 201) {
-            showConfirmView();
+            showConfirmView("Você agora está cadastrado!");
         } else if (response.status == 400) {
             showFailureView();
         }
