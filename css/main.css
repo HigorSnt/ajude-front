@@ -32,7 +32,31 @@ nav ul {
 
 #listing{
     background-color: grey;
+    border-radius: 25px;
+    text-align: justify;
     width: 50em;
+    height: 10em;
+    margin-bottom: 10px;
+    height: fit-content;
+}
+
+#listing #comment
+{
+    margin-left: 2em;
+    margin-right: 2em;
+    margin-top: 1em;
+    width: fit-content;
+    background-color: white;
+    border-radius: 5px;
+}
+
+#listing #name{
+    margin-left: 1em;
+}
+
+#listing li{
+    margin: 2em;
+    display: inline;
 }
 
 #search-btn{
@@ -136,6 +160,7 @@ button:hover {
 #attention-img {
     width: 8%;
     height: 8%;
+    margin-top: 5em;
 }
 
 #campaign{
@@ -195,6 +220,8 @@ x-justify-center {
 }
 
 .flex-box-column {
+    width: 655px;
+    margin: auto;
     flex-direction: column;
 }
 

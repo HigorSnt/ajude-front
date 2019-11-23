@@ -57,7 +57,6 @@ function viewHome() {
     $searchBtn.addEventListener('click', searchCampaigns);
 }
 
-
 export function showConfirmView(message) {
     let $div = document.createElement('div');
     let $p = document.createElement('p');
@@ -91,17 +90,14 @@ export function showFailureView(message) {
     $img.src = 'images/fail.svg';
     $img.style.filter = 'invert(100%)';
 
-    let $template = document.querySelector('#header-not-user-logged');
-    $viewer.innerHTML = $template.innerHTML;
-    let $iptSearchCampaigns = $viewer.querySelector('#search-campaigns');
-    let $header = document.querySelector('header');
-    $header.removeChild($iptSearchCampaigns);
+    let $template = document.querySelector('#header');
+    $viewer.innerHTML = $div.innerHTML;
 
     $div.appendChild($img);
     $div.appendChild($p);
     $viewer.appendChild($div);
 
-    window.setTimeout("location.href = '/'", 500);
+    window.setTimeout("location.href = '/'", 10000);
 }
 
 function logout() {

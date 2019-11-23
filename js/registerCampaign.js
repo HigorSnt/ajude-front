@@ -5,17 +5,27 @@ export {viewCampaignRegister}
 async function fetchRegisterCampaign(campaign) {
     try {
         let body = JSON.stringify(campaign);
+        let token = await sessionStorage.getItem('token');
+
+        console.log(token);
         let header = {
-            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Origin': url + '/campaign/register',
+            'Access-Control-Allow-Credentials': 'true',
+            'Access-Control-Allow-Methods': 'POST',
+            'Access-Control-Allow-Headers': 'Content-Type',
             'Content-Type': 'application/json;charset=utf-8',
-            'Authorization': 'Bearer ' + sessionStorage.getItem("token")
+            'Authorization': `Bearer ${token}`
         }
 
+
         let response = await fetch(url + '/campaign/register', {
+             mode: 'cors',
             'method': 'POST',
             'body': body,
             'headers': header,
         });
+
+        console.log(body);
 
         if (response.status == 201) {
             showConfirmView("Campanha Cadastrada com sucesso")
@@ -89,7 +99,6 @@ function normalizeDate(date) {
 }
 
 function viewHasNoPermission() {
-    let $body = document.querySelector('body');
     let $div = document.createElement('div');
     let $p = document.createElement('p');
     let $img = document.createElement('img');
@@ -99,15 +108,11 @@ function viewHasNoPermission() {
     $p.innerText = "É necessário realizar login para ter acesso à esse conteúdo...";
     $p.style.paddingTop = '1em';
     $img.id = 'attention-img';
-
     $img.src = 'images/crying-face.svg';
     $img.style.filter = 'invert(100%)';
 
-    let $template = document.querySelector('#header-not-user-logged');
-    $viewer.innerHTML = $template.innerHTML;
-    let $iptSearchCampaigns = $viewer.querySelector('#search-campaigns');
-    let $header = document.querySelector('header');
-    $header.removeChild($iptSearchCampaigns);
+    let $template = document.querySelector('#header');
+    $viewer.innerHTML = $div.innerHTML;
 
     $div.appendChild($img);
     $div.appendChild($p);
