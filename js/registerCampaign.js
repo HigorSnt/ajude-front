@@ -23,13 +23,15 @@ async function fetchRegisterCampaign(campaign) {
             'headers': header,
         });
 
-        console.log(body);
+        
 
         if (response.status == 201) {
+            console.log(response);
             showConfirmView("Campanha Cadastrada com sucesso")
             // TODO Link pra acessar a campanha
 
         } else if (response.status == 400) {
+            console.log(response);
             showFailureView("Erro ao cadastrar campanha");
         }
 
@@ -62,7 +64,7 @@ function registerCampaign() {
 
     if (!values.includes("")) {
         let urlIdentifier = genereteUrlIdentifier(shortNameInput.value);
-        let deadline = normalizeDate(deadlineInput.value)
+        let deadline = (deadlineInput.value)
         let c = new Campaign(
             values[0],
             urlIdentifier,
@@ -90,9 +92,4 @@ function genereteUrlIdentifier(shortName) {
     urlIdentifier = urlIdentifier.replace(/ /g, "-");
     urlIdentifier = urlIdentifier.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
     return urlIdentifier;
-}
-
-function normalizeDate(date) {
-    let l = date.split('-');
-    return l[2] + '-' + l[1] + '-' + l[0];
 }
