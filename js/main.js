@@ -42,7 +42,6 @@ async function viewerChange() {
 }
 
 function viewHome(tittle) {
-
     let $nav = document.querySelector('#nav');
     let $searchBtn = document.querySelector('#search-btn');
     let $h2 = $viewer.querySelector('#tittle');
@@ -54,7 +53,9 @@ function viewHome(tittle) {
     } else {
         $nav.innerHTML = $loggedTemplate.innerHTML;
         $h2.innerText = tittle;
-        $searchBtn.addEventListener('click', searchCampaigns);
+        $searchBtn.addEventListener('click', ()=>{
+            searchCampaigns();
+        });
     }
 }
 
@@ -98,7 +99,7 @@ export function showFailureView(message) {
     $div.appendChild($p);
     $viewer.appendChild($div);
 
-    window.setTimeout("location.href = '/'", 500);
+    window.setTimeout("location.href = '/'", 100000);
 }
 
 function logout() {

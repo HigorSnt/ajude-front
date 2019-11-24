@@ -132,7 +132,12 @@ nav ul {
     align-items: stretch;
 }
 
-input {
+#filter {
+    width: fit-content;
+    margin: 1em;
+}
+
+input [type="text"] {
     height: 2.5em;
     width: 75%;
     font-size: 1.2em;
