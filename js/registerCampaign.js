@@ -1,6 +1,5 @@
 import {Campaign} from "./entities.js";
-import {$viewer, url, showFailureView, showConfirmView} from "./main.js";
-export {viewCampaignRegister}
+import {$viewer, url, showFailureView, showConfirmView, viewHasNoPermission} from "./main.js";
 
 async function fetchRegisterCampaign(campaign) {
     try {
@@ -16,7 +15,6 @@ async function fetchRegisterCampaign(campaign) {
             'Content-Type': 'application/json;charset=utf-8',
             'Authorization': `Bearer ${token}`
         }
-
 
         let response = await fetch(url + '/campaign/register', {
              mode: 'cors',
@@ -40,11 +38,12 @@ async function fetchRegisterCampaign(campaign) {
     }
 }
 
-function viewCampaignRegister() {
+export function viewCampaignRegister() {
 
     if (sessionStorage.getItem('token') != null) {
+        let $headerTemplate = document.querySelector("#header-user-logged");
         let $template = document.querySelector('#view-campaign-register');
-        $viewer.innerHTML = $template.innerHTML;
+        $viewer.innerHTML = $headerTemplate.innerHTML + $template.innerHTML;
 
         let $registerCampaignBtn = document.querySelector('.confirm-btn');
         $registerCampaignBtn.addEventListener('click', registerCampaign);
@@ -96,25 +95,4 @@ function genereteUrlIdentifier(shortName) {
 function normalizeDate(date) {
     let l = date.split('-');
     return l[2] + '-' + l[1] + '-' + l[0];
-}
-
-function viewHasNoPermission() {
-    let $div = document.createElement('div');
-    let $p = document.createElement('p');
-    let $img = document.createElement('img');
-
-    $div.className = 'opaque-div flex-box flex-box-justify-center flex-box-align-center flex-box-column';
-    $div.id = 'flex-box-column';
-    $p.innerText = "É necessário realizar login para ter acesso à esse conteúdo...";
-    $p.style.paddingTop = '1em';
-    $img.id = 'attention-img';
-    $img.src = 'images/crying-face.svg';
-    $img.style.filter = 'invert(100%)';
-
-    let $template = document.querySelector('#header');
-    $viewer.innerHTML = $div.innerHTML;
-
-    $div.appendChild($img);
-    $div.appendChild($p);
-    $viewer.appendChild($div);
 }

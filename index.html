@@ -11,12 +11,29 @@
 </head>
 
 <body>
-    <div id="viewer">
-        <h2 id="tittle"></h2>
-    </div>
+    <div id="viewer"></div>
 
-    <div id="view-header">
-        <header id="header" class="flex-box">
+    <template id="header-not-logged-without-search">
+        <header class="flex-box">
+            <div id="logo">
+                <a href="">
+                    <img src="images/ajude!.svg" alt="logo" width="100px" height="100px">
+                </a>
+            </div>
+
+            <nav class="flex-box flex-box-row" id="menu">
+                <ul class="flex-box flex-box-row">
+                    <li><a href="#login">Login</a></li>
+                    <li><a href="#user-register" id="sign-up">Sign Up</a></li>
+                </ul>
+            </nav>
+        </header>
+    </template>
+
+    <!--CABEÇALHO SEM USO POR ENQUANTO, SE CASO NÃO FOR USADO EM NENHUMA
+        VIEW LEMBRAR DE APAGAR-->
+    <template id="header-not-logged">
+        <header class="flex-box">
             <div id="logo">
                 <a href="">
                     <img src="images/ajude!.svg" alt="logo" width="100px" height="100px">
@@ -26,13 +43,48 @@
             <div id="search-campaigns" class="flex-box flex-box-align-center flex-box-justify-center">
                 <input type="text" id="input-search" placeholder="Buscar Campanhas">
 
-                <button id="search-btn">Pesquisar</button>
+                <a href="" id="search-btn">
+                    <img src="images/search.svg" alt="search">
+                </a>
             </div>
 
-            <div id="nav"></div>
-
+            <nav class="flex-box flex-box-row" id="menu">
+                <ul class="flex-box flex-box-row">
+                    <li><a href="#login">Login</a></li>
+                    <li><a href="#user-register" id="sign-up">Sign Up</a></li>
+                </ul>
+            </nav>
         </header>
-    </div>
+    </template>
+
+    <template id="header-user-logged">
+        <header class="flex-box">
+            <div id="logo">
+                <a href="">
+                    <img src="images/ajude!.svg" alt="logo" width="100px" height="100px">
+                </a>
+            </div>
+
+            <div id="search-campaigns" class="flex-box flex-box-align-center flex-box-justify-center">
+                <input type="text" id="input-search" placeholder="Buscar Campanhas">
+
+                <a href="" id="search-btn">
+                    <img src="images/search.svg" alt="search">
+                </a>
+            </div>
+
+            <nav class="flex-box flex-box-row" id="user-menu">
+                <div class="dropdown">
+                    <img src="images/account.svg" alt="user" width="50px" height="50px" class="drop-image">
+                    <div class="dropdown-content">
+                        <a href="#">Perfil</a>
+                        <a href="#campaign-register">Cadastrar Campanhas</a>
+                        <a href="#logout">Logout</a>
+                    </div>
+                </div>
+            </nav>
+        </header>
+    </template>
 
     <template id="view-user-register">
 
@@ -50,8 +102,9 @@
             </nav>
         </header>
 
-        <section id="section-register-user" class="flex-box flex-box-center flex-box-justify-center">
-            <div id="div-register-user" class="center flex-box flex-box-center flex-box-justify-center">
+        <section id="section-register-user" class="section-forms flex-box flex-box-center flex-box-justify-center"
+            style="margin-top: 8em;">
+            <div id="div-register-user" class="divs-form center flex-box flex-box-center flex-box-justify-center">
                 <div>
                     <input type="text" placeholder="Primeiro nome" required="required" id="user-first-name"
                         class="input-form">
@@ -84,7 +137,6 @@
     </template>
 
     <template id="view-login">
-
         <header class="flex-box">
             <div class="" id="logo">
                 <a href="">
@@ -99,9 +151,9 @@
             </nav>
         </header>
 
-        <section id="section-login-user" class="flex-box flex-box-center flex-box-justify-center">
-            <div id="div-login" class="center flex-box flex-box-center flex-box-justify-center">
-                
+        <section id="section-login-user" class="section-forms flex-box flex-box-center flex-box-justify-center"
+            style="margin-top: 8em;">
+            <div id="div-login" class="divs-form center flex-box flex-box-center flex-box-justify-center">
                 <div>
                     <input type="email" placeholder="Email" required="required" id="user-email" class="input-form">
                 </div>
@@ -112,7 +164,7 @@
                 </div>
 
                 <div>
-                    <button type="submit" class="confirm-btn">Login</button>
+                    <button type="submit" class="confirm-btn">Cadastrar</button>
                 </div>
             </div>
         </section>
@@ -120,36 +172,33 @@
     </template>
 
     <template id="view-campaign-register">
-            <section id="section-register-campaign" class="flex-box flex-box-center flex-box-justify-center">
-                <div id="div-register-campaign" class="center flex-box flex-box-center flex-box-justify-center">
-                    
+        <section id="section-register-user" class="section-forms flex-box flex-box-center flex-box-justify-center"
+            style="margin-top: 8em;">
+            <div id="div-register-user" class="divs-form center flex-box flex-box-center flex-box-justify-center">
                 <div>
-                    <input type="text" placeholder="Nome" required="required" 
-                    id="campaign-short-name" class="input-form">
+                    <input type="text" placeholder="Nome" required="required" id="campaign-short-name"
+                        class="input-form">
                 </div>
 
                 <div>
-                    <input type="text" placeholder="Descrição" required="required"
-                    id="campaign-description" class="input-form">
+                    <input type="text" placeholder="Descrição" required="required" id="campaign-description"
+                        class="input-form">
                 </div>
 
                 <div>
-                    <input type="date" placeholder="Data de vencimento" required="required" 
-                    id="campaign-deadline" class="input-form">
+                    <input type="date" placeholder="Data de vencimento" required="required" id="campaign-deadline"
+                        class="input-form">
                 </div>
 
                 <div>
-                    <input type="number" placeholder="Meta" required="required" 
-                    id="campaign-goal" class="input-form">
+                    <input type="number" placeholder="Meta" required="required" id="campaign-goal" class="input-form">
                 </div>
 
                 <div>
                     <button type="submit" class="confirm-btn">Cadastrar</button>
                 </div>
-            
             </div>
         </section>
-
     </template>
 
 </body>

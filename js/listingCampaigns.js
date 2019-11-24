@@ -1,6 +1,6 @@
-import {$viewer, url} from './main.js';
-import {viewHome} from "./main.js";
-export {searchCampaigns};
+import { $viewer, url } from './main.js';
+import { viewHome } from "./main.js";
+export { searchCampaigns };
 
 let data;
 async function listingCampaigns(substring) {
@@ -17,16 +17,16 @@ async function listingCampaigns(substring) {
     };
 
     data = await fetch(url + "/campaign/search/", {
-         mode: 'cors',
+        mode: 'cors',
         'method': 'POST',
-        'body': '{"substring": "' + substring + '"}',
+        'body': `{"substring": "${substring}"}`,
         'headers': header
     }).then(r => r.json());
 
     return data;
 }
 
-let  $filterDiv, $list, $campaign;
+let $filterDiv, $list, $campaign;
 let campaignsJSON, currentCampaigns;
 async function searchCampaigns() {
     let $search = document.querySelector('#input-search');
@@ -36,15 +36,13 @@ async function searchCampaigns() {
 
     removeCampaigns();
 
-    if($filterDiv != undefined) $filterDiv.innerHTML = '';
+    if ($filterDiv != undefined) $filterDiv.innerHTML = '';
 
-    if(data[0] === undefined) {
+    if (data[0] === undefined) {
         removeCampaigns();
         viewHome("Nenhuma campanha com esse nome");
-    }
+    } else {
 
-
-    else {
         let $h2 = $viewer.querySelector('#tittle');
         $h2.innerText = "Listagem de Campanhas";
         let campaignsString = JSON.stringify(campaigns);
@@ -73,7 +71,7 @@ async function searchCampaigns() {
         });
 
         $list = document.createElement('div');
-        $list.id = "list";
+        $list.id = "list-campaigns";
 
         $viewer.appendChild($list);
         $viewer.appendChild($filterDiv);
@@ -82,27 +80,32 @@ async function searchCampaigns() {
     }
 }
 
-function removeCampaigns()
-{
-    if($list != undefined) $list.innerHTML = '';
+function removeCampaigns() {
+    if ($list != undefined) $list.innerHTML = '';
 }
 
 function showCampaigns(campaigns) {
-        campaigns.forEach( c => {
-            $campaign = document.createElement('div');
-            $campaign.id = "listing";
-            $campaign.innerHTML =
-                `<h3 id="name">${c.shortName}</h3>
-                 <div id="comment">${c.description}</div>
-                 <ul id="info">
-                    <li>Goal: ${c.goal}</li>
-                    <li>Deadline: ${c.deadline}</li>
-                    <li>Status: ${c.status}</li>
-                    <li> <a href="/campaign/${c.urlIdentifier}">Ver mais</a> </li>
-                </ul>`;
+    campaigns.forEach(c => {
+        $campaign = document.createElement('div');
+        $campaign.id = "listing";
+        $campaign.className = "flex-box flex-box-justify-center flex-box-align-center flex-box-column";
+        $campaign.innerHTML =
+            `<h3 id="name">${c.shortName.toUpperCase()}</h3>
+                <div id="comment">${c.description}</div>
+                <ul class="ul-info flex-box" style="justify-content: space-between;">
+                   <li class="flex-box flex-box-row flex-box-justify-center flex-box-align-center" style="justify-content: space-between;">
+                       <img src="images/piggy-bank.svg" alt="Meta" width="30px" height="30px" style="margin-right: 0.3em">
+                       <p>${c.goal}</p>
+                   </li>
+                   <li class="flex-box flex-box-row flex-box-justify-center flex-box-align-center" style="justify-content: space-between;">
+                       <img src="images/calendar.svg" alt="Deadline" width="30px" height="30px" style="margin-right: 0.3em">
+                       <p>${c.deadline}</p>
+                   </li>
+                   <li> <a href="/campaign/${c.urlIdentifier}">Ver mais</a> </li>
+               </ul>
+            </div>`;
             $list.appendChild($campaign);
-            $viewer.appendChild($list);
-        })
+        });
 }
 
 function getActiveCampaigns(campaigns) {
@@ -112,6 +115,7 @@ function getActiveCampaigns(campaigns) {
         if(c.status === "A") {
             activedCampaignsArray.push(c);
         }
-    })
+    });
+    
     return activedCampaignsArray;
 }

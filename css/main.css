@@ -31,8 +31,7 @@ nav ul {
 }
 
 #listing{
-    background-color: grey;
-    border-radius: 25px;
+    background-color: rgba(0, 145, 255, .3);
     text-align: justify;
     width: 50em;
     height: 10em;
@@ -40,28 +39,21 @@ nav ul {
     height: fit-content;
 }
 
-#listing #comment
-{
-    margin-left: 2em;
-    margin-right: 2em;
-    margin-top: 1em;
-    width: fit-content;
+#inform {
+    margin-top: 7em;
+    font-size: .9em;
+}
+
+#comment {
+    border-radius: 10px;
+    width: 95%;
     background-color: white;
-    border-radius: 5px;
+    margin: .5em;
+    padding: .5em;
 }
 
 #listing #name{
     margin-left: 1em;
-}
-
-#listing li{
-    margin: 2em;
-    display: inline;
-}
-
-#search-btn{
-    border-radius: 10px;
-    text-align: center;
 }
 
 #logo {
@@ -77,8 +69,7 @@ nav ul {
     list-style: none;
 }
 
-
-#viewer {
+#tittle {
     text-align: center;
     margin-top: 10em;
     border-radius: 1.5em;
@@ -92,7 +83,9 @@ nav ul {
 }
 
 
-#menu a:link, #menu a:active, #menu a:visited, .dropdown a:link, .dropdown a:active, .dropdown a:visited {    color: #af670a;
+#menu a:link, #menu a:active, #menu a:visited, 
+.dropdown a:link, .dropdown a:active, .dropdown a:visited,
+.ul-info a:link, .ul-info a:active, .ul-info a:visited {
     color: #af670a;
     text-decoration: none;
 }
@@ -102,49 +95,31 @@ nav ul {
     border-bottom: 1px solid #af670a;
 }
 
-#section-register-user {
-    position: relative;
+.ul-info a:hover {
+    color: black;
+    border-bottom: 1px solid #af670a;
 }
 
-
-#div-register-user {
+.divs-form {
     box-shadow: 0 .1em .3em #808080;
+    width: 50em;
     border-radius: 1.5em;
     flex-direction: column;
     align-items: stretch;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+#div-register-user {
+    padding-top: 1em;
+    padding-bottom: 1em;
 }
 
 #div-register-campaign {
-    width: 50em;
     height: 25em;
-    margin-top: 5em;
-    border-radius: 1.5em;
-    flex-direction: column;
-    align-items: stretch;
 }
 
 #div-login {
-    box-shadow: 0 .1em .3em #808080;
-    width: 50em;
     height: 15em;
-    border-radius: 1.5em;
-    flex-direction: column;
-    align-items: stretch;
-}
-
-#filter {
-    width: fit-content;
-    margin: 1em;
-}
-
-input [type="text"] {
-    height: 2.5em;
-    width: 75%;
-    font-size: 1.2em;
-    margin-bottom: .7em;
-    background-color: #fff;
-    padding-left: 20px;
-    border: none;
 }
 
 button {
@@ -168,10 +143,17 @@ button:hover {
     margin-top: 5em;
 }
 
-#campaign{
+#list-campaigns {
     font-weight: bolder;
-    size: 100px;
-    border-color: #af670a;
+    size: 10em;
+    text-align: center;
+    margin-top: 1em;
+    min-width: fit-content;
+    padding: 0.7em;
+}
+
+.campaign {
+    margin-top: 1em;
 }
 
 #search-campaigns {
@@ -182,14 +164,17 @@ button:hover {
     justify-content: space-between;
 }
 
+#search-btn {
+    padding-right: .6em;
+}
+
 #input-search {
     background-color: transparent;
     padding-left: 1.5em;
     font-size: 1em;
     border: none;
-    text-align: center;
     height: 2em;
-    width: 10em;
+    width: 70%;
     color: black;
 }
 
@@ -205,7 +190,6 @@ button:hover {
 
 .center {
     text-align: center;
-    width: 30em;
 }
 
 .flex-box {
@@ -216,30 +200,30 @@ button:hover {
     align-items: center;
 }
 
-#logged-menu{
-    border-radius: 15px;
-    background-color: #0091ff;
-    margin: 2em;
-    display: inline;
+.flex-box-justify-center {
+    justify-content: center;
 }
 
-#logged-menu .ul{
-    margin: 2em;
+.section-forms {
+    position: relative;
 }
 
-.
-x-justify-center {
+.ul-info {
+    list-style: none;
+    width: 95%;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+}
+
+.x-justify-center {
     justify-content: center;
 }
 
 .flex-box-row {
     flex-direction: row;
-    margin: 1em;
 }
 
 .flex-box-column {
-    width: 655px;
-    margin: auto;
     flex-direction: column;
 }
 
@@ -318,4 +302,19 @@ x-justify-center {
 .dropdown:hover .dropdown-content {
     display: block;
 
+}
+
+#filter {
+    width: fit-content;
+    margin: 1em;
+}
+
+input [type="text"] {
+    height: 2.5em;
+    width: 75%;
+    font-size: 1.2em;
+    margin-bottom: .7em;
+    background-color: #fff;
+    padding-left: 20px;
+    border: none;
 }

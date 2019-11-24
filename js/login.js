@@ -6,7 +6,7 @@ function viewLogin() {
     let $template = document.querySelector('#view-login');
     $viewer.innerHTML = $template.innerHTML;
 
-    let $loginBtn = document.querySelector('.confirm-btn');
+    let $loginBtn = $viewer.querySelector('.confirm-btn');
     $loginBtn.addEventListener('click', login);
 }
 
@@ -25,6 +25,7 @@ function login() {
         emailInput.value = "";
         passwordInput.value = "";
 
+        
         fetchLogin(l);
     } else {
         alert("TODOS OS CAMPOS DEVEM SER PREENCHIDOS");

@@ -10,25 +10,10 @@ let $viewer = document.querySelector('#viewer');
 window.onload = viewerChange;
 window.addEventListener('hashchange', viewerChange);
 
-let $loggedTemplate, $unloggedTemplate;
-async function fetch_login_templates() {
-    let unlogged = await fetch('/html/navUnloggedUser.html').then(r => r.text());
-    let logged = await (fetch('/html/navLoggedUser.html').then(r => r.text()));
-
-    let div = document.createElement("div");
-
-    div.innerHTML = logged;
-    $loggedTemplate = div.querySelector("#logged-menu");
-
-    div.innerHTML = unlogged;
-    $unloggedTemplate = div.querySelector("#menu");
-}
-
 async function viewerChange() {
     let hash = location.hash;
 
     if ([''].includes(hash)) {
-        await Promise.all([fetch_login_templates()]);
         viewHome("Listagem de Campanhas");
     } else if (['#user-register'].includes(hash)) {
         viewUserRegister();
@@ -38,31 +23,35 @@ async function viewerChange() {
         viewCampaignRegister();
     } else if (['#logout'].includes(hash)) {
         logout();
+    } else if(['#search'].includes(hash)) {
+        searchCampaigns();
     }
 }
 
 function viewHome(tittle) {
-    let $nav = document.querySelector('#nav');
-    let $searchBtn = document.querySelector('#search-btn');
-    let $h2 = $viewer.querySelector('#tittle');
-
-    if (sessionStorage === undefined || sessionStorage.getItem('token') == null) {
-        $nav.innerHTML = $unloggedTemplate.innerHTML;
-        $h2.innerText = tittle;
-        $searchBtn.addEventListener('click', () => window.setTimeout("location.href = '/#login'", 0));
+    let $headerTemplate;
+    let $h2 = document.createElement('h2');
+    $h2.id = "tittle";
+    $h2.innerText = tittle;
+    
+    if (sessionStorage.getItem('token') == null) {
+        $headerTemplate = document.querySelector("#header-not-logged-without-search");
+        $viewer.innerHTML = $headerTemplate.innerHTML;
     } else {
-        $nav.innerHTML = $loggedTemplate.innerHTML;
-        $h2.innerText = tittle;
-        $searchBtn.addEventListener('click', ()=>{
-            searchCampaigns();
-        });
+        $headerTemplate = document.querySelector("#header-user-logged");
+        $viewer.innerHTML = $headerTemplate.innerHTML;
+        let $searchBtn = $viewer.querySelector("#search-btn");
+        $searchBtn.href = "/#search";
     }
+
+    $viewer.appendChild($h2);
 }
 
 export function showConfirmView(message) {
     let $div = document.createElement('div');
     let $p = document.createElement('p');
     let $img = document.createElement('img');
+    let $headerTemplate = getHeaderTemplate();
 
     $div.className = 'opaque-div flex-box flex-box-justify-center flex-box-align-center flex-box-column';
     $div.id = 'flex-box-column';
@@ -72,17 +61,20 @@ export function showConfirmView(message) {
     $img.src = 'images/check.svg';
     $img.style.filter = 'invert(100%)';
 
+    $viewer.innerHTML = $headerTemplate.innerHTML;
+
     $div.appendChild($img);
     $div.appendChild($p);
     $viewer.appendChild($div);
 
-    window.setTimeout("location.href = '/'", 500);
+    window.setTimeout("location.href = '/'", 1000);
 }
 
 export function showFailureView(message) {
     let $div = document.createElement('div');
     let $p = document.createElement('p');
     let $img = document.createElement('img');
+    let $headerTemplate = getHeaderTemplate();
 
     $div.className = 'opaque-div flex-box flex-box-justify-center flex-box-align-center flex-box-column';
     $div.id = 'flex-box-column';
@@ -92,14 +84,13 @@ export function showFailureView(message) {
     $img.src = 'images/fail.svg';
     $img.style.filter = 'invert(100%)';
 
-    let $template = document.querySelector('#header');
-    $viewer.innerHTML = $div.innerHTML;
+    $viewer.innerHTML = $headerTemplate.innerHTML;
 
     $div.appendChild($img);
     $div.appendChild($p);
     $viewer.appendChild($div);
 
-    window.setTimeout("location.href = '/'", 100000);
+    window.setTimeout("location.href = '/'", 800);
 }
 
 function logout() {
@@ -109,4 +100,35 @@ function logout() {
     window.setTimeout("location.href = '/'", 0);
 }
 
+export function viewHasNoPermission() {
+    let $headerTemplate = document.querySelector('#header-not-logged-without-search');
+    let $div = document.createElement('div');
+    let $p = document.createElement('p');
+    let $img = document.createElement('img');
 
+    $div.className = 'opaque-div flex-box flex-box-justify-center flex-box-align-center flex-box-column';
+    $div.id = 'flex-box-column';
+    $p.innerText = "É necessário realizar login para ter acesso à esse conteúdo...";
+    $p.style.paddingTop = '1em';
+    $img.id = 'attention-img';
+    $img.src = 'images/crying-face.svg';
+    $img.style.filter = 'invert(100%)';
+
+    $viewer.innerHTML = $headerTemplate.innerHTML;
+
+    $div.appendChild($img);
+    $div.appendChild($p);
+    $viewer.appendChild($div);
+}
+
+export function getHeaderTemplate() {
+    let template;
+
+    if (sessionStorage.getItem('token') == null) {
+        template = document.querySelector('#header-not-logged-without-search');
+    } else {
+        template = document.querySelector('#header-user-logged');
+    }
+
+    return template;
+}
