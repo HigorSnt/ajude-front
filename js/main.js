@@ -1,8 +1,8 @@
-import {viewLogin} from './login.js'
-import {viewUserRegister, viewRequestChangePassword, viewChangePassword} from './userFunctions.js'
-import {viewCampaignRegister} from "./registerCampaign.js";
-import {searchCampaigns} from "./listingCampaigns.js";
-export {$viewer, url, viewHome};
+import { viewLogin } from './login.js'
+import { viewUserRegister, viewRequestChangePassword, viewChangePassword } from './userFunctions.js'
+import { viewCampaignRegister } from "./registerCampaign.js";
+import { searchCampaigns } from "./listingCampaigns.js";
+export { $viewer, url, viewHome };
 
 let url = 'https://apiajude.herokuapp.com/api';
 let $viewer = document.querySelector('#viewer');
@@ -33,20 +33,11 @@ async function viewerChange() {
 }
 
 function viewHome(tittle) {
-    let $headerTemplate;
     let $h2 = document.createElement('h2');
     $h2.id = "tittle";
     $h2.innerText = tittle;
-    
-    if (sessionStorage.getItem('token') == null) {
-        $headerTemplate = document.querySelector("#header-not-logged-without-search");
-        $viewer.innerHTML = $headerTemplate.innerHTML;
-    } else {
-        $headerTemplate = document.querySelector("#header-user-logged");
-        $viewer.innerHTML = $headerTemplate.innerHTML;
-        let $searchBtn = $viewer.querySelector("#search-btn");
-        $searchBtn.href = "/#search";
-    }
+
+    generateHeader();
 
     $viewer.appendChild($h2);
 }
@@ -55,7 +46,7 @@ export function showConfirmView(message) {
     let $div = document.createElement('div');
     let $p = document.createElement('p');
     let $img = document.createElement('img');
-    let $headerTemplate = getHeaderTemplate();
+    let $headerTemplate = document.querySelector('#header-not-logged-without-search');
 
     $div.className = 'opaque-div flex-box flex-box-justify-center flex-box-align-center flex-box-column';
     $div.id = 'flex-box-column';
@@ -66,6 +57,13 @@ export function showConfirmView(message) {
     $img.style.filter = 'invert(100%)';
 
     $viewer.innerHTML = $headerTemplate.innerHTML;
+    let $searchBtn = $viewer.querySelector("#search-btn");
+    if ($viewer.querySelector('#search-btn') !== null) {
+        $searchBtn.addEventListener('click', function (event) {
+            viewHasNoPermission();
+            event.preventDefault();
+        });
+    }
 
     $div.appendChild($img);
     $div.appendChild($p);
@@ -78,7 +76,7 @@ export function showFailureView(message) {
     let $div = document.createElement('div');
     let $p = document.createElement('p');
     let $img = document.createElement('img');
-    let $headerTemplate = getHeaderTemplate();
+    let $headerTemplate = document.querySelector('#header-not-logged-without-search');
 
     $div.className = 'opaque-div flex-box flex-box-justify-center flex-box-align-center flex-box-column';
     $div.id = 'flex-box-column';
@@ -89,6 +87,13 @@ export function showFailureView(message) {
     $img.style.filter = 'invert(100%)';
 
     $viewer.innerHTML = $headerTemplate.innerHTML;
+    let $searchBtn = $viewer.querySelector("#search-btn");
+    if ($viewer.querySelector('#search-btn') !== null) {
+        $searchBtn.addEventListener('click', function (event) {
+            viewHasNoPermission();
+            event.preventDefault();
+        });
+    }
 
     $div.appendChild($img);
     $div.appendChild($p);
@@ -105,7 +110,7 @@ function logout() {
 }
 
 export function viewHasNoPermission() {
-    let $headerTemplate = document.querySelector('#header-not-logged-without-search');
+    let $headerTemplate = document.querySelector('#header-not-logged');
     let $div = document.createElement('div');
     let $p = document.createElement('p');
     let $img = document.createElement('img');
@@ -119,20 +124,40 @@ export function viewHasNoPermission() {
     $img.style.filter = 'invert(100%)';
 
     $viewer.innerHTML = $headerTemplate.innerHTML;
+    let $searchBtn = $viewer.querySelector("#search-btn");
+
+    if ($viewer.querySelector('#search-btn') !== null) {
+        $searchBtn.addEventListener('click', function (event) {
+            viewHasNoPermission();
+            event.preventDefault();
+        });
+    }
 
     $div.appendChild($img);
     $div.appendChild($p);
     $viewer.appendChild($div);
 }
 
-export function getHeaderTemplate() {
-    let template;
+export function generateHeader() {
+    let $headerTemplate;
 
     if (sessionStorage.getItem('token') == null) {
-        template = document.querySelector('#header-not-logged-without-search');
+        $headerTemplate = document.querySelector("#header-not-logged");
+        $viewer.innerHTML = $headerTemplate.innerHTML;
+        let $searchBtn = $viewer.querySelector("#search-btn");
+        $searchBtn.addEventListener('click', function (event) {
+            viewHasNoPermission();
+            event.preventDefault();
+        });
     } else {
-        template = document.querySelector('#header-user-logged');
+        $headerTemplate = document.querySelector("#header-user-logged");
+        $viewer.innerHTML = $headerTemplate.innerHTML;
+        let $searchBtn = $viewer.querySelector("#search-btn");
+        let $searchInput = $viewer.querySelector("#input-search");
+        $searchBtn.addEventListener('click', function (event) {
+            console.log($searchInput);
+            searchCampaigns($searchInput.value);
+            event.preventDefault();
+        });
     }
-
-    return template;
 }

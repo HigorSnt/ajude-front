@@ -1,4 +1,4 @@
-import { $viewer, url, getHeaderTemplate } from './main.js';
+import { $viewer, url, generateHeader } from './main.js';
 import { viewHome } from "./main.js";
 export { searchCampaigns };
 
@@ -42,15 +42,13 @@ async function searchCampaigns() {
         removeCampaigns();
         viewHome("Nenhuma campanha com esse nome");
     } else {
-        let $headerTemplate = getHeaderTemplate();
+        generateHeader();
         let $h2 = document.createElement('h2');
         $h2.id = "tittle";
         $h2.innerText = "Listagem de Campanhas";
         let campaignsString = JSON.stringify(campaigns);
         campaignsJSON = JSON.parse(campaignsString)[0];
         currentCampaigns = getActiveCampaigns(campaignsJSON);
-        
-        $viewer.innerHTML = $headerTemplate.innerHTML;
 
         $filterDiv = document.createElement('div');
         $filterDiv.id = "filter";

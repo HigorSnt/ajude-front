@@ -44,6 +44,9 @@ export function viewCampaignRegister() {
         let $headerTemplate = document.querySelector("#header-user-logged");
         let $template = document.querySelector('#view-campaign-register');
         $viewer.innerHTML = $headerTemplate.innerHTML + $template.innerHTML;
+        let $div = document.querySelector('#search-campaigns');
+        let $header = document.querySelector('header');
+        $header.removeChild($div);
 
         let $registerCampaignBtn = document.querySelector('.confirm-btn');
         $registerCampaignBtn.addEventListener('click', registerCampaign);
