@@ -79,6 +79,7 @@
                     <div class="dropdown-content">
                         <a href="#">Perfil</a>
                         <a href="#campaign-register">Cadastrar Campanhas</a>
+                        <a href="#request-change-password">Restaurar Senha</a>
                         <a href="#logout">Logout</a>
                     </div>
                 </div>
@@ -165,6 +166,46 @@
 
                 <div>
                     <button type="submit" class="confirm-btn">Cadastrar</button>
+                </div>
+                <div id="forgot-password">
+                    <p>Esqueceu a Senha? <a href="#request-change-password"><strong>Clique aqui</strong></a>.</p>
+                </div>
+            </div>
+        </section>
+
+    </template>
+
+    <template id="request-change-password">
+        <section class="section-forms flex-box flex-box-center flex-box-justify-center"
+            style="margin-top: 8em;">
+            <div id="div-change-password" class="divs-form center flex-box flex-box-center flex-box-justify-center">
+                <h3>Deseja alterar a senha?</h3>
+
+                <div>
+                    <input type="email" id="request-email" class="input-form" required placeholder="Digite seu email">
+                </div>
+
+                <div>
+                    <button id="confirm-request" type="submit" class="confirm-btn">Alterar Senha</button>
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <template id="change-password">
+        <section id="section-login-user" class="section-forms flex-box flex-box-center flex-box-justify-center"
+            style="margin-top: 8em;">
+            <div id="div-login" class="divs-form center flex-box flex-box-center flex-box-justify-center">
+                <div>
+                    <input id="new-password" type="password" placeholder="Digite a Senha" required="required" class="input-form">
+                </div>
+
+                <div>
+                    <input id="confirm-new-password" type="password" placeholder="Confirme a senha" required="required" class="input-form">
+                </div>
+
+                <div>
+                    <button type="submit" class="confirm-btn" id="confirm-change">Alterar Senha</button>
                 </div>
             </div>
         </section>

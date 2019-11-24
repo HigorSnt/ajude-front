@@ -1,5 +1,5 @@
 import {viewLogin} from './login.js'
-import {viewUserRegister} from './registerUser.js'
+import {viewUserRegister, viewRequestChangePassword, viewChangePassword} from './userFunctions.js'
 import {viewCampaignRegister} from "./registerCampaign.js";
 import {searchCampaigns} from "./listingCampaigns.js";
 export {$viewer, url, viewHome};
@@ -23,8 +23,12 @@ async function viewerChange() {
         viewCampaignRegister();
     } else if (['#logout'].includes(hash)) {
         logout();
-    } else if(['#search'].includes(hash)) {
+    } else if (['#search'].includes(hash)) {
         searchCampaigns();
+    } else if (['#reset-password'].includes(hash)) {
+        viewChangePassword();
+    } else if (['#request-change-password'].includes(hash)) {
+        viewRequestChangePassword();
     }
 }
 

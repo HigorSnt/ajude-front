@@ -1,4 +1,4 @@
-import { $viewer, url } from './main.js';
+import { $viewer, url, getHeaderTemplate } from './main.js';
 import { viewHome } from "./main.js";
 export { searchCampaigns };
 
@@ -42,15 +42,19 @@ async function searchCampaigns() {
         removeCampaigns();
         viewHome("Nenhuma campanha com esse nome");
     } else {
-
-        let $h2 = $viewer.querySelector('#tittle');
+        let $headerTemplate = getHeaderTemplate();
+        let $h2 = document.createElement('h2');
+        $h2.id = "tittle";
         $h2.innerText = "Listagem de Campanhas";
         let campaignsString = JSON.stringify(campaigns);
         campaignsJSON = JSON.parse(campaignsString)[0];
         currentCampaigns = getActiveCampaigns(campaignsJSON);
+        
+        $viewer.innerHTML = $headerTemplate.innerHTML;
 
         $filterDiv = document.createElement('div');
         $filterDiv.id = "filter";
+        $filterDiv.className = "flex-box flex-box-justify-center flex-box-align-center flex-box-column";
         let $checkbox = document.createElement('input');
         $checkbox.type = 'checkbox';
         $checkbox.name = 'check';
@@ -59,22 +63,28 @@ async function searchCampaigns() {
         $label.innerText = " Todas as campanhas";
         $filterDiv.appendChild($checkbox);
         $filterDiv.appendChild($label);
+        $filterDiv.className = "flex-box flex-box-justify-center flex-box-align-center flex-box-row";
 
         $checkbox.addEventListener('change', () => {
             if (currentCampaigns == campaignsJSON) currentCampaigns = getActiveCampaigns(campaignsJSON);
             else currentCampaigns = campaignsJSON;
             removeCampaigns();
-            console.log(campaignsJSON);
-            console.log(currentCampaigns);
-            console.log(getActiveCampaigns(campaignsJSON));
             showCampaigns(currentCampaigns);
         });
 
         $list = document.createElement('div');
         $list.id = "list-campaigns";
+        $list.className = "flex-box flex-box-justify-center flex-box-align-center flex-box-column";
 
-        $viewer.appendChild($list);
+        let $h5 = document.createElement('h5');
+        $h5.innerText = `A busca por ${substring} retornou os seguintes resultados:`;
+        $h5.id = 'inform';
+        $h5.className = 'flex-box flex-box-justify-center flex-box-align-center';
+
+        $viewer.appendChild($h5);
+        $viewer.appendChild($h2);
         $viewer.appendChild($filterDiv);
+        $viewer.appendChild($list);
 
         showCampaigns(currentCampaigns);
     }
@@ -90,14 +100,14 @@ function showCampaigns(campaigns) {
         $campaign.id = "listing";
         $campaign.className = "flex-box flex-box-justify-center flex-box-align-center flex-box-column";
         $campaign.innerHTML =
-            `<h3 id="name">${c.shortName.toUpperCase()}</h3>
+            `<h3 id="name" style="margin: 0.5em">${c.shortName.toUpperCase()}</h3>
                 <div id="comment">${c.description}</div>
                 <ul class="ul-info flex-box" style="justify-content: space-between;">
-                   <li class="flex-box flex-box-row flex-box-justify-center flex-box-align-center" style="justify-content: space-between;">
+                   <li class="flex-box flex-box-row flex-box-align-center" style="justify-content: space-between;">
                        <img src="images/piggy-bank.svg" alt="Meta" width="30px" height="30px" style="margin-right: 0.3em">
                        <p>${c.goal}</p>
                    </li>
-                   <li class="flex-box flex-box-row flex-box-justify-center flex-box-align-center" style="justify-content: space-between;">
+                   <li class="flex-box flex-box-row flex-box-align-center" style="justify-content: space-between;">
                        <img src="images/calendar.svg" alt="Deadline" width="30px" height="30px" style="margin-right: 0.3em">
                        <p>${c.deadline}</p>
                    </li>

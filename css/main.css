@@ -71,17 +71,19 @@ nav ul {
 
 #tittle {
     text-align: center;
-    margin-top: 10em;
-    border-radius: 1.5em;
-    flex-direction: column;
+    margin-top: 6em;
+    border-radius: 1.2em;
     align-items: stretch;
     width: fit-content;
-    padding: 10px;
+    padding: .5em;
     margin-right: auto;
     margin-left: auto;
     background-color: rgba(0, 0, 0, 0.3);
 }
 
+h5 + h2 {
+    margin-top: 2em !important;
+}
 
 #menu a:link, #menu a:active, #menu a:visited, 
 .dropdown a:link, .dropdown a:active, .dropdown a:visited,
@@ -118,8 +120,12 @@ nav ul {
     height: 25em;
 }
 
-#div-login {
+#div-login, #div-change-password {
     height: 15em;
+}
+
+.divs-form h3 {
+    margin: 1em auto;
 }
 
 button {
@@ -162,6 +168,26 @@ button:hover {
     width: 20em;
     margin-left: 2em;
     justify-content: space-between;
+}
+
+#forgot-password {
+    font-size: .8em;
+    margin-top: 1em;
+    color: white;
+}
+
+#forgot-password a:link, #forgot-password a:active, #forgot-password a:visited {
+    color: black;
+    text-decoration: none;
+}
+
+#forgot-password a:hover {
+    color: #FFD700;
+}
+
+.ul-info a:hover {
+    color: black;
+    border-bottom: 1px solid #af670a;
 }
 
 #search-btn {
@@ -305,8 +331,13 @@ button:hover {
 }
 
 #filter {
-    width: fit-content;
-    margin: 1em;
+    margin-top: 1em;
+}
+
+#filter input {
+    margin: 0.5em;
+    height: 1.5em;
+    width: 1.5em;
 }
 
 input [type="text"] {
