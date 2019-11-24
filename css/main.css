@@ -111,6 +111,13 @@ h5 + h2 {
     background-color: rgba(0, 0, 0, 0.3);
 }
 
+#box{
+    padding-top: 1em;
+    padding-bottom: 1em;
+    margin-top: 10em;
+    background-color: grey;
+}
+
 #div-register-user {
     padding-top: 1em;
     padding-bottom: 1em;

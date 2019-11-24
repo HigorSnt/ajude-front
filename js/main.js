@@ -1,8 +1,9 @@
-import { viewLogin } from './login.js'
-import { viewUserRegister, viewRequestChangePassword, viewChangePassword } from './userFunctions.js'
-import { viewCampaignRegister } from "./registerCampaign.js";
-import { searchCampaigns } from "./listingCampaigns.js";
-export { $viewer, url, viewHome };
+import {viewLogin} from './login.js'
+import {viewUserRegister, viewRequestChangePassword, viewChangePassword} from './userFunctions.js'
+import {viewCampaignRegister} from "./registerCampaign.js";
+import {searchCampaigns} from "./listingCampaigns.js";
+import {showCampaign} from "./campaign.js"
+export {$viewer, url, viewerChange, viewHome, viewCampaign};
 
 let url = 'https://apiajude.herokuapp.com/api';
 let $viewer = document.querySelector('#viewer');
@@ -11,6 +12,7 @@ window.onload = viewerChange;
 window.addEventListener('hashchange', viewerChange);
 
 async function viewerChange() {
+    let campaignURL = window.location.hash.substring(9);
     let hash = location.hash;
 
     if ([''].includes(hash)) {
@@ -29,6 +31,8 @@ async function viewerChange() {
         viewChangePassword();
     } else if (['#request-change-password'].includes(hash)) {
         viewRequestChangePassword();
+    } else if(['#campaign' + campaignURL].includes(hash)){
+        viewCampaign(campaignURL);
     }
 }
 
@@ -38,6 +42,13 @@ function viewHome(tittle) {
     $h2.innerText = tittle;
 
     generateHeader();
+// function viewHome() {
+//      let $headerTemplate = getHeaderTemplate();
+//      $viewer.innerHTML = $headerTemplate.innerHTML;
+// }
+
+    let $searchBtn = $viewer.querySelector("#search-btn");
+    $searchBtn.href = "/#search";
 
     $viewer.appendChild($h2);
 }
@@ -47,6 +58,7 @@ export function showConfirmView(message) {
     let $p = document.createElement('p');
     let $img = document.createElement('img');
     let $headerTemplate = document.querySelector('#header-not-logged-without-search');
+    //let $headerTemplate = getHeaderTemplate();
 
     $div.className = 'opaque-div flex-box flex-box-justify-center flex-box-align-center flex-box-column';
     $div.id = 'flex-box-column';
@@ -77,6 +89,7 @@ export function showFailureView(message) {
     let $p = document.createElement('p');
     let $img = document.createElement('img');
     let $headerTemplate = document.querySelector('#header-not-logged-without-search');
+    //let $headerTemplate = getHeaderTemplate();
 
     $div.className = 'opaque-div flex-box flex-box-justify-center flex-box-align-center flex-box-column';
     $div.id = 'flex-box-column';
@@ -154,10 +167,15 @@ export function generateHeader() {
         $viewer.innerHTML = $headerTemplate.innerHTML;
         let $searchBtn = $viewer.querySelector("#search-btn");
         let $searchInput = $viewer.querySelector("#input-search");
-        $searchBtn.addEventListener('click', function (event) {
-            console.log($searchInput);
+        $searchBtn.addEventListener('click', (event) => {
+
             searchCampaigns($searchInput.value);
             event.preventDefault();
         });
     }
+}
+
+function viewCampaign(url) {
+    generateHeader()
+    showCampaign(url);
 }

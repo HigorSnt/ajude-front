@@ -1,6 +1,5 @@
-import { $viewer, url, generateHeader } from './main.js';
-import { viewHome } from "./main.js";
-export { searchCampaigns };
+import { $viewer, url, generateHeader, viewHome, viewCampaign} from './main.js';
+export { searchCampaigns, campaignURL };
 
 let data;
 async function listingCampaigns(substring) {
@@ -10,7 +9,7 @@ async function listingCampaigns(substring) {
     let header = {
         'Access-Control-Allow-Origin': url + '/campaign/search',
         'Access-Control-Allow-Credentials': 'true',
-        'Access-Control-Allow-Methods': 'GET',
+        'Access-Control-Allow-Methods': 'POST',
         'Access-Control-Allow-Headers': 'Content-Type',
         'Content-Type': 'application/json;charset=utf-8',
         'Authorization': `Bearer ${token}`
@@ -27,7 +26,7 @@ async function listingCampaigns(substring) {
 }
 
 let $filterDiv, $list, $campaign;
-let campaignsJSON, currentCampaigns;
+let campaignsJSON, currentCampaigns, campaignURL;
 async function searchCampaigns() {
     let $search = document.querySelector('#input-search');
     let substring = $search.value;
@@ -80,7 +79,6 @@ async function searchCampaigns() {
         $h5.className = 'flex-box flex-box-justify-center flex-box-align-center';
 
         $viewer.appendChild($h5);
-        $viewer.appendChild($h2);
         $viewer.appendChild($filterDiv);
         $viewer.appendChild($list);
 
@@ -89,6 +87,8 @@ async function searchCampaigns() {
 }
 
 function removeCampaigns() {
+    if (document.querySelector('#infom')!=undefined)document.querySelector('#infom').innerHTML = '';
+    if ($filterDiv != undefined) $filterDiv.innerHTML = '';
     if ($list != undefined) $list.innerHTML = '';
 }
 
@@ -100,20 +100,26 @@ function showCampaigns(campaigns) {
         $campaign.innerHTML =
             `<h3 id="name" style="margin: 0.5em">${c.shortName.toUpperCase()}</h3>
                 <div id="comment">${c.description}</div>
-                <ul class="ul-info flex-box" style="justify-content: space-between;">
-                   <li class="flex-box flex-box-row flex-box-align-center" style="justify-content: space-between;">
-                       <img src="images/piggy-bank.svg" alt="Meta" width="30px" height="30px" style="margin-right: 0.3em">
-                       <p>${c.goal}</p>
-                   </li>
-                   <li class="flex-box flex-box-row flex-box-align-center" style="justify-content: space-between;">
-                       <img src="images/calendar.svg" alt="Deadline" width="30px" height="30px" style="margin-right: 0.3em">
-                       <p>${c.deadline}</p>
-                   </li>
-                   <li> <a href="/campaign/${c.urlIdentifier}">Ver mais</a> </li>
-               </ul>
+                    <ul class="ul-info flex-box" style="justify-content: space-between;">
+                       <li class="flex-box flex-box-row flex-box-align-center" style="justify-content: space-between;">
+                           <img src="images/piggy-bank.svg" alt="Meta" width="30px" height="30px" style="margin-right: 0.3em">
+                           <p>${c.goal}</p>
+                       </li>
+                       <li class="flex-box flex-box-row flex-box-align-center" style="justify-content: space-between;">
+                           <img src="images/calendar.svg" alt="Deadline" width="30px" height="30px" style="margin-right: 0.3em">
+                           <p>${c.deadline}</p>
+                       </li>
+                       <li> <a href="#campaign/${c.urlIdentifier}" onclick="goToCampaign('${c.urlIdentifier}')">Ver mais</a> </li>
+                   </ul>
             </div>`;
             $list.appendChild($campaign);
-        });
+    })
+}
+//'${c.urlIdentifier}'
+window.goToCampaign = goToCampaign;
+function goToCampaign(url){
+    removeCampaigns();
+    viewCampaign(url);
 }
 
 function getActiveCampaigns(campaigns) {

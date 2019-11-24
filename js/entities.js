@@ -22,6 +22,7 @@ class Campaign {
         this.description = description;
         this.deadline = deadline;
         this.goal = goal;
+        this.remaining = goal;
     }
 }
 

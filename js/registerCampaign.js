@@ -97,5 +97,5 @@ function genereteUrlIdentifier(shortName) {
 
 function normalizeDate(date) {
     let l = date.split('-');
-    return l[2] + '-' + l[1] + '-' + l[0];
+    return l[0] + '-' + l[1] + '-' + l[1];
 }
