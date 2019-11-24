@@ -1,4 +1,4 @@
-import { $viewer, url, showConfirmView, showFailureView, getHeaderTemplate } from "./main.js";
+import { $viewer, url, showConfirmView, showFailureView, generateHeader } from "./main.js";
 import { User } from "./entities.js";
 export { viewUserRegister, viewRequestChangePassword, viewChangePassword }
 
@@ -65,7 +65,7 @@ function createUser() {
 }
 
 function viewRequestChangePassword() {
-    let $headerTemplate = getHeaderTemplate();
+    let $headerTemplate = document.querySelector('#header-not-logged-without-search');
     let $template = document.querySelector("#request-change-password");
 
     $viewer.innerHTML = $headerTemplate.innerHTML + $template.innerHTML;
@@ -75,7 +75,7 @@ function viewRequestChangePassword() {
 }
 
 function viewChangePassword() {
-    let $headerTemplate = getHeaderTemplate();
+    let $headerTemplate = document.querySelector('#header-not-logged-without-search');
     let $template = document.querySelector("#change-password");
 
     $viewer.innerHTML = $headerTemplate.innerHTML + $template.innerHTML;
