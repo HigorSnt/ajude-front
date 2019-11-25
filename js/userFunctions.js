@@ -1,4 +1,4 @@
-import { $viewer, url, showConfirmView, showFailureView, generateHeader } from "./main.js";
+import { $viewer, url, showConfirmView, showFailureView, generateHeader, searchListener } from "./main.js";
 import { User } from "./entities.js";
 export { viewUserRegister, viewRequestChangePassword, viewChangePassword }
 
@@ -66,12 +66,15 @@ function createUser() {
 
 function viewRequestChangePassword() {
     generateHeader();
+
     let $template = document.querySelector("#request-change-password");
 
     $viewer.innerHTML += $template.innerHTML;
 
     let $confirmButton = document.querySelector("#confirm-request");
     $confirmButton.addEventListener('click', fetchRequestChangePassword);
+
+    searchListener();
 }
 
 function viewChangePassword() {

@@ -115,7 +115,7 @@ function showCampaigns(campaigns) {
             $list.appendChild($campaign);
     })
 }
-//'${c.urlIdentifier}'
+
 window.goToCampaign = goToCampaign;
 function goToCampaign(url){
     removeCampaigns();
