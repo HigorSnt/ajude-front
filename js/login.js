@@ -32,7 +32,7 @@ function login() {
     }
 }
 
-async function fetchLogin(userCredentials) {
+export async function fetchLogin(userCredentials) {
     try {
         let body = JSON.stringify(userCredentials);
         let header = {
