@@ -29,6 +29,7 @@ export async function showCampaign(campaignUrl) {
     let campaign = JSON.parse(JSON.stringify(response))[0];
 
     createView(campaign);
+    if(campaign.user.email === sessionStorage.getItem('userEmail')) loadOwnerFunctions();
 }
 
 let $box;
@@ -84,8 +85,8 @@ function createView(c) {
 
     c.comments.forEach(comment=>{
         let $crate = document.createElement('div');
-        $crate.class = "comment-box";
-        $crate.innerText = comment;
+        $crate.id = "comment-box";
+        $crate.innerText = comment.comment;
         $box.appendChild($crate);
     })
 
@@ -133,3 +134,19 @@ function addDislike() {
 function donate(){
     console.log("FAZER DOAÇÃO");
 }
+
+function loadOwnerFunctions(){
+    let $deleteCampaignBtn = document.createElement('button');
+    $deleteCampaignBtn.innerText = "Deletar campanha";
+
+    $viewer.appendChild($deleteCampaignBtn);
+    $deleteCampaignBtn.addEventListener('click', deleteCampaign);
+
+    let $
+}
+
+function deleteCampaign(){
+    console.log("campanha deletada");
+    removeViews();
+}
+

@@ -163,7 +163,6 @@ function viewCampaign(url) {
 export function searchListener() {
     let $searchBtn = $viewer.querySelector("#search-btn");
     let $searchInput = $viewer.querySelector("#input-search");
-    console.log($searchInput.value);
     $searchBtn.addEventListener('click', (event) => {
         window.location.hash = '';
         searchCampaigns($searchInput.value);
