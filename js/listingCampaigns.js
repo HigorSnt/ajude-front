@@ -15,7 +15,7 @@ async function listingCampaigns(substring) {
         'Authorization': `Bearer ${token}`
     };
 
-    data = await fetch(url + "/campaign/search/", {
+    data = await fetch(url + "/campaign/search", {
         mode: 'cors',
         'method': 'POST',
         'body': `{"substring": "${substring}"}`,
@@ -35,10 +35,7 @@ async function searchCampaigns() {
 
     removeCampaigns();
 
-    if ($filterDiv != undefined) $filterDiv.innerHTML = '';
-
     if (data[0] === undefined) {
-        removeCampaigns();
         viewHome("Nenhuma campanha com esse nome");
     } else {
         generateHeader();
@@ -47,6 +44,7 @@ async function searchCampaigns() {
         $h2.innerText = "Listagem de Campanhas";
         let campaignsString = JSON.stringify(campaigns);
         campaignsJSON = JSON.parse(campaignsString)[0];
+
         currentCampaigns = getActiveCampaigns(campaignsJSON);
 
         $filterDiv = document.createElement('div');

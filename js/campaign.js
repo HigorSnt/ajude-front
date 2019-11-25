@@ -1,4 +1,4 @@
-import {url, $viewer, generateHeader} from "./main.js";
+import { url, $viewer, generateHeader, viewerChange} from "./main.js";
 
 let data;
 async function fetch_campaign(campaignUrl) {
@@ -23,8 +23,9 @@ async function fetch_campaign(campaignUrl) {
     return data;
 }
 
+let campaignURL;
 export async function showCampaign(campaignUrl) {
-
+    campaignURL = campaignUrl;
     let response = await Promise.all([fetch_campaign(campaignUrl)]);
     let campaign = JSON.parse(JSON.stringify(response))[0];
 
@@ -57,11 +58,11 @@ function createView(c) {
         <p>${c.description}</p>
     </div>
     <ul class="ul-info flex-box" style="justify-content: space-between;">
-        <li class="flex-box flex-box-row flex-box-align-center" style="justify-content: space-between;">
+        <li id="goal" class="flex-box flex-box-row flex-box-align-center" style="justify-content: space-between;">
             <img id="goal-img" src="images/piggy-bank.svg" class="img-inverter" alt="Meta" width="40px" height="40px" style="margin-right: 0.3em">
             <p><strong>${c.goal}</strong></p>
         </li>
-            <li id="deadline" class="flex-box flex-box-row flex-box-align-center" style="justify-content: space-between;">
+         <li id="deadline" class="flex-box flex-box-row flex-box-align-center" style="justify-content: space-between;">
             <img id="deadline-img" src="images/calendar.svg" class="img-inverter" alt="Deadline" width="40px" height="40px" style="margin-right: 0.3em">
             <p><strong>${c.deadline}</strong></p>
         </li>
@@ -136,14 +137,43 @@ function donate(){
 }
 
 function loadOwnerFunctions(){
+    let $goal = document.querySelector('#goal');
+    $goal.addEventListener('click', changeGoal);
+
+    let $deadline = document.querySelector('#deadline');
+    $deadline.addEventListener('click', changeDeadline);
+
     let $deleteCampaignBtn = document.createElement('button');
     $deleteCampaignBtn.innerText = "Deletar campanha";
-
-    $viewer.appendChild($deleteCampaignBtn);
     $deleteCampaignBtn.addEventListener('click', deleteCampaign);
+    $box.appendChild($deleteCampaignBtn);
+}
 
-    let $deadline = document.querySelector('#deadline-img');
-    $deadline.addEventListener('click', changeDeadline);
+function changeGoal(){
+    $box.innerHTML =
+        '<h3>Insira a nova meta</h3>' +
+        '<input id="campaign-goal" type="number" placeholder="Meta" required="required" class="input-form">' +
+        '<button id="confirm-btn" type="submit" class="confirm-btn">Confirmar</button>';
+    let $btn = $box.querySelector('#confirm-btn');
+    let $goal = $viewer.querySelector('#campaign-goal');
+    $btn.addEventListener('click', async () =>{
+         await Promise.all([setGoal($goal.value)]);
+         showCampaign(campaignURL);
+    });
+}
+
+function changeDeadline(){
+    console.log("mudar deadline");
+    $box.innerHTML = '' +
+        '<h3>Insira o novo deadline</h3>'+
+        '<input type="date" placeholder="Data de vencimento" required="required" id="campaign-deadline" class="input-form">' +
+        '<button id="confirm-btn" type="submit" class="confirm-btn">Confirmar</button>';
+        let $btn = $box.querySelector('#confirm-btn');
+        let $deadline = $viewer.querySelector('#campaign-deadline');
+
+        $btn.addEventListener('click', ()=>{
+            setDeadline($deadline.value);
+        });
 }
 
 function deleteCampaign(){
@@ -151,6 +181,28 @@ function deleteCampaign(){
     removeViews();
 }
 
-function changeDeadline(){
-    console.log("mudar")
+async function setGoal(newGoal) {
+    let token = await sessionStorage.getItem('token');
+
+    let header = {
+        'Access-Control-Allow-Origin': url + '/campaign/' + campaignURL + '/setGoal',
+        'Access-Control-Allow-Credentials': 'true',
+        'Access-Control-Allow-Methods': 'PUT',
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Content-Type': 'application/json;charset=utf-8',
+        'Authorization': `Bearer ${token}`
+    };
+
+    let data = await fetch(url + '/campaign/' + campaignURL + '/setGoal', {
+        mode: 'cors',
+        'method': 'PUT',
+        'body': `{"goal": "${newGoal}"}`,
+        'headers': header
+    }).then(r => r.json());
+
+    console.log(data);
+}
+
+function setDeadline(newDeadline){
+    console.log(newDeadline);
 }
