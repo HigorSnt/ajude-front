@@ -391,13 +391,25 @@ input [type="text"] {
     filter: invert(100%);
 }
 
+#div-top-campaigns {
+    display: grid;
+    grid-template-columns: 15em;
+    margin-top: 10em;
+    margin-left: 3em; 
+}
+
+#home-filter {
+    background-color: rgba(240, 240, 240, .6);
+    width: 100%;
+}
+
 .container {
     display: block;
     position: relative;
-    padding-left: 35px;
-    margin-bottom: 12px;
+    padding-left: 3em;
+    margin-bottom: 0.8em;
     cursor: pointer;
-    font-size: 22px;
+    font-size: 1.2em;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;

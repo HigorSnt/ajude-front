@@ -2,7 +2,7 @@ import {viewLogin} from './login.js'
 import {viewUserRegister, viewRequestChangePassword, viewChangePassword} from './userFunctions.js'
 import {viewCampaignRegister} from "./registerCampaign.js";
 import {searchCampaigns} from "./listingCampaigns.js";
-import {showCampaign} from "./campaign.js"
+import {showCampaign} from "./campaign.js";
 export {$viewer, url, viewerChange, viewHome, viewCampaign};
 
 let url = 'https://apiajude.herokuapp.com/api';
@@ -16,7 +16,7 @@ async function viewerChange() {
     let hash = location.hash;
 
     if ([''].includes(hash)) {
-        viewHome("Listagem de Campanhas");
+        viewHome();
     } else if (['#user-register'].includes(hash)) {
         viewUserRegister();
     } else if (['#login'].includes(hash)) {
@@ -25,8 +25,6 @@ async function viewerChange() {
         viewCampaignRegister();
     } else if (['#logout'].includes(hash)) {
         logout();
-    } else if (['#search'].includes(hash)) {
-        searchCampaigns();
     } else if (['#reset-password'].includes(hash)) {
         viewChangePassword();
     } else if (['#request-change-password'].includes(hash)) {
@@ -38,13 +36,17 @@ async function viewerChange() {
 
 function viewHome() {
     generateHeader();
+
+    let $template = document.querySelector('#home-view');
+    $viewer.innerHTML += $template.innerHTML;
+
 }
 
 export function showConfirmView(message) {
     let $div = document.createElement('div');
     let $p = document.createElement('p');
     let $img = document.createElement('img');
-    let $headerTemplate = document.querySelector('#header-not-logged-without-search');
+    generateHeader();
 
     $div.className = 'opaque-div flex-box flex-box-justify-center flex-box-align-center flex-box-column';
     $div.id = 'flex-box-column';
@@ -54,28 +56,20 @@ export function showConfirmView(message) {
     $img.src = 'images/check.svg';
     $img.className = 'img-inverter';
 
-    $viewer.innerHTML = $headerTemplate.innerHTML;
-    let $searchBtn = $viewer.querySelector("#search-btn");
-    if ($viewer.querySelector('#search-btn') !== null) {
-        $searchBtn.addEventListener('click', function (event) {
-            viewHasNoPermission();
-            event.preventDefault();
-        });
-    }
-
     $div.appendChild($img);
     $div.appendChild($p);
     $viewer.appendChild($div);
 
-    window.setTimeout("location.href = '/'", 1000);
+    if (message !== "Você agora está cadastrado!") {
+        window.setTimeout("location.href = '/'", 1000);
+    }
 }
 
 export function showFailureView(message) {
     let $div = document.createElement('div');
     let $p = document.createElement('p');
     let $img = document.createElement('img');
-    let $headerTemplate = document.querySelector('#header-not-logged-without-search');
-    //let $headerTemplate = getHeaderTemplate();
+    generateHeader();
 
     $div.className = 'opaque-div flex-box flex-box-justify-center flex-box-align-center flex-box-column';
     $div.id = 'flex-box-column';
@@ -84,15 +78,6 @@ export function showFailureView(message) {
     $img.id = 'attention-img';
     $img.src = 'images/fail.svg';
     $img.className = 'img-inverter';
-
-    $viewer.innerHTML = $headerTemplate.innerHTML;
-    let $searchBtn = $viewer.querySelector("#search-btn");
-    if ($viewer.querySelector('#search-btn') !== null) {
-        $searchBtn.addEventListener('click', function (event) {
-            viewHasNoPermission();
-            event.preventDefault();
-        });
-    }
 
     $div.appendChild($img);
     $div.appendChild($p);

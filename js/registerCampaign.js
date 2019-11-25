@@ -1,6 +1,6 @@
 import {Campaign} from "./entities.js";
 import {$viewer, url, showFailureView, showConfirmView, 
-    viewHasNoPermission, viewCampaign} from "./main.js";
+    viewHasNoPermission, viewCampaign, viewerChange} from "./main.js";
 
 async function fetchRegisterCampaign(campaign) {
     try {
@@ -28,7 +28,10 @@ async function fetchRegisterCampaign(campaign) {
             response.json().then(data => ({
                 data: data
             })).then(res => {
-                viewCampaign(res.data.urlIdentifier);
+                //href = "#campaign/${res.data.urlIdentifier}"
+                window.location.hash = "campaign/" + res.data.urlIdentifier;
+                //viewCampaign(res.data.urlIdentifier);
+                viewerChange();
             });
 
         } else if (response.status == 400) {
@@ -68,7 +71,7 @@ function registerCampaign() {
 
     if (!values.includes("")) {
         let urlIdentifier = genereteUrlIdentifier(shortNameInput.value);
-        let deadline = (deadlineInput.value)
+        let deadline = (deadlineInput.value) + " 23:59:59";
         let c = new Campaign(
             values[0],
             urlIdentifier,

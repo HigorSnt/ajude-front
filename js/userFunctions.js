@@ -1,6 +1,7 @@
 import { $viewer, url, showConfirmView, showFailureView, generateHeader, searchListener } from "./main.js";
-import { User } from "./entities.js";
-export { viewUserRegister, viewRequestChangePassword, viewChangePassword }
+import { User, Login } from "./entities.js";
+import { fetchLogin } from "./login.js";
+export { viewUserRegister, viewRequestChangePassword, viewChangePassword };
 
 
 async function fetchRegisterUser(user) {
@@ -17,7 +18,13 @@ async function fetchRegisterUser(user) {
         });
 
         if (response.status == 201) {
+            let l = new Login(
+                user['email'],
+                user['password']
+            );
+
             showConfirmView("Você agora está cadastrado!");
+            setTimeout(() => fetchLogin(l), 1000);
         } else if (response.status == 400) {
             showFailureView('Opa! Parece que você já está cadastrado...');
         }
