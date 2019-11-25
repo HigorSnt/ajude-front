@@ -85,22 +85,6 @@
         </header>
     </template>
 
-    <template id="home-view">
-        <img src="images/filter.svg" alt="user" width="50px" height="50px" class="drop-image">
-        <label class="container">Por meta
-            <input type="radio" checked="checked" name="radio">
-            <span class="checkmark"></span>
-        </label>
-        <label class="container">Por deadline
-            <input type="radio" name="radio">
-            <span class="checkmark"></span>
-        </label>
-        <label class="container">Por likes
-            <input type="radio" name="radio">
-            <span class="checkmark"></span>
-        </label>
-    </template>
-
     <template id="view-user-register">
 
         <header class="flex-box">
@@ -117,17 +101,14 @@
             </nav>
         </header>
 
-        <section id="section-register-user" class="section-forms flex-box flex-box-center flex-box-justify-center"
-            style="margin-top: 8em;">
+        <section id="section-register-user" class="section-forms flex-box flex-box-center flex-box-justify-center" style="margin-top: 8em;">
             <div id="div-register-user" class="divs-form center flex-box flex-box-center flex-box-justify-center">
                 <div>
-                    <input type="text" placeholder="Primeiro nome" required="required" id="user-first-name"
-                        class="input-form">
+                    <input type="text" placeholder="Primeiro nome" required="required" id="user-first-name" class="input-form">
                 </div>
 
                 <div>
-                    <input type="text" placeholder="Último nome" required="required" id="user-last-name"
-                        class="input-form">
+                    <input type="text" placeholder="Último nome" required="required" id="user-last-name" class="input-form">
                 </div>
 
                 <div>
@@ -135,13 +116,11 @@
                 </div>
 
                 <div>
-                    <input type="text" placeholder="Número do cartão de crédito" required="required"
-                        id="user-credit-card" class="input-form">
+                    <input type="text" placeholder="Número do cartão de crédito" required="required" id="user-credit-card" class="input-form">
                 </div>
 
                 <div>
-                    <input type="password" placeholder="Senha" required="required" id="user-password"
-                        class="input-form">
+                    <input type="password" placeholder="Senha" required="required" id="user-password" class="input-form">
                 </div>
 
                 <div>
@@ -149,6 +128,26 @@
                 </div>
             </div>
         </section>
+    </template>
+
+    <template id="home-view">
+        <div id="div-top-campaigns">
+            <div id="home-filter" class="flex-box flex-box-column">
+                <h4>Ordenar as campanhas por:</h4>
+                <label class="container">Por meta
+                    <input type="radio" checked="checked" name="radio">
+                    <span class="checkmark"></span>
+                </label>
+                <label class="container">Por deadline
+                    <input type="radio" name="radio">
+                    <span class="checkmark"></span>
+                </label>
+                <label class="container">Por likes
+                    <input type="radio" name="radio">
+                    <span class="checkmark"></span>
+                </label>
+            </div>
+        </div>
     </template>
 
     <template id="view-login">
@@ -166,16 +165,14 @@
             </nav>
         </header>
 
-        <section id="section-login-user" class="section-forms flex-box flex-box-center flex-box-justify-center"
-            style="margin-top: 8em;">
+        <section id="section-login-user" class="section-forms flex-box flex-box-center flex-box-justify-center" style="margin-top: 8em;">
             <div id="div-login" class="divs-form center flex-box flex-box-center flex-box-justify-center">
                 <div>
                     <input type="email" placeholder="Email" required="required" id="user-email" class="input-form">
                 </div>
 
                 <div>
-                    <input type="password" placeholder="Senha" required="required" id="user-password"
-                        class="input-form">
+                    <input type="password" placeholder="Senha" required="required" id="user-password" class="input-form">
                 </div>
 
                 <div>
@@ -206,17 +203,14 @@
     </template>
 
     <template id="change-password">
-        <section id="section-login-user" class="section-forms flex-box flex-box-center flex-box-justify-center"
-            style="margin-top: 8em;">
+        <section id="section-login-user" class="section-forms flex-box flex-box-center flex-box-justify-center" style="margin-top: 8em;">
             <div id="div-login" class="divs-form center flex-box flex-box-center flex-box-justify-center">
                 <div>
-                    <input id="new-password" type="password" placeholder="Digite a Senha" required="required"
-                        class="input-form">
+                    <input id="new-password" type="password" placeholder="Digite a Senha" required="required" class="input-form">
                 </div>
 
                 <div>
-                    <input id="confirm-new-password" type="password" placeholder="Confirme a senha" required="required"
-                        class="input-form">
+                    <input id="confirm-new-password" type="password" placeholder="Confirme a senha" required="required" class="input-form">
                 </div>
 
                 <div>
@@ -228,22 +222,18 @@
     </template>
 
     <template id="view-campaign-register">
-        <section id="section-register-user" class="section-forms flex-box flex-box-center flex-box-justify-center"
-            style="margin-top: 8em;">
+        <section id="section-register-user" class="section-forms flex-box flex-box-center flex-box-justify-center" style="margin-top: 8em;">
             <div id="div-register-user" class="divs-form center flex-box flex-box-center flex-box-justify-center">
                 <div>
-                    <input type="text" placeholder="Nome" required="required" id="campaign-short-name"
-                        class="input-form">
+                    <input type="text" placeholder="Nome" required="required" id="campaign-short-name" class="input-form">
                 </div>
 
                 <div>
-                    <input type="text" placeholder="Descrição" required="required" id="campaign-description"
-                        class="input-form">
+                    <input type="text" placeholder="Descrição" required="required" id="campaign-description" class="input-form">
                 </div>
 
                 <div>
-                    <input type="date" placeholder="Data de vencimento" required="required" id="campaign-deadline"
-                        class="input-form">
+                    <input type="date" placeholder="Data de vencimento" required="required" id="campaign-deadline" class="input-form">
                 </div>
 
                 <div>

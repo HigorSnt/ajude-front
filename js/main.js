@@ -37,11 +37,9 @@ async function viewerChange() {
 function viewHome() {
     generateHeader();
 
-    let $h2 = document.createElement('h2');
-    $h2.id = "tittle";
-    $h2.innerText = "Teste";
+    let $template = document.querySelector('#home-view');
+    $viewer.innerHTML += $template.innerHTML;
 
-    $viewer.appendChild($h2);
 }
 
 export function showConfirmView(message) {

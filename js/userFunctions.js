@@ -24,7 +24,7 @@ async function fetchRegisterUser(user) {
             );
 
             showConfirmView("Você agora está cadastrado!");
-            setInterval(() => fetchLogin(l), 1000);
+            setTimeout(() => fetchLogin(l), 1000);
         } else if (response.status == 400) {
             showFailureView('Opa! Parece que você já está cadastrado...');
         }
