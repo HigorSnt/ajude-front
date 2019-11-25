@@ -39,7 +39,6 @@ function viewHome() {
 
     let $template = document.querySelector('#home-view');
     $viewer.innerHTML += $template.innerHTML;
-
 }
 
 export function showConfirmView(message) {

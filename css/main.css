@@ -393,14 +393,30 @@ input [type="text"] {
 
 #div-top-campaigns {
     display: grid;
-    grid-template-columns: 15em;
-    margin-top: 10em;
-    margin-left: 3em; 
+    grid-template-columns: 15% 60%;
+    justify-content: space-between;
+    margin: 10em;
 }
 
 #home-filter {
     background-color: rgba(240, 240, 240, .6);
     width: 100%;
+    padding: 0.8em;
+    grid-column: 1;
+}
+
+#top-campaigns {
+    background-color: rgba(0, 0, 0, 0.4);
+    width: 80%;
+    margin-left: 3em;
+    padding: 0.8em;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.3);
+    grid-column: 2;
+}
+
+#home-filter h4 {
+    text-align: center;
+    padding-bottom: 1em;
 }
 
 .container {
