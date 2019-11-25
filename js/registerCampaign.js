@@ -1,12 +1,12 @@
 import {Campaign} from "./entities.js";
-import {$viewer, url, showFailureView, showConfirmView, viewHasNoPermission} from "./main.js";
+import {$viewer, url, showFailureView, showConfirmView, 
+    viewHasNoPermission, viewCampaign} from "./main.js";
 
 async function fetchRegisterCampaign(campaign) {
     try {
         let body = JSON.stringify(campaign);
         let token = await sessionStorage.getItem('token');
 
-        console.log(token);
         let header = {
             'Access-Control-Allow-Origin': url + '/campaign/register',
             'Access-Control-Allow-Credentials': 'true',
@@ -23,12 +23,13 @@ async function fetchRegisterCampaign(campaign) {
             'headers': header,
         });
 
-        
-
         if (response.status == 201) {
-            console.log(response);
-            showConfirmView("Campanha Cadastrada com sucesso")
-            // TODO Link pra acessar a campanha
+            
+            response.json().then(data => ({
+                data: data
+            })).then(res => {
+                viewCampaign(res.data.urlIdentifier);
+            });
 
         } else if (response.status == 400) {
             console.log(response);
@@ -76,11 +77,10 @@ function registerCampaign() {
             values[3]
         );
 
-        /*shortNameInput.value = "";
+        shortNameInput.value = "";
         descriptionInput.value = "";
         deadlineInput.value = "";
         goalInput.value = "";
-        */
         fetchRegisterCampaign(c);
     } else {
         alert("TODOS OS CAMPOS DEVEM SER PREENCHIDOS");
