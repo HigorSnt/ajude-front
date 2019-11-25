@@ -14,7 +14,7 @@ async function fetch_campaign(campaignUrl) {
         'Authorization': `Bearer ${token}`
     };
 
-    data = await fetch(url + "/campaign/" + campaignUrl, {
+    data = await fetch(url + "/campaign" + campaignUrl, {
         mode: 'cors',
         'method': 'GET',
         'headers': header
@@ -34,10 +34,11 @@ export async function showCampaign(campaignUrl) {
 }
 
 let $box;
+
 function createView(c) {
     removeViews();
     $box = document.createElement('div');
-    
+
     let status;
     console.log(c);
 
@@ -77,19 +78,10 @@ function createView(c) {
             <p><strong id ="dislike">${c.numDislikes}</strong></p>
         </li>
     </ul>
-    <div id="comment-text" class="flex-box flex-box-justify-center flex-box-align-center flex-box-column">
-        <textarea rows="3" cols="100" name="comment" id="form" form="comment-text$" placeholder="Deixe um comentário aqui..."></textarea>
-        <button type="submit" id="comment-btn" width="1.5em" height="1.5em">Comentar</button>
-    </div>
     <button id="donate">Fazer doação</button>
     </textarea>`;
 
-    c.comments.forEach(comment=>{
-        let $crate = document.createElement('div');
-        $crate.id = "comment-box";
-        $crate.innerText = comment.comment;
-        $box.appendChild($crate);
-    })
+    loadComments(c.comments);
 
     $viewer.appendChild($box);
 
@@ -108,11 +100,22 @@ function createView(c) {
     let $commentBtn = document.querySelector('#comment-btn');
     $commentBtn.addEventListener('click', async ()=>{
         let $comment = $viewer.querySelector('#form');
-        addComment($comment.value);
+        console.log($comment.value);
+        await Promise.all([addComment($comment.value)]);
+        showCampaign(campaignURL);
     });
 
     let $donateBtn = document.querySelector('#donate');
     $donateBtn.addEventListener('click', donate);
+}
+
+function loadComments(comments) {
+    comments.forEach(comment=>{
+        let $crate = document.createElement('div');
+        $crate.id = "comment-box";
+        $crate.innerText = comment.comment;
+        $box.appendChild($crate);
+    })
 }
 
 function removeViews() {
@@ -128,26 +131,38 @@ function donate(){
     let $btn = $box.querySelector('#confirm-btn');
     let value = $viewer.querySelector('#donation-value').value;
     $btn.addEventListener('click', ()=>{console.log(value)})
-
     }
 
-function addComment(comment) {
-    console.log(comment);
-}
-
-async function addLike(){
-    let token = await sessionStorage.getItem('token');
-
+async function addComment(comment) {
     let header = {
-        'Access-Control-Allow-Origin': url + '/campaign/' + campaignURL + '/like',
+        'Access-Control-Allow-Origin': url + '/campaign' + campaignURL + '/comment',
         'Access-Control-Allow-Credentials': 'true',
         'Access-Control-Allow-Methods': 'POST',
         'Access-Control-Allow-Headers': 'Content-Type',
         'Content-Type': 'application/json;charset=utf-8',
-        'Authorization': `Bearer ${token}`
+        'Authorization': `Bearer ${sessionStorage.getItem('token')}`
     };
 
-    let data = await fetch(url + '/campaign/' + campaignURL + '/like', {
+    let data = await fetch(url + '/campaign' + campaignURL + '/comment', {
+        mode: 'cors',
+        'method': 'POST',
+        'body': `{"comment":"${comment}"}`,
+        'headers': header
+    }).then(r => r.json());
+}
+
+async function addLike(){
+
+    let header = {
+        'Access-Control-Allow-Origin': url + '/campaign' + campaignURL + '/like',
+        'Access-Control-Allow-Credentials': 'true',
+        'Access-Control-Allow-Methods': 'POST',
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Content-Type': 'application/json;charset=utf-8',
+        'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+    };
+
+    let data = await fetch(url + '/campaign' + campaignURL + '/like', {
         mode: 'cors',
         'method': 'POST',
         'body': "{}",
@@ -156,18 +171,17 @@ async function addLike(){
 }
 
 async function addDislike() {
-    let token = await sessionStorage.getItem('token');
 
     let header = {
-        'Access-Control-Allow-Origin': url + '/campaign/' + campaignURL + '/dislike',
+        'Access-Control-Allow-Origin': url + '/campaign' + campaignURL + '/dislike',
         'Access-Control-Allow-Credentials': 'true',
         'Access-Control-Allow-Methods': 'POST',
         'Access-Control-Allow-Headers': 'Content-Type',
         'Content-Type': 'application/json;charset=utf-8',
-        'Authorization': `Bearer ${token}`
+        'Authorization': `Bearer ${sessionStorage.getItem('token')}`
     };
 
-    let data = await fetch(url + '/campaign/' + campaignURL + '/dislike', {
+    let data = await fetch(url + '/campaign' + campaignURL + '/dislike', {
         mode: 'cors',
         'method': 'POST',
         'body': "{}",
@@ -220,7 +234,7 @@ async function setGoal(newGoal) {
     let token = await sessionStorage.getItem('token');
 
     let header = {
-        'Access-Control-Allow-Origin': url + '/campaign/' + campaignURL + '/setGoal',
+        'Access-Control-Allow-Origin': url + '/campaign' + campaignURL + '/setGoal',
         'Access-Control-Allow-Credentials': 'true',
         'Access-Control-Allow-Methods': 'PUT',
         'Access-Control-Allow-Headers': 'Content-Type',
@@ -228,7 +242,7 @@ async function setGoal(newGoal) {
         'Authorization': `Bearer ${token}`
     };
 
-    let data = await fetch(url + '/campaign/' + campaignURL + '/setGoal', {
+    let data = await fetch(url + '/campaign' + campaignURL + '/setGoal', {
         mode: 'cors',
         'method': 'PUT',
         'body': `{"goal": "${newGoal}"}`,
