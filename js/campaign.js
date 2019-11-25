@@ -58,11 +58,11 @@ function createView(c) {
     </div>
     <ul class="ul-info flex-box" style="justify-content: space-between;">
         <li class="flex-box flex-box-row flex-box-align-center" style="justify-content: space-between;">
-            <img src="images/piggy-bank.svg" class="img-inverter" alt="Meta" width="40px" height="40px" style="margin-right: 0.3em">
+            <img id="goal-img" src="images/piggy-bank.svg" class="img-inverter" alt="Meta" width="40px" height="40px" style="margin-right: 0.3em">
             <p><strong>${c.goal}</strong></p>
         </li>
-            <li class="flex-box flex-box-row flex-box-align-center" style="justify-content: space-between;">
-            <img src="images/calendar.svg" class="img-inverter" alt="Deadline" width="40px" height="40px" style="margin-right: 0.3em">
+            <li id="deadline" class="flex-box flex-box-row flex-box-align-center" style="justify-content: space-between;">
+            <img id="deadline-img" src="images/calendar.svg" class="img-inverter" alt="Deadline" width="40px" height="40px" style="margin-right: 0.3em">
             <p><strong>${c.deadline}</strong></p>
         </li>
         </li>
@@ -142,7 +142,8 @@ function loadOwnerFunctions(){
     $viewer.appendChild($deleteCampaignBtn);
     $deleteCampaignBtn.addEventListener('click', deleteCampaign);
 
-    let $
+    let $deadline = document.querySelector('#deadline-img');
+    $deadline.addEventListener('click', changeDeadline);
 }
 
 function deleteCampaign(){
@@ -150,3 +151,6 @@ function deleteCampaign(){
     removeViews();
 }
 
+function changeDeadline(){
+    console.log("mudar")
+}
