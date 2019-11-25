@@ -1,12 +1,12 @@
 import {Campaign} from "./entities.js";
-import {$viewer, url, showFailureView, showConfirmView, viewHasNoPermission} from "./main.js";
+import {$viewer, url, showFailureView, showConfirmView, 
+    viewHasNoPermission, viewCampaign} from "./main.js";
 
 async function fetchRegisterCampaign(campaign) {
     try {
         let body = JSON.stringify(campaign);
         let token = await sessionStorage.getItem('token');
 
-        console.log(token);
         let header = {
             'Access-Control-Allow-Origin': url + '/campaign/register',
             'Access-Control-Allow-Credentials': 'true',
@@ -23,13 +23,16 @@ async function fetchRegisterCampaign(campaign) {
             'headers': header,
         });
 
-        console.log(body);
-
         if (response.status == 201) {
-            showConfirmView("Campanha Cadastrada com sucesso")
-            // TODO Link pra acessar a campanha
+            
+            response.json().then(data => ({
+                data: data
+            })).then(res => {
+                viewCampaign(res.data.urlIdentifier);
+            });
 
         } else if (response.status == 400) {
+            console.log(response);
             showFailureView("Erro ao cadastrar campanha");
         }
 
@@ -65,7 +68,7 @@ function registerCampaign() {
 
     if (!values.includes("")) {
         let urlIdentifier = genereteUrlIdentifier(shortNameInput.value);
-        let deadline = normalizeDate(deadlineInput.value)
+        let deadline = (deadlineInput.value)
         let c = new Campaign(
             values[0],
             urlIdentifier,
@@ -74,11 +77,10 @@ function registerCampaign() {
             values[3]
         );
 
-        /*shortNameInput.value = "";
+        shortNameInput.value = "";
         descriptionInput.value = "";
         deadlineInput.value = "";
         goalInput.value = "";
-        */
         fetchRegisterCampaign(c);
     } else {
         alert("TODOS OS CAMPOS DEVEM SER PREENCHIDOS");
@@ -93,9 +95,4 @@ function genereteUrlIdentifier(shortName) {
     urlIdentifier = urlIdentifier.replace(/ /g, "-");
     urlIdentifier = urlIdentifier.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
     return urlIdentifier;
-}
-
-function normalizeDate(date) {
-    let l = date.split('-');
-    return l[0] + '-' + l[1] + '-' + l[1];
 }
