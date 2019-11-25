@@ -85,6 +85,22 @@
         </header>
     </template>
 
+    <template id="home-view">
+        <img src="images/filter.svg" alt="user" width="50px" height="50px" class="drop-image">
+        <label class="container">Por meta
+            <input type="radio" checked="checked" name="radio">
+            <span class="checkmark"></span>
+        </label>
+        <label class="container">Por deadline
+            <input type="radio" name="radio">
+            <span class="checkmark"></span>
+        </label>
+        <label class="container">Por likes
+            <input type="radio" name="radio">
+            <span class="checkmark"></span>
+        </label>
+    </template>
+
     <template id="view-user-register">
 
         <header class="flex-box">
@@ -174,8 +190,7 @@
     </template>
 
     <template id="request-change-password">
-        <section class="section-forms flex-box flex-box-center flex-box-justify-center"
-            style="margin-top: 8em;">
+        <section class="section-forms flex-box flex-box-center flex-box-justify-center" style="margin-top: 8em;">
             <div id="div-change-password" class="divs-form center flex-box flex-box-center flex-box-justify-center">
                 <h3>Deseja alterar a senha?</h3>
 
@@ -195,11 +210,13 @@
             style="margin-top: 8em;">
             <div id="div-login" class="divs-form center flex-box flex-box-center flex-box-justify-center">
                 <div>
-                    <input id="new-password" type="password" placeholder="Digite a Senha" required="required" class="input-form">
+                    <input id="new-password" type="password" placeholder="Digite a Senha" required="required"
+                        class="input-form">
                 </div>
 
                 <div>
-                    <input id="confirm-new-password" type="password" placeholder="Confirme a senha" required="required" class="input-form">
+                    <input id="confirm-new-password" type="password" placeholder="Confirme a senha" required="required"
+                        class="input-form">
                 </div>
 
                 <div>
