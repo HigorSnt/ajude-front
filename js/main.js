@@ -37,16 +37,17 @@ async function viewerChange() {
 }
 
 function viewHome(tittle) {
-    let $h2 = document.createElement('h2');
+    /*let $h2 = document.createElement('h2');
     $h2.id = "tittle";
-    $h2.innerText = tittle;
+    $h2.innerText = tittle;*/
+    let $template = document.querySelector('#home-view');
 
     generateHeader();
 
     let $searchBtn = $viewer.querySelector("#search-btn");
     $searchBtn.href = "/#search";
 
-    $viewer.appendChild($h2);
+    $viewer.innerHTML += $template.innerHTML;
 }
 
 export function showConfirmView(message) {
