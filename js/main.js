@@ -36,18 +36,8 @@ async function viewerChange() {
     }
 }
 
-function viewHome(tittle) {
-    /*let $h2 = document.createElement('h2');
-    $h2.id = "tittle";
-    $h2.innerText = tittle;*/
-    let $template = document.querySelector('#home-view');
-
+function viewHome() {
     generateHeader();
-
-    let $searchBtn = $viewer.querySelector("#search-btn");
-    $searchBtn.href = "/#search";
-
-    $viewer.innerHTML += $template.innerHTML;
 }
 
 export function showConfirmView(message) {
@@ -161,16 +151,22 @@ export function generateHeader() {
     } else {
         $headerTemplate = document.querySelector("#header-user-logged");
         $viewer.innerHTML = $headerTemplate.innerHTML;
-        let $searchBtn = $viewer.querySelector("#search-btn");
-        let $searchInput = $viewer.querySelector("#input-search");
-        $searchBtn.addEventListener('click', (event) => {
-            searchCampaigns($searchInput.value);
-            event.preventDefault();
-        });
+        searchListener();
     }
 }
 
 function viewCampaign(url) {
     generateHeader()
     showCampaign(url);
+}
+
+export function searchListener() {
+    let $searchBtn = $viewer.querySelector("#search-btn");
+    let $searchInput = $viewer.querySelector("#input-search");
+    console.log($searchInput.value);
+    $searchBtn.addEventListener('click', (event) => {
+        window.location.hash = '';
+        searchCampaigns($searchInput.value);
+        event.preventDefault();
+    });
 }
