@@ -42,10 +42,6 @@ function viewHome(tittle) {
     $h2.innerText = tittle;
 
     generateHeader();
-// function viewHome() {
-//      let $headerTemplate = getHeaderTemplate();
-//      $viewer.innerHTML = $headerTemplate.innerHTML;
-// }
 
     let $searchBtn = $viewer.querySelector("#search-btn");
     $searchBtn.href = "/#search";
@@ -58,7 +54,6 @@ export function showConfirmView(message) {
     let $p = document.createElement('p');
     let $img = document.createElement('img');
     let $headerTemplate = document.querySelector('#header-not-logged-without-search');
-    //let $headerTemplate = getHeaderTemplate();
 
     $div.className = 'opaque-div flex-box flex-box-justify-center flex-box-align-center flex-box-column';
     $div.id = 'flex-box-column';
@@ -66,7 +61,7 @@ export function showConfirmView(message) {
     $p.style.paddingTop = '1em';
     $img.id = 'attention-img';
     $img.src = 'images/check.svg';
-    $img.style.filter = 'invert(100%)';
+    $img.className = 'img-inverter';
 
     $viewer.innerHTML = $headerTemplate.innerHTML;
     let $searchBtn = $viewer.querySelector("#search-btn");
@@ -97,7 +92,7 @@ export function showFailureView(message) {
     $p.style.paddingTop = '1em';
     $img.id = 'attention-img';
     $img.src = 'images/fail.svg';
-    $img.style.filter = 'invert(100%)';
+    $img.className = 'img-inverter';
 
     $viewer.innerHTML = $headerTemplate.innerHTML;
     let $searchBtn = $viewer.querySelector("#search-btn");
@@ -134,7 +129,7 @@ export function viewHasNoPermission() {
     $p.style.paddingTop = '1em';
     $img.id = 'attention-img';
     $img.src = 'images/crying-face.svg';
-    $img.style.filter = 'invert(100%)';
+    $img.className = 'img-inverter';
 
     $viewer.innerHTML = $headerTemplate.innerHTML;
     let $searchBtn = $viewer.querySelector("#search-btn");
@@ -168,7 +163,6 @@ export function generateHeader() {
         let $searchBtn = $viewer.querySelector("#search-btn");
         let $searchInput = $viewer.querySelector("#input-search");
         $searchBtn.addEventListener('click', (event) => {
-
             searchCampaigns($searchInput.value);
             event.preventDefault();
         });

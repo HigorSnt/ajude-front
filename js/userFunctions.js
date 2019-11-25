@@ -65,10 +65,10 @@ function createUser() {
 }
 
 function viewRequestChangePassword() {
-    let $headerTemplate = document.querySelector('#header-not-logged-without-search');
+    generateHeader();
     let $template = document.querySelector("#request-change-password");
 
-    $viewer.innerHTML = $headerTemplate.innerHTML + $template.innerHTML;
+    $viewer.innerHTML += $template.innerHTML;
 
     let $confirmButton = document.querySelector("#confirm-request");
     $confirmButton.addEventListener('click', fetchRequestChangePassword);

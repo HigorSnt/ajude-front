@@ -4,7 +4,7 @@ let data;
 async function fetch_campaign(campaignUrl) {
 
     let token = await sessionStorage.getItem('token');
-    console.log(url + '/campaign/search' + campaignUrl);
+    
     let header = {
         'Access-Control-Allow-Origin': url + '/campaign/search' + campaignUrl,
         'Access-Control-Allow-Credentials': 'true',
@@ -36,30 +36,55 @@ let $box;
 function createView(c) {
     removeViews();
     $box = document.createElement('div');
+    
+    let status;
     console.log(c);
+
+    if (c.status === 'A') {
+        status = "Esta campanha está ativa!";
+    } else if (c.status === 'F') {
+        //
+    }
+
     $box.id = "box";
+    $viewer.className = 'flex-box flex-box-justify-center flex-box-align-center flex-box-column';
+    $box.className = 'flex-box flex-box-justify-center flex-box-align-center flex-box-column';
     $box.innerHTML =
-    `<h1>Nome: ${c.shortName}</h1>
-    <h2>Status: ${c.status}</h2>
+    `<h1>${c.shortName}</h1>
+    <h4>Status: ${status}</h4>
+    <div id="comment">
+        <h4 style="text-align:center; padding-bottom: 0.5em">Uma breve descrição desta campanha:</h4>
+        <p>${c.description}</p>
+    </div>
     <ul class="ul-info flex-box" style="justify-content: space-between;">
         <li class="flex-box flex-box-row flex-box-align-center" style="justify-content: space-between;">
-            <img src="images/piggy-bank.svg" alt="Meta" width="30px" height="30px" style="margin-right: 0.3em">
-            <p>${c.goal}</p>
+            <img src="images/piggy-bank.svg" class="img-inverter" alt="Meta" width="40px" height="40px" style="margin-right: 0.3em">
+            <p><strong>${c.goal}</strong></p>
         </li>
             <li class="flex-box flex-box-row flex-box-align-center" style="justify-content: space-between;">
-            <img src="images/calendar.svg" alt="Deadline" width="30px" height="30px" style="margin-right: 0.3em">
-            <p>${c.deadline}</p>
+            <img src="images/calendar.svg" class="img-inverter" alt="Deadline" width="40px" height="40px" style="margin-right: 0.3em">
+            <p><strong>${c.deadline}</strong></p>
+        </li>
+        </li>
+            <li class="flex-box flex-box-row flex-box-align-center" style="justify-content: space-between;">
+            <img id="img-like" class="img-inverter" src="images/heart.svg" alt="Deadline" width="40px" height="40px" style="margin-right: 0.3em">
+            <p><strong>${c.numLikes}</strong></p>
+        </li>
+        </li>
+            <li class="flex-box flex-box-row flex-box-align-center" style="justify-content: space-between;">
+            <img id="img-dislike" class="img-inverter" src="images/broken-heart.svg" alt="Deadline" width="40px" height="40px" style="margin-right: 0.3em">
+            <p><strong>${c.numDislikes}</strong></p>
         </li>
     </ul>
-    <form id="comment-text">
-        <textarea rows="4" cols="100" name="comment" id="form" form="comment-text$"></textarea>
-    </form>
-    </textarea>
-`;
+    <div id="comment-text" class="flex-box flex-box-justify-center flex-box-align-center flex-box-column">
+        <textarea rows="3" cols="100" name="comment" id="form" form="comment-text$" placeholder="Deixe um comentário aqui..."></textarea>
+        <button type="submit" id="comment-btn" width="1.5em" height="1.5em">Comentar</button>
+    </div>
+    </textarea>`;
 
     c.comments.forEach(comment=>{
         let $crate = document.createElement('div');
-        $crate.id = "comment-box";
+        $crate.class = "comment-box";
         $crate.innerText = comment;
         $box.appendChild($crate);
     })
