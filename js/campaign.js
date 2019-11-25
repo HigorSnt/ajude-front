@@ -94,25 +94,25 @@ function createView(c) {
     $viewer.appendChild($box);
 
     let $likeButton = document.querySelector("#img-like");
-    $likeButton.addEventListener('click', ()=>{
-        addLike();
+    $likeButton.addEventListener('click', async ()=>{
+        await Promise.all([addLike()]);
+        showCampaign(campaignURL);
     });
 
     let $dislikeButton = document.querySelector("#img-dislike");
-    $dislikeButton.addEventListener('click', ()=>{
-        addDislike();
+    $dislikeButton.addEventListener('click', async ()=>{
+        await Promise.all([addDislike()]);
+        showCampaign(campaignURL);
     });
 
     let $commentBtn = document.querySelector('#comment-btn');
-    $commentBtn.addEventListener('click', ()=>{
+    $commentBtn.addEventListener('click', async ()=>{
         let $comment = $viewer.querySelector('#form');
         addComment($comment.value);
     });
 
     let $donateBtn = document.querySelector('#donate');
-    $donateBtn.addEventListener('click', ()=>{
-        donate();
-    });
+    $donateBtn.addEventListener('click', donate);
 }
 
 function removeViews() {
@@ -120,20 +120,59 @@ function removeViews() {
     generateHeader();
 }
 
+function donate(){
+    $box.innerHTML =
+        '<h3>Insira aqui o valor da doação</h3>' +
+        '<input id="donation-value" type="number" placeholder="Valor" required="required" class="input-form">' +
+        '<button id="confirm-btn" type="submit" class="confirm-btn">Confirmar</button>';
+    let $btn = $box.querySelector('#confirm-btn');
+    let value = $viewer.querySelector('#donation-value').value;
+    $btn.addEventListener('click', ()=>{console.log(value)})
+
+    }
+
 function addComment(comment) {
     console.log(comment);
 }
 
-function addLike(){
-    console.log("DEU LIKE");
+async function addLike(){
+    let token = await sessionStorage.getItem('token');
+
+    let header = {
+        'Access-Control-Allow-Origin': url + '/campaign/' + campaignURL + '/like',
+        'Access-Control-Allow-Credentials': 'true',
+        'Access-Control-Allow-Methods': 'POST',
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Content-Type': 'application/json;charset=utf-8',
+        'Authorization': `Bearer ${token}`
+    };
+
+    let data = await fetch(url + '/campaign/' + campaignURL + '/like', {
+        mode: 'cors',
+        'method': 'POST',
+        'body': "{}",
+        'headers': header
+    }).then(r => r.json());
 }
 
-function addDislike() {
-    console.log("DEU DISLIKE");
-}
+async function addDislike() {
+    let token = await sessionStorage.getItem('token');
 
-function donate(){
-    console.log("FAZER DOAÇÃO");
+    let header = {
+        'Access-Control-Allow-Origin': url + '/campaign/' + campaignURL + '/dislike',
+        'Access-Control-Allow-Credentials': 'true',
+        'Access-Control-Allow-Methods': 'POST',
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Content-Type': 'application/json;charset=utf-8',
+        'Authorization': `Bearer ${token}`
+    };
+
+    let data = await fetch(url + '/campaign/' + campaignURL + '/dislike', {
+        mode: 'cors',
+        'method': 'POST',
+        'body': "{}",
+        'headers': header
+    }).then(r => r.json());
 }
 
 function loadOwnerFunctions(){
@@ -156,7 +195,7 @@ function changeGoal(){
         '<button id="confirm-btn" type="submit" class="confirm-btn">Confirmar</button>';
     let $btn = $box.querySelector('#confirm-btn');
     let $goal = $viewer.querySelector('#campaign-goal');
-    $btn.addEventListener('click', async () =>{
+    $btn.addEventListener('click', async ()=>{
          await Promise.all([setGoal($goal.value)]);
          showCampaign(campaignURL);
     });
@@ -164,21 +203,17 @@ function changeGoal(){
 
 function changeDeadline(){
     console.log("mudar deadline");
-    $box.innerHTML = '' +
+    $box.innerHTML =
         '<h3>Insira o novo deadline</h3>'+
         '<input type="date" placeholder="Data de vencimento" required="required" id="campaign-deadline" class="input-form">' +
         '<button id="confirm-btn" type="submit" class="confirm-btn">Confirmar</button>';
         let $btn = $box.querySelector('#confirm-btn');
         let $deadline = $viewer.querySelector('#campaign-deadline');
 
-        $btn.addEventListener('click', ()=>{
-            setDeadline($deadline.value);
+        $btn.addEventListener('click', async ()=>{
+            await Promise.all([setDeadline($deadline.value  + " 23:59:59")]);
+            showCampaign(campaignURL);
         });
-}
-
-function deleteCampaign(){
-    console.log("campanha deletada");
-    removeViews();
 }
 
 async function setGoal(newGoal) {
@@ -200,9 +235,29 @@ async function setGoal(newGoal) {
         'headers': header
     }).then(r => r.json());
 
-    console.log(data);
 }
 
-function setDeadline(newDeadline){
-    console.log(newDeadline);
+async function setDeadline(newDeadline){
+    let token = await sessionStorage.getItem('token');
+
+    let header = {
+        'Access-Control-Allow-Origin': url + '/campaign' + campaignURL + '/setDeadline',
+        'Access-Control-Allow-Credentials': 'true',
+        'Access-Control-Allow-Methods': 'PUT',
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Content-Type': 'application/json;charset=utf-8',
+        'Authorization': `Bearer ${token}`
+    };
+
+    let data = await fetch(url + '/campaign' + campaignURL + '/setDeadline', {
+        mode: 'cors',
+        'method': 'PUT',
+        'body': `{"deadline": "${newDeadline}"}`,
+        'headers': header
+    }).then(r => r.json());
+}
+
+function deleteCampaign(){
+    console.log("campanha deletada");
+    removeViews();
 }
