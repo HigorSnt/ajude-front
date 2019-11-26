@@ -40,7 +40,7 @@ function createView(c) {
     $box = document.createElement('div');
 
     let status;
-    console.log(c);
+    //console.log(c);
 
     if (c.status === 'A') {
         status = "Esta campanha está ativa!";
@@ -54,7 +54,7 @@ function createView(c) {
     $box.innerHTML =
     `<h1>${c.shortName}</h1>
     <h4>Status: ${status}</h4>
-    <div id="comment">
+    <div id="campaign-description">
         <h4 style="text-align:center; padding-bottom: 0.5em">Uma breve descrição desta campanha:</h4>
         <p>${c.description}</p>
     </div>
@@ -110,6 +110,7 @@ function createView(c) {
 }
 
 function loadComments(comments) {
+    console.log(comments);
     comments.forEach(comment=>{
         let $crate = document.createElement('div');
         $crate.id = "comment-box";

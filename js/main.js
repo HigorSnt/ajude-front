@@ -1,9 +1,10 @@
-import {viewLogin} from './login.js'
-import {viewUserRegister, viewRequestChangePassword, viewChangePassword} from './userFunctions.js'
-import {viewCampaignRegister} from "./registerCampaign.js";
-import {searchCampaigns} from "./listingCampaigns.js";
-import {showCampaign} from "./campaign.js";
-export {$viewer, url, viewerChange, viewHome, viewCampaign};
+import { viewLogin } from './login.js'
+import { viewUserRegister, viewRequestChangePassword, viewChangePassword } from './user.js'
+import { viewCampaignRegister } from "./registerCampaign.js";
+import { searchCampaigns } from "./listingCampaigns.js";
+import { showCampaign } from "./campaign.js";
+import { Campaign } from './entities.js';
+export { $viewer, url, viewerChange, viewHome, viewCampaign };
 
 let url = 'https://apiajude.herokuapp.com/api';
 let $viewer = document.querySelector('#viewer');
@@ -29,7 +30,7 @@ async function viewerChange() {
         viewChangePassword();
     } else if (['#request-change-password'].includes(hash)) {
         viewRequestChangePassword();
-    } else if(['#campaign' + campaignURL].includes(hash)){
+    } else if (['#campaign' + campaignURL].includes(hash)) {
         viewCampaign(campaignURL);
     }
 }
@@ -39,6 +40,15 @@ function viewHome() {
 
     let $template = document.querySelector('#home-view');
     $viewer.innerHTML += $template.innerHTML;
+
+    let $remainingCheckbox = $viewer.querySelector("#check-remaining");
+    let $deadlineCheckbox = $viewer.querySelector("#check-deadline");
+    let $likeCheckbox = $viewer.querySelector("#check-likes");
+
+    showTop5ByRemaining();
+    $remainingCheckbox.addEventListener("change", showTop5ByRemaining);
+    $deadlineCheckbox.addEventListener("change", showTop5ByDeadline);
+    $likeCheckbox.addEventListener("change", showTop5ByLikes);
 }
 
 export function showConfirmView(message) {
@@ -127,6 +137,7 @@ export function generateHeader() {
     if (sessionStorage.getItem('token') == null) {
         $headerTemplate = document.querySelector("#header-not-logged");
         $viewer.innerHTML = $headerTemplate.innerHTML;
+
         let $searchBtn = $viewer.querySelector("#search-btn");
         $searchBtn.addEventListener('click', function (event) {
             viewHasNoPermission();
@@ -135,6 +146,8 @@ export function generateHeader() {
     } else {
         $headerTemplate = document.querySelector("#header-user-logged");
         $viewer.innerHTML = $headerTemplate.innerHTML;
+        let $a = $viewer.querySelector('#profile');
+        $a.href = `/#profile${sessionStorage.getItem('')}`;
         searchListener();
     }
 }
@@ -152,4 +165,84 @@ export function searchListener() {
         searchCampaigns($searchInput.value);
         event.preventDefault();
     });
+}
+
+async function showTop5ByRemaining() {
+    let data = await Promise.all([fetchTop5Campaigns('remaining')]);
+    let campaigns = JSON.parse(JSON.stringify(data))[0];
+    generateViewTop5Campaigns(campaigns);
+}
+
+async function showTop5ByDeadline() {
+    let data = await Promise.all([fetchTop5Campaigns('date')]);
+    let campaigns = JSON.parse(JSON.stringify(data))[0];
+    generateViewTop5Campaigns(campaigns);
+}
+
+async function showTop5ByLikes() {
+    let data = await Promise.all([fetchTop5Campaigns('like')]);
+    let campaigns = JSON.parse(JSON.stringify(data))[0];
+    generateViewTop5Campaigns(campaigns);
+}
+
+function generateViewTop5Campaigns(campaigns) {
+    let $divTopCampaigns = document.querySelector('#home-list-campaigns');
+    $divTopCampaigns.innerHTML = "";
+
+    if (campaigns.length === 0) {
+        let $h3 = document.createElement('h3');
+        $h3.innerText = 'Não existem campanhas cadastradas ativas!';
+        $divTopCampaigns.appendChild($h3);
+        $divTopCampaigns.className = 'top-campaigns';
+    } else {
+        campaigns.forEach(c => {
+            let campaign = document.createElement('div');
+            campaign.className = "top-campaigns";
+            campaign.innerHTML =
+                `<h3 id="name" style="margin: 0.5em">${c.shortName.toUpperCase()}</h3>
+                <div class="campaign-description">${c.description}</div>
+                    <ul class="ul-info flex-box" style="justify-content: space-between;">
+                        <li class="flex-box flex-box-row flex-box-align-center" style="justify-content: space-between;">
+                            <img src="images/piggy-bank.svg" alt="Meta" width="30px" height="30px" style="margin-right: 0.3em">
+                            <p></strong>${c.remaining}</strong></p>
+                        </li>
+                        <li class="flex-box flex-box-row flex-box-align-center" style="justify-content: space-between;">
+                            <img src="images/calendar.svg" alt="Deadline" width="30px" height="30px" style="margin-right: 0.3em">
+                            <p></strong>${c.deadline}</strong></p>
+                        </li>
+                        </li>
+                        <li class="flex-box flex-box-row flex-box-align-center" style="justify-content: space-between;">
+                            <img id="img-like" class="img-inverter" src="images/heart.svg" alt="Deadline" width="30px" height="30px" style="margin-right: 0.3em">
+                            <p><strong id ="like">${c.likes}</strong></p>
+                        </li>
+                        </li>
+                            <li class="flex-box flex-box-row flex-box-align-center" style="justify-content: space-between;">
+                            <img id="img-dislike" class="img-inverter" src="images/broken-heart.svg" alt="Deadline" width="35px" height="35px" style="margin-right: 0.3em">
+                            <p><strong id ="dislike">${c.dislikes}</strong></p>
+                        </li>
+                        <li> 
+                            <a href="#campaign/${c.urlIdentifier}" >Ver mais</a> 
+                        </li>
+                    </ul>
+                </div>`;
+
+            $divTopCampaigns.appendChild(campaign);
+        });
+    }
+}
+
+async function fetchTop5Campaigns(orderBy) {
+
+    let header = {
+        'Content-Type': 'application/json;charset=utf-8'
+    };
+
+    let response = await fetch(url + `/home/${orderBy}`, {
+        'method': 'GET',
+        'headers': header
+    });
+
+    let campaigns = await response.json();
+
+    return campaigns;
 }

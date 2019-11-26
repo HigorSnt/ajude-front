@@ -1,4 +1,4 @@
-import { $viewer, url, generateHeader, viewHome, viewCampaign} from './main.js';
+import { $viewer, url, generateHeader, viewHome, viewCampaign } from './main.js';
 export { searchCampaigns, campaignURL };
 
 let data;
@@ -85,7 +85,7 @@ async function searchCampaigns() {
 }
 
 function removeCampaigns() {
-    if (document.querySelector('#infom')!=undefined)document.querySelector('#infom').innerHTML = '';
+    if (document.querySelector('#infom') != undefined) document.querySelector('#infom').innerHTML = '';
     if ($filterDiv != undefined) $filterDiv.innerHTML = '';
     if ($list != undefined) $list.innerHTML = '';
 }
@@ -97,25 +97,27 @@ function showCampaigns(campaigns) {
         $campaign.className = "flex-box flex-box-justify-center flex-box-align-center flex-box-column";
         $campaign.innerHTML =
             `<h3 id="name" style="margin: 0.5em">${c.shortName.toUpperCase()}</h3>
-                <div id="comment">${c.description}</div>
-                    <ul class="ul-info flex-box" style="justify-content: space-between;">
-                       <li class="flex-box flex-box-row flex-box-align-center" style="justify-content: space-between;">
-                           <img src="images/piggy-bank.svg" alt="Meta" width="30px" height="30px" style="margin-right: 0.3em">
-                           <p>${c.goal}</p>
-                       </li>
-                       <li class="flex-box flex-box-row flex-box-align-center" style="justify-content: space-between;">
-                           <img src="images/calendar.svg" alt="Deadline" width="30px" height="30px" style="margin-right: 0.3em">
-                           <p>${c.deadline}</p>
-                       </li>
-                       <li> <a href="#campaign/${c.urlIdentifier}" onclick="goToCampaign('${c.urlIdentifier}')">Ver mais</a> </li>
-                   </ul>
+            <div class="campaign-description">${c.description}</div>
+                <ul class="ul-info flex-box" style="justify-content: space-between;">
+                    <li class="flex-box flex-box-row flex-box-align-center" style="justify-content: space-between;">
+                        <img src="images/piggy-bank.svg" alt="Meta" width="30px" height="30px" style="margin-right: 0.3em">
+                        <p>${c.goal}</p>
+                    </li>
+                    <li class="flex-box flex-box-row flex-box-align-center" style="justify-content: space-between;">
+                        <img src="images/calendar.svg" alt="Deadline" width="30px" height="30px" style="margin-right: 0.3em">
+                        <p>${c.deadline}</p>
+                    </li>
+                    <li> 
+                        <a href="#campaign/${c.urlIdentifier}" onclick="goToCampaign('${c.urlIdentifier}')">Ver mais</a> 
+                    </li>
+                </ul>
             </div>`;
-            $list.appendChild($campaign);
+        $list.appendChild($campaign);
     })
 }
 
 window.goToCampaign = goToCampaign;
-function goToCampaign(url){
+function goToCampaign(url) {
     removeCampaigns();
     viewCampaign(url);
 }
@@ -123,11 +125,11 @@ function goToCampaign(url){
 function getActiveCampaigns(campaigns) {
     var activedCampaignsArray = [];
 
-    campaigns.forEach((c)=>{
-        if(c.status === "A") {
+    campaigns.forEach((c) => {
+        if (c.status === "A") {
             activedCampaignsArray.push(c);
         }
     });
-    
+
     return activedCampaignsArray;
 }
