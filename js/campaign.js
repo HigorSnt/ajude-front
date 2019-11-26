@@ -1,10 +1,10 @@
-import { url, $viewer, generateHeader, viewerChange} from "./main.js";
+import { url, $viewer, generateHeader, viewerChange, viewHasNoPermission } from "./main.js";
 
 let data;
 async function fetch_campaign(campaignUrl) {
 
     let token = await sessionStorage.getItem('token');
-    
+
     let header = {
         'Access-Control-Allow-Origin': url + '/campaign/search' + campaignUrl,
         'Access-Control-Allow-Credentials': 'true',
@@ -20,6 +20,12 @@ async function fetch_campaign(campaignUrl) {
         'headers': header
     }).then(r => r.json());
 
+    if (data.status === 200) {
+        return data;
+    } else {
+        viewHasNoPermission();
+    }
+
     return data;
 }
 
@@ -27,10 +33,11 @@ let campaignURL;
 export async function showCampaign(campaignUrl) {
     campaignURL = campaignUrl;
     let response = await Promise.all([fetch_campaign(campaignUrl)]);
+
     let campaign = JSON.parse(JSON.stringify(response))[0];
 
     createView(campaign);
-    if(campaign.user.email === sessionStorage.getItem('userEmail')) loadOwnerFunctions();
+    if (campaign.user.email === sessionStorage.getItem('userEmail')) loadOwnerFunctions();
 }
 
 let $box;
@@ -40,7 +47,6 @@ function createView(c) {
     $box = document.createElement('div');
 
     let status;
-    //console.log(c);
 
     if (c.status === 'A') {
         status = "Esta campanha está ativa!";
@@ -52,16 +58,16 @@ function createView(c) {
     $viewer.className = 'flex-box flex-box-justify-center flex-box-align-center flex-box-column';
     $box.className = 'flex-box flex-box-justify-center flex-box-align-center flex-box-column';
     $box.innerHTML =
-    `<h1>${c.shortName}</h1>
+        `<h1>${c.shortName}</h1>
     <h4>Status: ${status}</h4>
-    <div id="campaign-description">
+    <div class="campaign-description">
         <h4 style="text-align:center; padding-bottom: 0.5em">Uma breve descrição desta campanha:</h4>
         <p>${c.description}</p>
     </div>
     <ul class="ul-info flex-box" style="justify-content: space-between;">
         <li id="goal" class="flex-box flex-box-row flex-box-align-center" style="justify-content: space-between;">
             <img id="goal-img" src="images/piggy-bank.svg" class="img-inverter" alt="Meta" width="40px" height="40px" style="margin-right: 0.3em">
-            <p><strong>${c.goal}</strong></p>
+            <p><strong>${c.received}/${c.goal}</strong></p>
         </li>
          <li id="deadline" class="flex-box flex-box-row flex-box-align-center" style="justify-content: space-between;">
             <img id="deadline-img" src="images/calendar.svg" class="img-inverter" alt="Deadline" width="40px" height="40px" style="margin-right: 0.3em">
@@ -78,29 +84,32 @@ function createView(c) {
             <p><strong id ="dislike">${c.numDislikes}</strong></p>
         </li>
     </ul>
-    <button id="donate">Fazer doação</button>
-    </textarea>`;
+    <div id="comment-text" class="flex-box flex-box-justify-center flex-box-align-center flex-box-column">
+        <textarea rows="3" cols="100" name="comment" id="form" form="comment-text$" placeholder="Deixe um comentário aqui..."></textarea>
+        <button type="submit" id="comment-btn" width="1.5em" height="1.5em">Comentar</button>
+    </div>
+    <button id="donate">Fazer doação</button>`;
 
     loadComments(c.comments);
 
     $viewer.appendChild($box);
 
     let $likeButton = document.querySelector("#img-like");
-    $likeButton.addEventListener('click', async ()=>{
+    $likeButton.addEventListener('click', async () => {
         await Promise.all([addLike()]);
         showCampaign(campaignURL);
     });
 
     let $dislikeButton = document.querySelector("#img-dislike");
-    $dislikeButton.addEventListener('click', async ()=>{
+    $dislikeButton.addEventListener('click', async () => {
         await Promise.all([addDislike()]);
         showCampaign(campaignURL);
     });
 
     let $commentBtn = document.querySelector('#comment-btn');
-    $commentBtn.addEventListener('click', async ()=>{
+    $commentBtn.addEventListener('click', async () => {
         let $comment = $viewer.querySelector('#form');
-        console.log($comment.value);
+
         await Promise.all([addComment($comment.value)]);
         showCampaign(campaignURL);
     });
@@ -110,8 +119,8 @@ function createView(c) {
 }
 
 function loadComments(comments) {
-    console.log(comments);
-    comments.forEach(comment=>{
+
+    comments.forEach(comment => {
         let $crate = document.createElement('div');
         $crate.id = "comment-box";
         $crate.innerText = comment.comment;
@@ -124,15 +133,18 @@ function removeViews() {
     generateHeader();
 }
 
-function donate(){
+function donate() {
     $box.innerHTML =
         '<h3>Insira aqui o valor da doação</h3>' +
         '<input id="donation-value" type="number" placeholder="Valor" required="required" class="input-form">' +
         '<button id="confirm-btn" type="submit" class="confirm-btn">Confirmar</button>';
     let $btn = $box.querySelector('#confirm-btn');
-    let value = $viewer.querySelector('#donation-value').value;
-    $btn.addEventListener('click', ()=>{console.log(value)})
-    }
+    $btn.addEventListener('click', async () => {
+        let value = $viewer.querySelector('#donation-value').value;
+        await Promise.all([realizeDonate(value)]);
+        showCampaign(campaignURL);
+    });
+}
 
 async function addComment(comment) {
     let header = {
@@ -152,7 +164,7 @@ async function addComment(comment) {
     }).then(r => r.json());
 }
 
-async function addLike(){
+async function addLike() {
 
     let header = {
         'Access-Control-Allow-Origin': url + '/campaign' + campaignURL + '/like',
@@ -190,7 +202,7 @@ async function addDislike() {
     }).then(r => r.json());
 }
 
-function loadOwnerFunctions(){
+function loadOwnerFunctions() {
     let $goal = document.querySelector('#goal');
     $goal.addEventListener('click', changeGoal);
 
@@ -203,32 +215,31 @@ function loadOwnerFunctions(){
     $box.appendChild($deleteCampaignBtn);
 }
 
-function changeGoal(){
+function changeGoal() {
     $box.innerHTML =
         '<h3>Insira a nova meta</h3>' +
         '<input id="campaign-goal" type="number" placeholder="Meta" required="required" class="input-form">' +
         '<button id="confirm-btn" type="submit" class="confirm-btn">Confirmar</button>';
     let $btn = $box.querySelector('#confirm-btn');
     let $goal = $viewer.querySelector('#campaign-goal');
-    $btn.addEventListener('click', async ()=>{
-         await Promise.all([setGoal($goal.value)]);
-         showCampaign(campaignURL);
+    $btn.addEventListener('click', async () => {
+        await Promise.all([setGoal($goal.value)]);
+        showCampaign(campaignURL);
     });
 }
 
-function changeDeadline(){
-    console.log("mudar deadline");
+function changeDeadline() {
     $box.innerHTML =
-        '<h3>Insira o novo deadline</h3>'+
+        '<h3>Insira o novo deadline</h3>' +
         '<input type="date" placeholder="Data de vencimento" required="required" id="campaign-deadline" class="input-form">' +
         '<button id="confirm-btn" type="submit" class="confirm-btn">Confirmar</button>';
-        let $btn = $box.querySelector('#confirm-btn');
-        let $deadline = $viewer.querySelector('#campaign-deadline');
+    let $btn = $box.querySelector('#confirm-btn');
+    let $deadline = $viewer.querySelector('#campaign-deadline');
 
-        $btn.addEventListener('click', async ()=>{
-            await Promise.all([setDeadline($deadline.value  + " 23:59:59")]);
-            showCampaign(campaignURL);
-        });
+    $btn.addEventListener('click', async () => {
+        await Promise.all([setDeadline($deadline.value + " 23:59:59")]);
+        showCampaign(campaignURL);
+    });
 }
 
 async function setGoal(newGoal) {
@@ -252,8 +263,8 @@ async function setGoal(newGoal) {
 
 }
 
-async function setDeadline(newDeadline){
-    let token = await sessionStorage.getItem('token');
+async function setDeadline(newDeadline) {
+    let token = sessionStorage.getItem('token');
 
     let header = {
         'Access-Control-Allow-Origin': url + '/campaign' + campaignURL + '/setDeadline',
@@ -272,7 +283,29 @@ async function setDeadline(newDeadline){
     }).then(r => r.json());
 }
 
-function deleteCampaign(){
+async function realizeDonate(value) {
+    let token = sessionStorage.getItem('token');
+
+    let body = `{"value": "${value}"}`;
+
+    let header = {
+        'Access-Control-Allow-Origin': `${url}/campaign${campaignURL}/donate`,
+        'Access-Control-Allow-Credentials': 'true',
+        'Access-Control-Allow-Methods': 'POST',
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Content-Type': 'application/json;charset=utf-8',
+        'Authorization': `Bearer ${token}`
+    };
+
+    let data = await fetch(`${url}/campaign${campaignURL}/donate`, {
+        mode: 'cors',
+        'method': 'POST',
+        'body': body,
+        'headers': header
+    }).then(r => r.json());
+}
+
+function deleteCampaign() {
     console.log("campanha deletada");
     removeViews();
 }

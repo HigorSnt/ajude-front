@@ -136,28 +136,33 @@
     </template>
 
     <template id="home-view">
-        <div id="div-top-campaigns">
-            <div id="home-filter" class="dropdown">
-                <img src="images/filter.svg" alt="Filtrar campanhas" class="drop-image" width="50px" height="50px" style="font-size: 1.5em;">
-                <div class="dropdown-content">
-                    <h4>Ordenar as campanhas por:</h4>
-                    <label class="container">Por meta
-                        <input type="radio" checked="checked" id="check-remaining" name="radio">
-                        <span class="checkmark"></span>
-                    </label>
-                    <label class="container">Por deadline
-                        <input type="radio" id="check-deadline" name="radio">
-                        <span class="checkmark"></span>
-                    </label>
-                    <label class="container">Por likes
-                        <input type="radio" id="check-likes" name="radio">
-                        <span class="checkmark"></span>
-                    </label>
+        <section>
+            <div class="dropdown-filter">
+                <div id="home-filter" class="dropdown">
+                    <img src="images/filter.svg" alt="Filtrar campanhas" class="drop-image image-filter" width="30px"
+                        height="30px">
+                    <div class="dropdown-content dropdown-content-filter">
+                        <h4>Ordenar as campanhas por:</h4>
+                        <label class="container">Por meta
+                            <input type="radio" checked="checked" id="check-received" name="radio">
+                            <span class="checkmark"></span>
+                        </label>
+                        <label class="container">Por deadline
+                            <input type="radio" id="check-deadline" name="radio">
+                            <span class="checkmark"></span>
+                        </label>
+                        <label class="container">Por likes
+                            <input type="radio" id="check-likes" name="radio">
+                            <span class="checkmark"></span>
+                        </label>
+                    </div>
                 </div>
             </div>
 
-            <div id="home-list-campaigns"></div>
-        </div>
+            <div id="div-top-campaigns">
+                <div id="home-list-campaigns"></div>
+            </div>
+        </section>
     </template>
 
     <template id="view-login">
@@ -262,6 +267,14 @@
                 <div>
                     <button type="submit" class="confirm-btn">Cadastrar</button>
                 </div>
+            </div>
+        </section>
+    </template>
+
+    <template id="view-profile">
+        <section>
+            <div id="user-inf">
+                
             </div>
         </section>
     </template>

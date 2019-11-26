@@ -3,7 +3,7 @@ import { viewUserRegister, viewRequestChangePassword, viewChangePassword } from 
 import { viewCampaignRegister } from "./registerCampaign.js";
 import { searchCampaigns } from "./listingCampaigns.js";
 import { showCampaign } from "./campaign.js";
-import { Campaign } from './entities.js';
+import { viewProfile } from './profile.js';
 export { $viewer, url, viewerChange, viewHome, viewCampaign };
 
 let url = 'https://apiajude.herokuapp.com/api';
@@ -13,7 +13,7 @@ window.onload = viewerChange;
 window.addEventListener('hashchange', viewerChange);
 
 async function viewerChange() {
-    let campaignURL = window.location.hash.substring(9);
+    let parameter = window.location.hash.substring(9);
     let hash = location.hash;
 
     if ([''].includes(hash)) {
@@ -30,8 +30,10 @@ async function viewerChange() {
         viewChangePassword();
     } else if (['#request-change-password'].includes(hash)) {
         viewRequestChangePassword();
-    } else if (['#campaign' + campaignURL].includes(hash)) {
-        viewCampaign(campaignURL);
+    } else if ([`#campaign${parameter}`].includes(hash)) {
+        viewCampaign(parameter);
+    } else if ([`#user${parameter}`].includes(hash)) {
+        viewProfile(parameter);
     }
 }
 
@@ -41,12 +43,12 @@ function viewHome() {
     let $template = document.querySelector('#home-view');
     $viewer.innerHTML += $template.innerHTML;
 
-    let $remainingCheckbox = $viewer.querySelector("#check-remaining");
+    let $receivedCheckbox = $viewer.querySelector("#check-received");
     let $deadlineCheckbox = $viewer.querySelector("#check-deadline");
     let $likeCheckbox = $viewer.querySelector("#check-likes");
 
     showTop5ByRemaining();
-    $remainingCheckbox.addEventListener("change", showTop5ByRemaining);
+    $receivedCheckbox.addEventListener("change", showTop5ByRemaining);
     $deadlineCheckbox.addEventListener("change", showTop5ByDeadline);
     $likeCheckbox.addEventListener("change", showTop5ByLikes);
 }
@@ -168,7 +170,7 @@ export function searchListener() {
 }
 
 async function showTop5ByRemaining() {
-    let data = await Promise.all([fetchTop5Campaigns('remaining')]);
+    let data = await Promise.all([fetchTop5Campaigns('received')]);
     let campaigns = JSON.parse(JSON.stringify(data))[0];
     generateViewTop5Campaigns(campaigns);
 }
@@ -204,7 +206,7 @@ function generateViewTop5Campaigns(campaigns) {
                     <ul class="ul-info flex-box" style="justify-content: space-between;">
                         <li class="flex-box flex-box-row flex-box-align-center" style="justify-content: space-between;">
                             <img src="images/piggy-bank.svg" alt="Meta" width="30px" height="30px" style="margin-right: 0.3em">
-                            <p></strong>${c.remaining}</strong></p>
+                            <p></strong>${c.received}/${c.goal}</strong></p>
                         </li>
                         <li class="flex-box flex-box-row flex-box-align-center" style="justify-content: space-between;">
                             <img src="images/calendar.svg" alt="Deadline" width="30px" height="30px" style="margin-right: 0.3em">

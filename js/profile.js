@@ -1,5 +1,5 @@
 import { generateHeader } from "./main";
 
-function viewProfile() {
+export function viewProfile() {
     generateHeader();
 }

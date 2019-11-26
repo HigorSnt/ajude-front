@@ -1,6 +1,6 @@
 import {Campaign} from "./entities.js";
 import {$viewer, url, showFailureView, showConfirmView, 
-    viewHasNoPermission, viewCampaign, viewerChange} from "./main.js";
+    viewHasNoPermission, viewCampaign, viewerChange, generateHeader} from "./main.js";
 
 async function fetchRegisterCampaign(campaign) {
     try {
@@ -47,12 +47,9 @@ async function fetchRegisterCampaign(campaign) {
 export function viewCampaignRegister() {
 
     if (sessionStorage.getItem('token') != null) {
-        let $headerTemplate = document.querySelector("#header-user-logged");
+        generateHeader();
         let $template = document.querySelector('#view-campaign-register');
-        $viewer.innerHTML = $headerTemplate.innerHTML + $template.innerHTML;
-        let $div = document.querySelector('#search-campaigns');
-        let $header = document.querySelector('header');
-        $header.removeChild($div);
+        $viewer.innerHTML += $template.innerHTML;
 
         let $registerCampaignBtn = document.querySelector('.confirm-btn');
         $registerCampaignBtn.addEventListener('click', registerCampaign);
