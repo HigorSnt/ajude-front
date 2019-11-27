@@ -161,20 +161,17 @@ export function searchListener() {
 }
 
 async function showTop5ByRemaining() {
-    let data = await Promise.all([fetchTop5Campaigns('remaining')]);
-    let campaigns = JSON.parse(JSON.stringify(data))[0];
+    let campaigns = await fetchTop5Campaigns('remaining');
     generateViewTop5Campaigns(campaigns);
 }
 
 async function showTop5ByDeadline() {
-    let data = await Promise.all([fetchTop5Campaigns('date')]);
-    let campaigns = JSON.parse(JSON.stringify(data))[0];
+    let campaigns = await fetchTop5Campaigns('date');
     generateViewTop5Campaigns(campaigns);
 }
 
 async function showTop5ByLikes() {
-    let data = await Promise.all([fetchTop5Campaigns('like')]);
-    let campaigns = JSON.parse(JSON.stringify(data))[0];
+    let campaigns = await fetchTop5Campaigns('like');
     generateViewTop5Campaigns(campaigns);
 }
 
