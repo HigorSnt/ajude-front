@@ -60,6 +60,7 @@ function createView(c) {
     $box.innerHTML =
         `<h1>${c.shortName}</h1>
     <h4>Status: ${status}</h4>
+    <p>Campanha criada por: <a href="/#user/${c.user.username}">${c.user.firstName} ${c.user.lastName}</a></p>
     <div class="campaign-description">
         <h4 style="text-align:center; padding-bottom: 0.5em">Uma breve descrição desta campanha:</h4>
         <p>${c.description}</p>

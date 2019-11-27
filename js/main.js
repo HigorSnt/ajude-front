@@ -1,9 +1,8 @@
 import { viewLogin } from './login.js'
-import { viewUserRegister, viewRequestChangePassword, viewChangePassword } from './user.js'
+import { viewUserRegister, viewRequestChangePassword, viewChangePassword, viewProfile } from './user.js'
 import { viewCampaignRegister } from "./registerCampaign.js";
 import { searchCampaigns } from "./listingCampaigns.js";
 import { showCampaign } from "./campaign.js";
-import { viewProfile } from './profile.js';
 export { $viewer, url, viewerChange, viewHome, viewCampaign };
 
 let url = 'https://apiajude.herokuapp.com/api';
@@ -13,7 +12,8 @@ window.onload = viewerChange;
 window.addEventListener('hashchange', viewerChange);
 
 async function viewerChange() {
-    let parameter = window.location.hash.substring(9);
+    let campaignURL = location.hash.substring(9);
+    let profileURL = location.hash.substring(6);
     let hash = location.hash;
 
     if ([''].includes(hash)) {
@@ -30,10 +30,10 @@ async function viewerChange() {
         viewChangePassword();
     } else if (['#request-change-password'].includes(hash)) {
         viewRequestChangePassword();
-    } else if ([`#campaign${parameter}`].includes(hash)) {
-        viewCampaign(parameter);
-    } else if ([`#user${parameter}`].includes(hash)) {
-        viewProfile(parameter);
+    } else if ([`#campaign${campaignURL}`].includes(hash)) {
+        viewCampaign(campaignURL);
+    } else if ([`#user/${profileURL}`].includes(hash)) {
+        viewProfile(profileURL);
     }
 }
 
@@ -42,6 +42,7 @@ function viewHome() {
 
     let $template = document.querySelector('#home-view');
     $viewer.innerHTML += $template.innerHTML;
+    searchListener();
 
     let $receivedCheckbox = $viewer.querySelector("#check-received");
     let $deadlineCheckbox = $viewer.querySelector("#check-deadline");
@@ -148,9 +149,8 @@ export function generateHeader() {
     } else {
         $headerTemplate = document.querySelector("#header-user-logged");
         $viewer.innerHTML = $headerTemplate.innerHTML;
-        let $a = $viewer.querySelector('#profile');
-        $a.href = `/#profile${sessionStorage.getItem('')}`;
-        searchListener();
+        let $a = document.querySelector('#profile');
+        $a.href = `#user/${sessionStorage.getItem('username')}`;
     }
 }
 
@@ -162,8 +162,8 @@ function viewCampaign(url) {
 export function searchListener() {
     let $searchBtn = $viewer.querySelector("#search-btn");
     let $searchInput = $viewer.querySelector("#input-search");
+    
     $searchBtn.addEventListener('click', (event) => {
-        window.location.hash = '';
         searchCampaigns($searchInput.value);
         event.preventDefault();
     });

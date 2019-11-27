@@ -50,6 +50,7 @@ export async function fetchLogin(userCredentials) {
 
             sessionStorage.setItem('token', json.token);
             sessionStorage.setItem('userEmail', userCredentials.email);
+            sessionStorage.setItem('username', json.username);
 
             window.setTimeout("location.href = '/'", 0);
         } else {
