@@ -1,6 +1,7 @@
 import {Campaign} from "./entities.js";
 import {$viewer, url, showFailureView, showConfirmView, 
-    viewHasNoPermission, viewCampaign, viewerChange, generateHeader} from "./main.js";
+    viewHasNoPermission, viewCampaign, viewerChange, generateHeader, searchListener} from "./main.js";
+import { searchCampaigns } from "./listingCampaigns.js";
 
 async function fetchRegisterCampaign(campaign) {
     try {
@@ -28,9 +29,7 @@ async function fetchRegisterCampaign(campaign) {
             response.json().then(data => ({
                 data: data
             })).then(res => {
-                //href = "#campaign/${res.data.urlIdentifier}"
                 window.location.hash = "campaign/" + res.data.urlIdentifier;
-                //viewCampaign(res.data.urlIdentifier);
                 viewerChange();
             });
 
@@ -50,7 +49,7 @@ export function viewCampaignRegister() {
         generateHeader();
         let $template = document.querySelector('#view-campaign-register');
         $viewer.innerHTML += $template.innerHTML;
-
+        searchListener();
         let $registerCampaignBtn = document.querySelector('.confirm-btn');
         $registerCampaignBtn.addEventListener('click', registerCampaign);
     } else {

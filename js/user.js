@@ -178,14 +178,15 @@ async function fetchChangePassword() {
 }
 
 export async function viewProfile(username) {
-    generateHeader();
     let u = (await Promise.all([getUser(username)]))[0];
     let campaigns = u.campaignList;
     let donations = u.donations;
-    console.log(u);
 
+    generateHeader();
     let $template = document.querySelector('#view-profile');
     $viewer.innerHTML += $template.innerHTML;
+    
+    searchListener();
 
     userInformationsList(u);
     campaignsUserList(campaigns, u.firstName);

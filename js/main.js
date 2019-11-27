@@ -103,7 +103,10 @@ function logout() {
     sessionStorage.removeItem('token');
     sessionStorage.removeItem('userEmail');
 
-    window.setTimeout("location.href = '/'", 0);
+    window.setTimeout(() => {
+        history.replaceState(null, null, "/");
+        viewHome();
+    }, 0);
 }
 
 export function viewHasNoPermission() {

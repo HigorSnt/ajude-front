@@ -1,4 +1,4 @@
-import {$viewer, url} from "./main.js";
+import {$viewer, url, generateHeader, viewHome} from "./main.js";
 import {Login} from "./entities.js";
 export{viewLogin}
 
@@ -52,7 +52,7 @@ export async function fetchLogin(userCredentials) {
             sessionStorage.setItem('userEmail', userCredentials.email);
             sessionStorage.setItem('username', json.username);
 
-            window.setTimeout("location.href = '/'", 0);
+            window.setTimeout(() => viewHome(), 0);
         } else {
             alert("DADOS INCORRETOS OU USUÁRIO INEXISTENTE!");
         }
