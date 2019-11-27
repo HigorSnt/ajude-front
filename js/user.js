@@ -185,7 +185,7 @@ export async function viewProfile(username) {
     generateHeader();
     let $template = document.querySelector('#view-profile');
     $viewer.innerHTML += $template.innerHTML;
-    
+
     searchListener();
 
     userInformationsList(u);
@@ -195,30 +195,58 @@ export async function viewProfile(username) {
 
 function userInformationsList(user) {
     let $userInfo = $viewer.querySelector('#user-profile');
+    $userInfo.id = 'tittle';
+    $userInfo.style.width = '20em';
+    $userInfo.style = 'display: grid; grid-template-columns: 5fr 5fr; height: 6em; background-color: rgba(255, 255, 255, 0.3)';
 
     $userInfo.innerHTML =
-        `<h3>${user.firstName} ${user.lastName}</h3>
-    <h5>${user.email}</h5>`;
+        `<img src='images/account.svg' width="100%" height="100%" tittle="${user.firstName} ${user.lastName}"></img>
+        <div class="flex-box flex-box-justify-center flex-box-align-center flex-box-column">
+            <h3>${user.firstName} ${user.lastName}</h3>
+            <h5>${user.email}</h5>
+        </div>`;
 }
 
 function campaignsUserList(campaigns, firstName) {
     let $campaignInfo = $viewer.querySelector('#campaign-profile');
 
     if (campaigns.length === 0) {
-        let $h4 = document.createElement('h4');
-        $h4.innerText = `${firstName} não criou nenhuma campanha ainda.`
-        $campaignInfo.appendChild($h4);
+        let $h2 = document.createElement('h2');
+        $h2.style = 'text-align: center;';
+        $h2.innerText = `${firstName} não criou nenhuma campanha ainda.`;
+        $campaignInfo.appendChild($h2);
+    } else {
+        let $h2 = document.createElement('h2');
+        $h2.innerText = `Campanhas criadas por ${firstName}`;
+        $h2.style = 'text-align: center';
+        $campaignInfo.appendChild($h2);
     }
 
+    let $box = document.createElement('div');
+    $box.id = 'user-items';
+    $box.className = 'flex-box-align-center flex-box-justify-center';
+
     campaigns.forEach(c => {
+        let status;
+
+        if (c.status === 'A') {
+            status = "Esta campanha está ativa!";
+        } else if (c.status === 'F') {
+            status = "Esta campanha foi concluída!";
+        } else if (c.status === 'E') {
+            status = "Esta campanha está vencida!";
+        } else if (c.status === 'C') {
+            status = "Esta campanha foi encerrada pelo seu criador!";
+        }
+
         let $div = document.createElement('div');
-        $div.className = 'top-campaigns'
+        $div.className = 'user-campaigns';
         $div.innerHTML =
             `<h1>${c.shortName}</h1>
             <h4>Status: ${status}</h4>
             <div class="campaign-description">
-                <h4 style="text-align:center; padding-bottom: 0.5em">Uma breve descrição desta campanha:</h4>
-                <p>${c.description}</p>
+                <h4 style="padding-bottom: 0.5em">Uma breve descrição desta campanha:</h4>
+                <p style="text-align: justify;">${c.description}</p>
             </div>
             <ul class="ul-info flex-box" style="justify-content: space-between;">
                 <li id="goal" class="flex-box flex-box-row flex-box-align-center" style="justify-content: space-between;">
@@ -243,23 +271,36 @@ function campaignsUserList(campaigns, firstName) {
                     <a href="#campaign/${c.urlIdentifier}" >Ver mais</a> 
                 </li>
             </ul>`;
-        $campaignInfo.appendChild($div);
+        $box.appendChild($div);
     });
+
+    $campaignInfo.appendChild($box);
     return $campaignInfo;
 }
 
 function donationsUserList(donations, firstName) {
     let $donationsInfo = $viewer.querySelector('#donations-profile');
+    $donationsInfo.style = 'margin: 2em 0';
 
     if (donations.length === 0) {
-        let $h4 = document.createElement('h4');
-        $h4.innerText = `${firstName} não realizou nenhuma doação ainda.`
-        $donationsInfo.appendChild($h4);
+        let $h2 = document.createElement('h2');
+        $h2.style = 'text-align: center;';
+        $h2.innerText = `${firstName} não realizou nenhuma doação ainda.`
+        $donationsInfo.appendChild($h2);
+    } else {
+        let $h2 = document.createElement('h2');
+        $h2.innerText = `Doações realizadas por ${firstName}`;
+        $h2.style = 'text-align: center';
+        $donationsInfo.appendChild($h2);
     }
+
+    let $box = document.createElement('div');
+    $box.id = 'user-items';
+    $box.className = 'flex-box-align-center flex-box-justify-center'
 
     donations.forEach(d => {
         let $div = document.createElement('div');
-        $div.className = 'top-campaigns';
+        $div.className = 'user-campaigns';
         $div.innerHTML =
             `<h1>${firstName} realizou uma doação na campanha ${d.campaignTarget.shortName}</h1>
             <div class="campaign-description">
@@ -280,8 +321,10 @@ function donationsUserList(donations, firstName) {
                     <p><strong>${d.donationDate.split(" ")[0]}</strong></p>
                 </li>
             </ul>`;
-        $donationsInfo.appendChild($div);
+        $box.appendChild($div);
     });
+
+    $donationsInfo.appendChild($box);
     return $donationsInfo;
 }
 

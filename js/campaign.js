@@ -1,4 +1,4 @@
-import { url, $viewer, generateHeader, viewerChange, viewHasNoPermission } from "./main.js";
+import { url, $viewer, generateHeader, searchListener, viewHasNoPermission } from "./main.js";
 
 let data;
 async function fetch_campaign(campaignUrl) {
@@ -45,6 +45,7 @@ let $box;
 
 function createView(c) {
     removeViews();
+    searchListener();
     $box = document.createElement('div');
 
     let status;
@@ -52,7 +53,11 @@ function createView(c) {
     if (c.status === 'A') {
         status = "Esta campanha está ativa!";
     } else if (c.status === 'F') {
-        //
+        status = "Esta campanha foi concluída!";
+    } else if (c.status === 'E') {
+        status = "Esta campanha está vencida!";
+    } else if (c.status === 'C') {
+        status = "Esta campanha foi encerrada pelo seu criador!";
     }
 
     $box.id = "box";

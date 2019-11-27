@@ -145,7 +145,7 @@ export function generateHeader() {
 }
 
 function viewCampaign(url) {
-    generateHeader()
+    generateHeader();
     showCampaign(url);
 }
 
@@ -161,7 +161,7 @@ export function searchListener() {
 }
 
 async function showTop5ByRemaining() {
-    let data = await Promise.all([fetchTop5Campaigns('received')]);
+    let data = await Promise.all([fetchTop5Campaigns('remaining')]);
     let campaigns = JSON.parse(JSON.stringify(data))[0];
     generateViewTop5Campaigns(campaigns);
 }
