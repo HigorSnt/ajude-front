@@ -21,7 +21,7 @@ async function fetch_campaign(campaignUrl) {
             mode: 'cors',
             'method': 'GET',
             'headers': header
-        }).then(r => r.json());
+        }).then();
 
         return data;
     }
@@ -30,19 +30,24 @@ async function fetch_campaign(campaignUrl) {
 let campaignURL;
 export async function showCampaign(campaignUrl) {
     campaignURL = campaignUrl;
-    let response = await Promise.all([fetch_campaign(campaignUrl)]);
-    
-    if (response[0] !== undefined) {
-        let campaign = JSON.parse(JSON.stringify(response))[0];
+    let response = await fetch_campaign(campaignUrl);
+
+    if (response.status === 200) {
+        let campaign = await response.json();
 
         createView(campaign);
         if (campaign.user.email === sessionStorage.getItem('userEmail')) loadOwnerFunctions();
+    }
+    else{
+        let $h2 = document.createElement('h2');
+        $h2.id = "tittle";
+        $h2.innerText = `A campanha ${campaignUrl} não existe`;
+        $viewer.appendChild($h2);
     }
 
 }
 
 let $box;
-
 function createView(c) {
     removeViews();
     $box = document.createElement('div');
@@ -52,7 +57,9 @@ function createView(c) {
     if (c.status === 'A') {
         status = "Esta campanha está ativa!";
     } else if (c.status === 'F') {
-        //
+        status = "Esta campanha está Fechada!";
+    } else if (c.status === 'C'){
+            status = "Esta campanha está Concluída!";
     }
 
     $box.id = "box";
@@ -98,13 +105,13 @@ function createView(c) {
 
     let $likeButton = document.querySelector("#img-like");
     $likeButton.addEventListener('click', async () => {
-        await Promise.all([addLike()]);
+        await addLike();
         showCampaign(campaignURL);
     });
 
     let $dislikeButton = document.querySelector("#img-dislike");
     $dislikeButton.addEventListener('click', async () => {
-        await Promise.all([addDislike()]);
+        await addDislike();
         showCampaign(campaignURL);
     });
 
@@ -112,7 +119,7 @@ function createView(c) {
     $commentBtn.addEventListener('click', async () => {
         let $comment = $viewer.querySelector('#form');
 
-        await Promise.all([addComment($comment.value)]);
+        await addComment($comment.value);
         showCampaign(campaignURL);
     });
 
@@ -121,13 +128,30 @@ function createView(c) {
 }
 
 function loadComments(comments) {
-
+    console.log(comments);
     comments.forEach(comment => {
-        let $crate = document.createElement('div');
-        $crate.id = "comment-box";
-        $crate.innerText = comment.comment;
-        $box.appendChild($crate);
+
+    if(comment.comment != ""){
+        let $commentBox = document.createElement('div');
+        $commentBox.className = "campaign-description";
+        $commentBox.innerHTML = `<h2>${comment.comment}</h2>`
+        let $seeReplies = document.createElement('strong');
+        $seeReplies.innerText = "Ver respostas";
+        $box.appendChild($commentBox);
+
+        $seeReplies.addEventListener('click', loadReplies(comment));
+        $box.appendChild($seeReplies);
+
+        }
     })
+}
+
+function loadReplies(comment){
+    console.log(comment.comment)
+    while(comment != null){
+        if (comment.reply != null) console.log(comment.reply.comment);
+        comment = comment.reply;
+    }
 }
 
 function removeViews() {
@@ -143,7 +167,7 @@ function donate() {
     let $btn = $box.querySelector('#confirm-btn');
     $btn.addEventListener('click', async () => {
         let value = $viewer.querySelector('#donation-value').value;
-        await Promise.all([realizeDonate(value)]);
+        await realizeDonate(value);
         showCampaign(campaignURL);
     });
 }
@@ -225,7 +249,7 @@ function changeGoal() {
     let $btn = $box.querySelector('#confirm-btn');
     let $goal = $viewer.querySelector('#campaign-goal');
     $btn.addEventListener('click', async () => {
-        await Promise.all([setGoal($goal.value)]);
+        await setGoal($goal.value);
         showCampaign(campaignURL);
     });
 }
@@ -239,7 +263,7 @@ function changeDeadline() {
     let $deadline = $viewer.querySelector('#campaign-deadline');
 
     $btn.addEventListener('click', async () => {
-        await Promise.all([setDeadline($deadline.value + " 23:59:59")]);
+        await setDeadline($deadline.value + " 23:59:59");
         showCampaign(campaignURL);
     });
 }

@@ -178,7 +178,7 @@ async function fetchChangePassword() {
 }
 
 export async function viewProfile(username) {
-    let u = (await Promise.all([getUser(username)]))[0];
+    let u = await getUser(username);
     let campaigns = u.campaignList;
     let donations = u.donations;
 
