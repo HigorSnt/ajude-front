@@ -133,11 +133,16 @@ h5+h2 {
 #box {
     width: 80%;
     padding-top: 1em;
-    padding-bottom: 1em;
+    padding-bottom: 2em;
+    margin-bottom: 2em;
     margin-top: 10em;
     background-color: rgba(0, 0, 0, 0.3);
     border-radius: 10px;
     box-shadow: 0 .1em .3em #808080;
+}
+
+#box p {
+    margin: 0.3em;
 }
 
 #box h1 {
@@ -145,7 +150,7 @@ h5+h2 {
 }
 
 #comment-btn {
-    font-size: 12px;
+    font-size: 0.8em;
     color: white;
     background-color: #FF8C00;
     border: none;
@@ -160,7 +165,8 @@ h5+h2 {
 }
 
 textarea {
-    margin: 0.5em;
+    margin-top: 1.5em;
+    margin-bottom: 0.2em;
     width: 80%;
     outline: none;
     resize: none;
@@ -238,7 +244,13 @@ button:hover {
     text-decoration: none;
 }
 
-#forgot-password a:hover {
+#box p a:link, #box p a:active, #box p a:visited {
+    color: black;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+#forgot-password a:hover, #box p a:hover {
     color: #FFD700;
 }
 
@@ -453,7 +465,7 @@ input [type="text"] {
     text-align: center;
 }
 
-.top-campaigns .ul-info {
+.user-campaigns .ul-info {
     flex-wrap: wrap;
 }
 

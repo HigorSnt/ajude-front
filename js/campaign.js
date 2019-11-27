@@ -36,9 +36,8 @@ export async function showCampaign(campaignUrl) {
         let campaign = await response.json();
 
         createView(campaign);
-        if (campaign.user.email === sessionStorage.getItem('userEmail')) loadOwnerFunctions();
     }
-    else{
+    else {
         let $h2 = document.createElement('h2');
         $h2.id = "tittle";
         $h2.innerText = `A campanha ${campaignUrl} não existe`;
@@ -78,33 +77,42 @@ function createView(c) {
     </div>
     <ul class="ul-info flex-box" style="justify-content: space-between;">
         <li id="goal" class="flex-box flex-box-row flex-box-align-center" style="justify-content: space-between;">
-            <img id="goal-img" src="images/piggy-bank.svg" class="img-inverter" alt="Meta" width="40px" height="40px" style="margin-right: 0.3em">
+            <img id="goal-img" src="images/piggy-bank.svg" class="img-inverter" title="Alterar Meta" width="40px" height="40px" style="margin-right: 0.3em">
             <p><strong>${c.received}/${c.goal}</strong></p>
         </li>
          <li id="deadline" class="flex-box flex-box-row flex-box-align-center" style="justify-content: space-between;">
-            <img id="deadline-img" src="images/calendar.svg" class="img-inverter" alt="Deadline" width="40px" height="40px" style="margin-right: 0.3em">
+            <img id="deadline-img" src="images/calendar.svg" class="img-inverter" title="Alterar Deadline" width="40px" height="40px" style="margin-right: 0.3em">
             <p><strong>${c.deadline}</strong></p>
         </li>
         </li>
             <li class="flex-box flex-box-row flex-box-align-center" style="justify-content: space-between;">
-            <img id="img-like" class="img-inverter" src="images/heart.svg" alt="Deadline" width="40px" height="40px" style="margin-right: 0.3em">
+            <img id="img-like" class="img-inverter" src="images/heart.svg" title="Dar like" width="40px" height="40px" style="margin-right: 0.3em">
             <p><strong id ="like">${c.numLikes}</strong></p>
         </li>
         </li>
             <li class="flex-box flex-box-row flex-box-align-center" style="justify-content: space-between;">
-            <img id="img-dislike" class="img-inverter" src="images/broken-heart.svg" alt="Deadline" width="40px" height="40px" style="margin-right: 0.3em">
+            <img id="img-dislike" class="img-inverter" src="images/broken-heart.svg" title="Dar dislike" width="40px" height="40px" style="margin-right: 0.3em">
             <p><strong id ="dislike">${c.numDislikes}</strong></p>
         </li>
-    </ul>
-    <div id="comment-text" class="flex-box flex-box-justify-center flex-box-align-center flex-box-column">
-        <textarea rows="3" cols="100" name="comment" id="form" form="comment-text$" placeholder="Deixe um comentário aqui..."></textarea>
-        <button type="submit" id="comment-btn" width="1.5em" height="1.5em">Comentar</button>
-    </div>
-    <button id="donate">Fazer doação</button>`;
-
-    loadComments(c.comments);
+    </ul>`;
 
     $viewer.appendChild($box);
+    if (c.user.email === sessionStorage.getItem('userEmail')) {
+        loadOwnerFunctions();
+    } else {
+        $box.innerHTML += '<button id="donate">Realizar doação</button>';
+    }
+
+    let $div = document.createElement('div');
+    $div.innerHTML = 
+    `<div id="comment-text" class="flex-box flex-box-justify-center flex-box-align-center flex-box-column">
+        <textarea rows="3" cols="100" name="comment" id="form" form="comment-text$" placeholder="Deixe um comentário aqui..."></textarea>
+        <button type="submit" id="comment-btn" width="1.5em" height="1.5em">Comentar</button>
+    </div>`;
+
+    $box.appendChild($div);
+
+    loadComments(c.comments);
 
     let $likeButton = document.querySelector("#img-like");
     $likeButton.addEventListener('click', async () => {
@@ -134,24 +142,24 @@ function loadComments(comments) {
     console.log(comments);
     comments.forEach(comment => {
 
-    if(comment.comment != ""){
-        let $commentBox = document.createElement('div');
-        $commentBox.className = "campaign-description";
-        $commentBox.innerHTML = `<h2>${comment.comment}</h2>`
-        let $seeReplies = document.createElement('strong');
-        $seeReplies.innerText = "Ver respostas";
-        $box.appendChild($commentBox);
+        if (comment.comment != "") {
+            let $commentBox = document.createElement('div');
+            $commentBox.className = "campaign-description";
+            $commentBox.innerHTML = `<h2>${comment.comment}</h2>`
+            let $seeReplies = document.createElement('strong');
+            $seeReplies.innerText = "Ver respostas";
+            $box.appendChild($commentBox);
 
-        $seeReplies.addEventListener('click', loadReplies(comment));
-        $box.appendChild($seeReplies);
+            $seeReplies.addEventListener('click', loadReplies(comment));
+            $box.appendChild($seeReplies);
 
         }
     })
 }
 
-function loadReplies(comment){
+function loadReplies(comment) {
     console.log(comment.comment)
-    while(comment != null){
+    while (comment != null) {
         if (comment.reply != null) console.log(comment.reply.comment);
         comment = comment.reply;
     }
@@ -238,10 +246,24 @@ function loadOwnerFunctions() {
     let $deadline = document.querySelector('#deadline');
     $deadline.addEventListener('click', changeDeadline);
 
+    let $div = document.createElement('div');
+    $div.className = 'flex-box flex-box-align-center flex-box-row';
+    $div.style.justifyContent = 'space-between';
+    $div.style.width = '80%';
+    $div.style.margin = '1em';
+    
     let $deleteCampaignBtn = document.createElement('button');
+    let $donateCampaignBtn = document.createElement('button');
+    $donateCampaignBtn.id = 'donate';
+    $deleteCampaignBtn.style.width = '12em';
+    $donateCampaignBtn.style.width = '12em';
+    $donateCampaignBtn.innerText = "Realizar doação";
     $deleteCampaignBtn.innerText = "Deletar campanha";
     $deleteCampaignBtn.addEventListener('click', deleteCampaign);
-    $box.appendChild($deleteCampaignBtn);
+    $div.appendChild($donateCampaignBtn);
+    $div.appendChild($deleteCampaignBtn);
+    
+    $box.appendChild($div);
 }
 
 function changeGoal() {
