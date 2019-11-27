@@ -42,6 +42,7 @@ function viewHome() {
 
     let $template = document.querySelector('#home-view');
     $viewer.innerHTML += $template.innerHTML;
+    $viewer.classList = '';
     searchListener();
 
     let $receivedCheckbox = $viewer.querySelector("#check-received");
