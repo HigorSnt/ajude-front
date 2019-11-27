@@ -5,24 +5,28 @@ export { searchCampaigns, campaignURL };
 let data;
 async function listingCampaigns(substring) {
     let token = sessionStorage.getItem('token');
+    
+    if (token !== null && token !== undefined) {
+        let header = {
+            'Access-Control-Allow-Origin': `${url}/campaign/search`,
+            'Access-Control-Allow-Credentials': 'true',
+            'Access-Control-Allow-Methods': 'POST',
+            'Access-Control-Allow-Headers': 'Content-Type',
+            'Content-Type': 'application/json;charset=utf-8',
+            'Authorization': `Bearer ${token}`
+        };
 
-    let header = {
-        'Access-Control-Allow-Origin': `${url}/campaign/search`,
-        'Access-Control-Allow-Credentials': 'true',
-        'Access-Control-Allow-Methods': 'POST',
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Content-Type': 'application/json;charset=utf-8',
-        'Authorization': `Bearer ${token}`
-    };
+        data = await fetch(`${url}/campaign/search`, {
+            mode: 'cors',
+            'method': 'POST',
+            'body': `{"substring": "${substring}"}`,
+            'headers': header
+        });
 
-    data = await fetch(`${url}/campaign/search`, {
-        mode: 'cors',
-        'method': 'POST',
-        'body': `{"substring": "${substring}"}`,
-        'headers': header
-    });
-
-    return data;
+        return data;
+    } else {
+        viewHasNoPermission();
+    }
 }
 
 let $filterDiv, $list, $campaign;
@@ -33,9 +37,7 @@ async function searchCampaigns() {
 
     let campaigns = await Promise.all([listingCampaigns(substring)]);
 
-    if (campaigns[0].status === 401) {
-        viewHasNoPermission();
-    } else {
+    if (campaigns[0] !== undefined) {
         removeCampaigns();
 
         if (data[0] === undefined) {

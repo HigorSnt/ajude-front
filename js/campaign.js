@@ -3,41 +3,42 @@ import { url, $viewer, generateHeader, viewerChange, viewHasNoPermission } from 
 let data;
 async function fetch_campaign(campaignUrl) {
 
-    let token = await sessionStorage.getItem('token');
+    let token = sessionStorage.getItem('token');
 
-    let header = {
-        'Access-Control-Allow-Origin': url + '/campaign/search' + campaignUrl,
-        'Access-Control-Allow-Credentials': 'true',
-        'Access-Control-Allow-Methods': 'GET',
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Content-Type': 'application/json;charset=utf-8',
-        'Authorization': `Bearer ${token}`
-    };
-
-    data = await fetch(url + "/campaign" + campaignUrl, {
-        mode: 'cors',
-        'method': 'GET',
-        'headers': header
-    }).then(r => r.json());
-
-    if (data.status === 200) {
-        return data;
-    } else {
+    if (token === null) {
         viewHasNoPermission();
-    }
+    } else {
+        let header = {
+            'Access-Control-Allow-Origin': url + '/campaign/search' + campaignUrl,
+            'Access-Control-Allow-Credentials': 'true',
+            'Access-Control-Allow-Methods': 'GET',
+            'Access-Control-Allow-Headers': 'Content-Type',
+            'Content-Type': 'application/json;charset=utf-8',
+            'Authorization': `Bearer ${token}`
+        };
 
-    return data;
+        data = await fetch(url + "/campaign" + campaignUrl, {
+            mode: 'cors',
+            'method': 'GET',
+            'headers': header
+        }).then(r => r.json());
+
+        return data;
+    }
 }
 
 let campaignURL;
 export async function showCampaign(campaignUrl) {
     campaignURL = campaignUrl;
     let response = await Promise.all([fetch_campaign(campaignUrl)]);
+    
+    if (response[0] !== undefined) {
+        let campaign = JSON.parse(JSON.stringify(response))[0];
 
-    let campaign = JSON.parse(JSON.stringify(response))[0];
+        createView(campaign);
+        if (campaign.user.email === sessionStorage.getItem('userEmail')) loadOwnerFunctions();
+    }
 
-    createView(campaign);
-    if (campaign.user.email === sessionStorage.getItem('userEmail')) loadOwnerFunctions();
 }
 
 let $box;

@@ -29,6 +29,10 @@ nav ul {
     flex-wrap: nowrap;
 }
 
+#logo-a {
+    cursor: pointer;
+}
+
 #listing {
     background-color: rgba(0, 0, 0, .3);
     text-align: justify;

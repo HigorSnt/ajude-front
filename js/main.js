@@ -16,7 +16,7 @@ async function viewerChange() {
     let profileURL = location.hash.substring(6);
     let hash = location.hash;
 
-    if ([''].includes(hash)) {
+    if (['', '#'].includes(hash)) {
         viewHome();
     } else if (['#user-register'].includes(hash)) {
         viewUserRegister();
@@ -73,7 +73,7 @@ export function showConfirmView(message) {
     $viewer.appendChild($div);
 
     if (message !== "Você agora está cadastrado!") {
-        window.setTimeout("location.href = '/'", 1000);
+        window.setTimeout("location.href = '/'", 800);
     }
 }
 
@@ -106,7 +106,8 @@ function logout() {
 }
 
 export function viewHasNoPermission() {
-    let $headerTemplate = document.querySelector('#header-not-logged');
+    generateHeader();
+    searchListener();
     let $div = document.createElement('div');
     let $p = document.createElement('p');
     let $img = document.createElement('img');
@@ -119,15 +120,6 @@ export function viewHasNoPermission() {
     $img.src = 'images/crying-face.svg';
     $img.className = 'img-inverter';
 
-    $viewer.innerHTML = $headerTemplate.innerHTML;
-    let $searchBtn = $viewer.querySelector("#search-btn");
-
-    if ($viewer.querySelector('#search-btn') !== null) {
-        $searchBtn.addEventListener('click', function (event) {
-            viewHasNoPermission();
-            event.preventDefault();
-        });
-    }
 
     $div.appendChild($img);
     $div.appendChild($p);
@@ -140,12 +132,6 @@ export function generateHeader() {
     if (sessionStorage.getItem('token') == null) {
         $headerTemplate = document.querySelector("#header-not-logged");
         $viewer.innerHTML = $headerTemplate.innerHTML;
-
-        let $searchBtn = $viewer.querySelector("#search-btn");
-        $searchBtn.addEventListener('click', function (event) {
-            viewHasNoPermission();
-            event.preventDefault();
-        });
     } else {
         $headerTemplate = document.querySelector("#header-user-logged");
         $viewer.innerHTML = $headerTemplate.innerHTML;
@@ -164,6 +150,7 @@ export function searchListener() {
     let $searchInput = $viewer.querySelector("#input-search");
     
     $searchBtn.addEventListener('click', (event) => {
+        history.replaceState(null, null, "/");
         searchCampaigns($searchInput.value);
         event.preventDefault();
     });
@@ -194,6 +181,7 @@ function generateViewTop5Campaigns(campaigns) {
     if (campaigns.length === 0) {
         let $h3 = document.createElement('h3');
         $h3.innerText = 'Não existem campanhas cadastradas ativas!';
+        $h3.style.textAlign = 'center';
         $divTopCampaigns.appendChild($h3);
         $divTopCampaigns.className = 'top-campaigns';
     } else {
@@ -201,25 +189,25 @@ function generateViewTop5Campaigns(campaigns) {
             let campaign = document.createElement('div');
             campaign.className = "top-campaigns";
             campaign.innerHTML =
-                `<h3 id="name" style="margin: 0.5em">${c.shortName.toUpperCase()}</h3>
+                `<h3 id="name" style="margin: 0.5em; text-align: center;">${c.shortName.toUpperCase()}</h3>
                 <div class="campaign-description">${c.description}</div>
-                    <ul class="ul-info flex-box" style="justify-content: space-between;">
+                    <ul class="ul-info flex-box" style="justify-content: space-between; flex-wrap: wrap">
                         <li class="flex-box flex-box-row flex-box-align-center" style="justify-content: space-between;">
-                            <img src="images/piggy-bank.svg" alt="Meta" width="30px" height="30px" style="margin-right: 0.3em">
+                            <img src="images/piggy-bank.svg" title="Meta" width="30px" height="30px" style="margin-right: 0.3em">
                             <p></strong>${c.received}/${c.goal}</strong></p>
                         </li>
                         <li class="flex-box flex-box-row flex-box-align-center" style="justify-content: space-between;">
-                            <img src="images/calendar.svg" alt="Deadline" width="30px" height="30px" style="margin-right: 0.3em">
+                            <img src="images/calendar.svg" title="Deadline" width="30px" height="30px" style="margin-right: 0.3em">
                             <p></strong>${c.deadline}</strong></p>
                         </li>
                         </li>
                         <li class="flex-box flex-box-row flex-box-align-center" style="justify-content: space-between;">
-                            <img id="img-like" class="img-inverter" src="images/heart.svg" alt="Deadline" width="30px" height="30px" style="margin-right: 0.3em">
+                            <img id="img-like" class="img-inverter" src="images/heart.svg" title="Likes" width="30px" height="30px" style="margin-right: 0.3em">
                             <p><strong id ="like">${c.likes}</strong></p>
                         </li>
                         </li>
                             <li class="flex-box flex-box-row flex-box-align-center" style="justify-content: space-between;">
-                            <img id="img-dislike" class="img-inverter" src="images/broken-heart.svg" alt="Deadline" width="35px" height="35px" style="margin-right: 0.3em">
+                            <img id="img-dislike" class="img-inverter" src="images/broken-heart.svg" title="Dislikes" width="35px" height="35px" style="margin-right: 0.3em">
                             <p><strong id ="dislike">${c.dislikes}</strong></p>
                         </li>
                         <li> 
