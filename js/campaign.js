@@ -139,58 +139,84 @@ function createView(c) {
     $donateBtn.addEventListener('click', donate);
 }
 
-//let $commentBox;
 function loadComments(comments) {
-    let $div = document.createElement('div');
-
-    console.log(comments);
     comments.forEach(comment => {
-
         if (comment.comment !== "") {
+            let $div = document.createElement('div');
+            $div.id = `comment${comment.id}`;
+            $div.className = "flex-box flex-box-column flex-box-align-center";
+            $div.style.width = '80%';
             let $commentBox = document.createElement('div');
             $commentBox.className = 'comment-box flex-box flex-box-column';
-            
-            $commentBox.innerHTML = `<h4>${comment.comment}</h4>`;
-            let $seeReplies = document.createElement('strong');
-            $seeReplies.innerText = "Ver respostas";
-            $box.appendChild($commentBox);
+            if (sessionStorage.getItem('userEmail') === comment.user.email) {
+                $commentBox.innerHTML = `<div class="flex-box flex-box-row" style="justify-content: space-between; margin: 0.6em">
+                <div class="flex-box flex-box-row">
+                <a class="owner-comment" href="/#user/${comment.user.username}">${comment.user.firstName} ${comment.user.lastName}</a>
+                <h4>${comment.comment}</h4>
+            </div>
+            <button id="button${comment.id}" style="width: fit-content; height: fit-content; font-size: 10px">Apagar comentário</button>
+            </div>`;
+                let $deleteBtn = $commentBox.querySelector(`#button${comment.id}`);
+                $deleteBtn.addEventListener('click', async () => {
+                    await fetchDeleteComment(comment.id, campaignURL.substring(1));
+                    showCampaign(campaignURL);
+                });
+            } else {
+                $commentBox.innerHTML = `<div class="flex-box flex-box-row" style="justify-content: space-between; margin: 0.6em">
+            <div class="flex-box flex-box-row">
+                <a class="owner-comment" href="/#user/${comment.user.username}">${comment.user.firstName} ${comment.user.lastName}</a>
+                <h4>${comment.comment}</h4>
+            </div>
+            </div>`;
+            }
 
-            $seeReplies.addEventListener('click', ()=>loadReplies(comment, $commentBox));
-            $box.appendChild($seeReplies);
+            let $seeReplies = document.createElement('strong');
+            $seeReplies.id = `strong${comment.id}`;
+            $seeReplies.style = 'cursor:pointer;'
+            $seeReplies.innerText = "Ver respostas";
+            $div.appendChild($commentBox);
+
+            $seeReplies.addEventListener('click', () => loadReplies(comment, $commentBox));
+            $div.appendChild($seeReplies);
+            $box.appendChild($div)
         }
     });
-    
-    $box.appendChild($div);
 }
 
 function loadReplies(comment, box) {
+    let $strongReply = $viewer.querySelector(`#strong${comment.id}`);
+    let $divStrongParent = $viewer.querySelector(`#comment${comment.id}`);
+    $divStrongParent.removeChild($strongReply);
+
     let $repliesBox = document.createElement('div');
-    $repliesBox.id = "replies";
+    $repliesBox.className = "replies";
     let mainComment = comment;
+
     while (comment.reply != null) {
         let $reply = document.createElement('div');
         $reply.class = "campaign-description";
-        $reply.innerHTML = `<h3>${comment.reply.comment}</h3>`;
+        $reply.innerHTML = `<div class="flex-box flex-box-row">
+        <a class="owner-comment" href="/#user/${comment.user.username}">${comment.user.firstName} ${comment.user.lastName}</a>
+        <h4>${comment.reply.comment}</h4></div>`;
         $repliesBox.appendChild($reply);
         comment = comment.reply;
     }
+
     box.appendChild($repliesBox);
     let $div = document.createElement('div');
     $div.innerHTML =
         `<div id="comment-text" class="flex-box flex-box-justify-center flex-box-align-center flex-box-column">
-            <textarea rows="3" cols="100" name="comment" id="reply" form="comment-text$" placeholder="Deixe um comentário aqui..."></textarea>
-            <button type="submit" id="reply-btn" width="1.5em" height="1.5em">Responder</button>
+            <textarea rows="3" cols="100" name="comment" id="reply${comment.id}" form="comment-text$" placeholder="Responda esse comentário..."></textarea>
+            <button type="submit" id="reply-btn${comment.id}" width="1.5em" height="1.5em">Responder</button>
         </div>`;
     box.appendChild($div);
 
-    let $commentBtn = document.querySelector('#reply-btn');
+    let $commentBtn = document.querySelector(`#reply-btn${comment.id}`);
     $commentBtn.addEventListener('click', async () => {
-        let $comment = $viewer.querySelector('#reply');
-        console.log(mainComment.id + ": " + mainComment.comment);
+        let $comment = $viewer.querySelector(`#reply${comment.id}`);
         await addReply(mainComment.id, $comment.value);
         showCampaign(campaignURL);
     });
-
 }
 
 function removeViews() {
@@ -244,8 +270,6 @@ async function addReply(id, comment) {
         'body': `{"comment":"${comment}"}`,
         'headers': header
     }).then(r => r.json());
-
-    console.log(data);
 }
 
 
@@ -304,18 +328,18 @@ function loadOwnerFunctions() {
     $div.style.justifyContent = 'space-between';
     $div.style.width = '80%';
     $div.style.margin = '1em';
-    
+
     let $deleteCampaignBtn = document.createElement('button');
     let $donateCampaignBtn = document.createElement('button');
     $donateCampaignBtn.id = 'donate';
     $deleteCampaignBtn.style.width = '12em';
     $donateCampaignBtn.style.width = '12em';
     $donateCampaignBtn.innerText = "Realizar doação";
-    $deleteCampaignBtn.innerText = "Deletar campanha";
+    $deleteCampaignBtn.innerText = "Encerrar campanha";
     $deleteCampaignBtn.addEventListener('click', deleteCampaign);
     $div.appendChild($donateCampaignBtn);
     $div.appendChild($deleteCampaignBtn);
-    
+
     $box.appendChild($div);
 }
 
@@ -409,7 +433,45 @@ async function realizeDonate(value) {
     }).then(r => r.json());
 }
 
-function deleteCampaign() {
-    console.log("campanha deletada");
+async function deleteCampaign() {
+    await fetchDeleteCampaign();
     removeViews();
+}
+
+async function fetchDeleteCampaign() {
+    let token = sessionStorage.getItem('token');
+
+    let header = {
+        'Access-Control-Allow-Origin': `${url}/campaign${campaignURL}/closeCampaign`,
+        'Access-Control-Allow-Credentials': 'true',
+        'Access-Control-Allow-Methods': 'PUT',
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Content-Type': 'application/json;charset=utf-8',
+        'Authorization': `Bearer ${token}`
+    };
+
+    let data = await fetch(`${url}/campaign${campaignURL}/closeCampaign`, {
+        mode: 'cors',
+        'method': 'PUT',
+        'headers': header
+    }).then(r => r.json());
+}
+
+async function fetchDeleteComment(commentId, campaignUrl) {
+    let token = sessionStorage.getItem('token');
+
+    let header = {
+        'Access-Control-Allow-Origin': `${url}/campaign${campaignURL}/comment/${commentId}`,
+        'Access-Control-Allow-Credentials': 'true',
+        'Access-Control-Allow-Methods': 'DELETE',
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Content-Type': 'application/json;charset=utf-8',
+        'Authorization': `Bearer ${token}`
+    };
+
+    let data = await fetch(`${url}/campaign${campaignURL}/comment/${commentId}`, {
+        mode: 'cors',
+        'method': 'DELETE',
+        'headers': header
+    }).then(r => r.json());
 }

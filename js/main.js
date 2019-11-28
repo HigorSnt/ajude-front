@@ -194,21 +194,21 @@ function generateViewTop5Campaigns(campaigns) {
                 <div class="campaign-description">${c.description}</div>
                     <ul class="ul-info flex-box" style="justify-content: space-between; flex-wrap: wrap">
                         <li class="flex-box flex-box-row flex-box-align-center" style="justify-content: space-between;">
-                            <img src="images/piggy-bank.svg" title="Meta" width="30px" height="30px" style="margin-right: 0.3em">
+                            <img src="images/piggy-bank.svg" title="Meta" width="30px" height="30px" style="margin-right: 0.3em; cursor: default">
                             <p></strong>${c.received}/${c.goal}</strong></p>
                         </li>
                         <li class="flex-box flex-box-row flex-box-align-center" style="justify-content: space-between;">
-                            <img src="images/calendar.svg" title="Deadline" width="30px" height="30px" style="margin-right: 0.3em">
+                            <img src="images/calendar.svg" title="Deadline" width="30px" height="30px" style="margin-right: 0.3em; cursor: default">
                             <p></strong>${c.deadline}</strong></p>
                         </li>
                         </li>
                         <li class="flex-box flex-box-row flex-box-align-center" style="justify-content: space-between;">
-                            <img id="img-like" class="img-inverter" src="images/heart.svg" title="Likes" width="30px" height="30px" style="margin-right: 0.3em">
+                            <img id="img-like" class="img-inverter" src="images/heart.svg" title="Likes" width="30px" height="30px" style="margin-right: 0.3em; cursor: default">
                             <p><strong id ="like">${c.likes}</strong></p>
                         </li>
                         </li>
                             <li class="flex-box flex-box-row flex-box-align-center" style="justify-content: space-between;">
-                            <img id="img-dislike" class="img-inverter" src="images/broken-heart.svg" title="Dislikes" width="35px" height="35px" style="margin-right: 0.3em">
+                            <img id="img-dislike" class="img-inverter" src="images/broken-heart.svg" title="Dislikes" width="35px" height="35px" style="margin-right: 0.3em; cursor: default">
                             <p><strong id ="dislike">${c.dislikes}</strong></p>
                         </li>
                         <li> 
