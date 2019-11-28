@@ -13,7 +13,7 @@ Repositório do frontend do projeto _AJuDE - AquiJuntosDoandoEsperança_ da disc
 ## Tópicos
 
 - [ajude](#ajude)
-  - [Tópicos](#t%c3%b3picos)
+  - [Tópicos](#t%C3%B3picos)
     - [Caso de uso 1](#caso-de-uso-1)
     - [Caso de uso 1A](#caso-de-uso-1a)
     - [Caso de uso 2](#caso-de-uso-2)
@@ -25,14 +25,14 @@ Repositório do frontend do projeto _AJuDE - AquiJuntosDoandoEsperança_ da disc
     - [Casos de uso 7 e 8](#casos-de-uso-7-e-8)
     - [Caso de uso 9](#caso-de-uso-9)
     - [Caso de uso 10](#caso-de-uso-10)
-    - [Detalhes da implementação](#detalhes-da-implementa%c3%a7%c3%a3o)
+    - [Detalhes da implementação](#detalhes-da-implementa%C3%A7%C3%A3o)
     - [Links](#links)
     - [Grupo](#grupo)
 
 
 ### Caso de uso 1
 
-Assim que acessa o link, a página inicial no cabeçalho possui dois links, que na verdade são âncoras, que levam para formulários de cadasatro do usuário (Sign Up) e para o login.
+Assim que acessa o link, no cabeçalho da página inicial possui dois links, que na verdade são âncoras, que levam para formulários de cadasatro do usuário (Sign Up) e para o login.
 
 ### Caso de uso 1A
 
@@ -88,6 +88,7 @@ O `main.css` e `main.js` é importado pelo `index.html`, que é quem possui todo
 
 1. Aplicação rodando: [apiajude](https://meajude.netlify.com/)
 2. Vídeo mostrando funcionamento: [link]()
+3. Usuários cadastrados: [link](https://bit.ly/37NTTXy)
 
 ### Grupo
 > [Izaquiel Cordeiro](https://github.com/IzaquielCordeiro)  
