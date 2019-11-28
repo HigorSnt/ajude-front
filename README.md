@@ -86,7 +86,7 @@ O `main.css` e `main.js` é importado pelo `index.html`, que é quem possui todo
 
 ### Links
 
-1. Aplicação rodando: [apiajude](https://meajude.netlify.com/)
+1. Aplicação rodando: [ajude](https://meajude.netlify.com/)
 2. Vídeo mostrando funcionamento: [link]()
 
 ### Grupo
