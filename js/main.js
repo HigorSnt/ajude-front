@@ -99,7 +99,7 @@ export function showFailureView(message) {
     window.setTimeout("location.href = '/'", 800);
 }
 
-function logout() {
+export function logout() {
     sessionStorage.removeItem('token');
     sessionStorage.removeItem('userEmail');
 

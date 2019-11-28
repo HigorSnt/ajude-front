@@ -1,4 +1,4 @@
-import { $viewer, url, showConfirmView, showFailureView, generateHeader, searchListener } from "./main.js";
+import { $viewer, url, showConfirmView, showFailureView, generateHeader, searchListener, logout } from "./main.js";
 import { User, Login } from "./entities.js";
 import { fetchLogin } from "./login.js";
 export { viewUserRegister, viewRequestChangePassword, viewChangePassword };
@@ -85,13 +85,14 @@ function viewRequestChangePassword() {
 }
 
 function viewChangePassword() {
-    let $headerTemplate = document.querySelector('#header-not-logged-without-search');
     let $template = document.querySelector("#change-password");
 
-    $viewer.innerHTML = $headerTemplate.innerHTML + $template.innerHTML;
+    generateHeader();
 
+    $viewer.innerHTML += $template.innerHTML;
     let $confirmButton = $viewer.querySelector("#confirm-change");
     $confirmButton.addEventListener('click', fetchChangePassword);
+    searchListener();
 }
 
 async function fetchRequestChangePassword() {
@@ -159,12 +160,12 @@ async function fetchChangePassword() {
                     'body': body,
                     'headers': header
                 });
-                /*
+
                 if (data.status === 200) {
                     showConfirmView("Senha alterada!");
                 } else {
-                    showFailureView("Ocorreu algum erro durante a solicitação do serviço!");
-                }*/
+                    showFailureView("Esse link já não está mais válido!");
+                }
 
             } catch (e) {
                 console.log(e);
