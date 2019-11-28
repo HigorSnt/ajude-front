@@ -27,13 +27,13 @@ async function fetch_campaign(campaignUrl) {
     }
 }
 
-let campaignURL;
+let campaignURL, campaign;
 export async function showCampaign(campaignUrl) {
     campaignURL = campaignUrl;
     let response = await fetch_campaign(campaignUrl);
 
     if (response.status === 200) {
-        let campaign = await response.json();
+        campaign = await response.json();
 
         createView(campaign);
     }
@@ -187,16 +187,14 @@ function loadReplies(comment, box) {
     let $strongReply = $viewer.querySelector(`#strong${comment.id}`);
     let $divStrongParent = $viewer.querySelector(`#comment${comment.id}`);
     $divStrongParent.removeChild($strongReply);
-
     let $repliesBox = document.createElement('div');
     $repliesBox.className = "replies";
     let mainComment = comment;
-
     while (comment.reply != null) {
         let $reply = document.createElement('div');
         $reply.class = "campaign-description";
         $reply.innerHTML = `<div class="flex-box flex-box-row">
-        <a class="owner-comment" href="/#user/${comment.user.username}">${comment.user.firstName} ${comment.user.lastName}</a>
+        <a class="owner-comment" href="/#user/${comment.reply.user.username}">${comment.reply.user.firstName} ${comment.reply.user.lastName}</a>
         <h4>${comment.reply.comment}</h4></div>`;
         $repliesBox.appendChild($reply);
         comment = comment.reply;
@@ -329,16 +327,20 @@ function loadOwnerFunctions() {
     $div.style.width = '80%';
     $div.style.margin = '1em';
 
-    let $deleteCampaignBtn = document.createElement('button');
+
     let $donateCampaignBtn = document.createElement('button');
     $donateCampaignBtn.id = 'donate';
-    $deleteCampaignBtn.style.width = '12em';
     $donateCampaignBtn.style.width = '12em';
     $donateCampaignBtn.innerText = "Realizar doação";
-    $deleteCampaignBtn.innerText = "Encerrar campanha";
-    $deleteCampaignBtn.addEventListener('click', deleteCampaign);
     $div.appendChild($donateCampaignBtn);
-    $div.appendChild($deleteCampaignBtn);
+
+    if(campaign.status != "C"){
+        let $deleteCampaignBtn = document.createElement('button');
+        $deleteCampaignBtn.style.width = '12em';
+        $deleteCampaignBtn.innerText = "Encerrar campanha";
+        $deleteCampaignBtn.addEventListener('click', deleteCampaign);
+        $div.appendChild($deleteCampaignBtn);
+    }
 
     $box.appendChild($div);
 }

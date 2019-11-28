@@ -42,35 +42,19 @@ async function searchCampaigns() {
         searchListener();
         if (data[0] === undefined) {
             let $h2 = document.createElement('h2');
-            $h2.id = "tittle";
+            $h2.id = "inform";
+            $h2.className = 'flex-box flex-box-justify-center flex-box-align-center';
             $h2.innerText = `A busca por ${substring} não resultou em nenhuma campanha!`;
             $viewer.appendChild($h2);
+            generateFilter();
+
         } else {
             let campaignsString = JSON.stringify(campaigns);
             campaignsJSON = JSON.parse(campaignsString)[0];
     
             currentCampaigns = getActiveCampaigns(campaignsJSON);
     
-            $filterDiv = document.createElement('div');
-            $filterDiv.id = "filter";
-            $filterDiv.className = "flex-box flex-box-justify-center flex-box-align-center flex-box-column";
-            let $checkbox = document.createElement('input');
-            $checkbox.type = 'checkbox';
-            $checkbox.name = 'check';
-            $checkbox.value = 'todas';
-            let $label = document.createElement('p');
-            $label.innerText = " Todas as campanhas";
-            $filterDiv.appendChild($checkbox);
-            $filterDiv.appendChild($label);
-            $filterDiv.className = "flex-box flex-box-justify-center flex-box-align-center flex-box-row";
-    
-            $checkbox.addEventListener('change', () => {
-                if (currentCampaigns === campaignsJSON) currentCampaigns = getActiveCampaigns(campaignsJSON);
-                else currentCampaigns = campaignsJSON;
-                removeCampaigns();
-                showCampaigns(currentCampaigns);
-            });
-    
+
             $list = document.createElement('div');
             $list.id = "list-campaigns";
             $list.className = "flex-box flex-box-justify-center flex-box-align-center flex-box-column";
@@ -81,7 +65,7 @@ async function searchCampaigns() {
             $h5.className = 'flex-box flex-box-justify-center flex-box-align-center';
     
             $viewer.appendChild($h5);
-            $viewer.appendChild($filterDiv);
+            generateFilter();
             $viewer.appendChild($list);
     
             showCampaigns(currentCampaigns);
@@ -89,64 +73,32 @@ async function searchCampaigns() {
     }
 }
 
-/*
-let $filterDiv, $list, $campaign;
-let campaignsJSON, currentCampaigns, campaignURL;
-async function searchCampaigns() {
-    let $search = document.querySelector('#input-search');
-    let substring = $search.value;
+function generateFilter(){
+    $filterDiv = document.createElement('div');
+    $filterDiv.id = "filter";
+    $filterDiv.className = "flex-box flex-box-justify-center flex-box-align-center flex-box-column";
+    let $checkbox = document.createElement('input');
+    $checkbox.type = 'checkbox';
+    $checkbox.name = 'check';
+    $checkbox.value = 'todas';
+    let $label = document.createElement('p');
+    $label.innerText = " Todas as campanhas";
+    $filterDiv.appendChild($checkbox);
+    $filterDiv.appendChild($label);
+    $filterDiv.className = "flex-box flex-box-justify-center flex-box-align-center flex-box-row";
 
-    let campaigns = await listingCampaigns(substring);
-
-    removeCampaigns();
-    generateHeader();
-    searchListener();
-    if (campaigns === []) {
-        let $h2 = document.createElement('h2');
-        $h2.id = "tittle";
-        $h2.innerText = `A busca por ${substring} não resultou em nenhuma campanha!`;
-        $viewer.appendChild($h2);
-    } else {
-
-        currentCampaigns = getActiveCampaigns(campaigns);
-
-        $filterDiv = document.createElement('div');
-        $filterDiv.id = "filter";
-        $filterDiv.className = "flex-box flex-box-justify-center flex-box-align-center flex-box-column";
-        let $checkbox = document.createElement('input');
-        $checkbox.type = 'checkbox';
-        $checkbox.name = 'check';
-        $checkbox.value = 'todas';
-        let $label = document.createElement('p');
-        $label.innerText = " Todas as campanhas";
-        $filterDiv.appendChild($checkbox);
-        $filterDiv.appendChild($label);
-        $filterDiv.className = "flex-box flex-box-justify-center flex-box-align-center flex-box-row";
-
-        $checkbox.addEventListener('change', () => {
-            if (currentCampaigns === campaigns) currentCampaigns = getActiveCampaigns(campaigns);
-            else currentCampaigns = campaigns;
-            removeCampaigns();
-            showCampaigns(currentCampaigns);
-        });
-
-        $list = document.createElement('div');
-        $list.id = "list-campaigns";
-        $list.className = "flex-box flex-box-justify-center flex-box-align-center flex-box-column";
-
-        let $h5 = document.createElement('h5');
-        $h5.innerText = `A busca por ${substring} retornou os seguintes resultados:`;
-        $h5.id = 'inform';
-        $h5.className = 'flex-box flex-box-justify-center flex-box-align-center';
-
-        $viewer.appendChild($h5);
-        $viewer.appendChild($filterDiv);
-        $viewer.appendChild($list);
-
+    $checkbox.addEventListener('change', () => {
+        if (currentCampaigns === campaignsJSON) currentCampaigns = getActiveCampaigns(campaignsJSON);
+        else currentCampaigns = campaignsJSON;
+        removeCampaigns();
         showCampaigns(currentCampaigns);
-    }
+    });
 
-}*/
+    $viewer.appendChild($filterDiv);
+
+
+ }
+
 
 function removeCampaigns() {
     if (document.querySelector('#infom') != undefined) document.querySelector('#infom').innerHTML = '';

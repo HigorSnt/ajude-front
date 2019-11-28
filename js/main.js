@@ -33,7 +33,7 @@ async function viewerChange() {
     } else if ([`#campaign${campaignURL}`].includes(hash)) {
         viewCampaign(campaignURL);
     } else if ([`#user/${profileURL}`].includes(hash)) {
-        viewProfile(profileURL);
+        await viewProfile(profileURL);
     }
 }
 
