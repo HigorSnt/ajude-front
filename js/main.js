@@ -1,4 +1,9 @@
-import User from './user.js';
+import { viewLogin } from './login.js'
+import { viewUserRegister, viewRequestChangePassword, viewChangePassword, viewProfile } from './user.js'
+import { viewCampaignRegister } from "./registerCampaign.js";
+import { searchCampaigns } from "./listingCampaigns.js";
+import { showCampaign } from "./campaign.js";
+export { $viewer, url, viewerChange, viewHome, viewCampaign };
 
 let url = 'https://apiajude.herokuapp.com/api';
 let $viewer = document.querySelector('#viewer');
@@ -6,147 +11,229 @@ let $viewer = document.querySelector('#viewer');
 window.onload = viewerChange;
 window.addEventListener('hashchange', viewerChange);
 
-function viewerChange() {
+async function viewerChange() {
+    let campaignURL = location.hash.substring(9);
+    let profileURL = location.hash.substring(6);
     let hash = location.hash;
 
-    if ([''].includes(hash)) {
-        $viewer.innerHTML = '';
+    if (['', '#'].includes(hash)) {
+        viewHome();
     } else if (['#user-register'].includes(hash)) {
         viewUserRegister();
+    } else if (['#login'].includes(hash)) {
+        viewLogin();
+    } else if (['#campaign-register'].includes(hash)) {
+        viewCampaignRegister();
+    } else if (['#logout'].includes(hash)) {
+        logout();
+    } else if (['#reset-password'].includes(hash)) {
+        viewChangePassword();
+    } else if (['#request-change-password'].includes(hash)) {
+        viewRequestChangePassword();
+    } else if ([`#campaign${campaignURL}`].includes(hash)) {
+        viewCampaign(campaignURL);
+    } else if ([`#user/${profileURL}`].includes(hash)) {
+        viewProfile(profileURL);
     }
 }
 
-function createUser() {
-    let firstNameInput = document.querySelector("#user-first-name");
-    let lastNameInput = document.querySelector("#user-last-name");
-    let emailInput = document.querySelector("#user-email");
-    let creditCardInput = document.querySelector("#user-credit-card");
-    let passwordInput = document.querySelector("#user-password");
+function viewHome() {
+    generateHeader();
 
-    let u = new User(
-        firstNameInput.value,
-        lastNameInput.value,
-        emailInput.value,
-        creditCardInput.value,
-        passwordInput.value
-    );
+    let $template = document.querySelector('#home-view');
+    $viewer.innerHTML += $template.innerHTML;
+    $viewer.classList = '';
+    searchListener();
 
-    firstNameInput.value = "";
-    lastNameInput.value = "";
-    emailInput.value = "";
-    creditCardInput.value = "";
-    passwordInput.value = "";
+    let $receivedCheckbox = $viewer.querySelector("#check-received");
+    let $deadlineCheckbox = $viewer.querySelector("#check-deadline");
+    let $likeCheckbox = $viewer.querySelector("#check-likes");
 
-    registerUser(u);
+    showTop5ByRemaining();
+    $receivedCheckbox.addEventListener("change", showTop5ByRemaining);
+    $deadlineCheckbox.addEventListener("change", showTop5ByDeadline);
+    $likeCheckbox.addEventListener("change", showTop5ByLikes);
 }
 
-function showConfirmView() {
-    let $body = document.querySelector('body');
+export function showConfirmView(message) {
     let $div = document.createElement('div');
     let $p = document.createElement('p');
     let $img = document.createElement('img');
+    generateHeader();
 
     $div.className = 'opaque-div flex-box flex-box-justify-center flex-box-align-center flex-box-column';
-    $div.id = 'flex-box-column'
-    $p.innerText = "Você agora está cadastrado!";
-    $img.id = 'check-img';
+    $div.id = 'flex-box-column';
+    $p.innerText = message;
+    $p.style.paddingTop = '1em';
+    $img.id = 'attention-img';
     $img.src = 'images/check.svg';
-    $img.style.filter = 'invert(100%)';
+    $img.className = 'img-inverter';
 
     $div.appendChild($img);
     $div.appendChild($p);
-    $body.appendChild($div);
+    $viewer.appendChild($div);
+
+    if (message !== "Você agora está cadastrado!") {
+        window.setTimeout("location.href = '/'", 800);
+    }
 }
 
-function showFailureView() {
-    let $body = document.querySelector('body');
+export function showFailureView(message) {
+    let $div = document.createElement('div');
+    let $p = document.createElement('p');
+    let $img = document.createElement('img');
+    generateHeader();
+
+    $div.className = 'opaque-div flex-box flex-box-justify-center flex-box-align-center flex-box-column';
+    $div.id = 'flex-box-column';
+    $p.innerText = message;
+    $p.style.paddingTop = '1em';
+    $img.id = 'attention-img';
+    $img.src = 'images/fail.svg';
+    $img.className = 'img-inverter';
+
+    $div.appendChild($img);
+    $div.appendChild($p);
+    $viewer.appendChild($div);
+
+    window.setTimeout("location.href = '/'", 800);
+}
+
+function logout() {
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('userEmail');
+
+    window.setTimeout(() => {
+        history.replaceState(null, null, "/");
+        viewHome();
+    }, 0);
+}
+
+export function viewHasNoPermission() {
+    generateHeader();
+    searchListener();
     let $div = document.createElement('div');
     let $p = document.createElement('p');
     let $img = document.createElement('img');
 
     $div.className = 'opaque-div flex-box flex-box-justify-center flex-box-align-center flex-box-column';
-    $div.id = 'flex-box-column'
-    $p.innerText = "Opa! Parece que você já está cadastrado...";
-    $img.id = 'check-img';
-    $img.src = 'images/fail.svg';
-    $img.style.filter = 'invert(100%)';
+    $div.id = 'flex-box-column';
+    $p.innerText = "É necessário realizar login para ter acesso à esse conteúdo...";
+    $p.style.paddingTop = '1em';
+    $img.id = 'attention-img';
+    $img.src = 'images/crying-face.svg';
+    $img.className = 'img-inverter';
+
 
     $div.appendChild($img);
     $div.appendChild($p);
-    $body.appendChild($div);
+    $viewer.appendChild($div);
 }
 
-function viewUserRegister() {
-    let $template = document.querySelector('#view-user-register');
-    $viewer.innerHTML = $template.innerHTML;
+export function generateHeader() {
+    let $headerTemplate;
 
-    let $registerUserBtn = document.querySelector('#register-button');
-    $registerUserBtn.addEventListener('click', createUser);
+    if (sessionStorage.getItem('token') == null) {
+        $headerTemplate = document.querySelector("#header-not-logged");
+        $viewer.innerHTML = $headerTemplate.innerHTML;
+    } else {
+        $headerTemplate = document.querySelector("#header-user-logged");
+        $viewer.innerHTML = $headerTemplate.innerHTML;
+        let $a = document.querySelector('#profile');
+        $a.href = `#user/${sessionStorage.getItem('username')}`;
+    }
 }
 
-async function registerUser(user) {
-    try {
-        let body = JSON.stringify(user);
-        let header = {
-            'Content-Type': 'application/json;charset=utf-8'
-        };
+function viewCampaign(url) {
+    generateHeader();
+    showCampaign(url);
+}
 
-        let response = await fetch(url + '/user', {
-            'method': 'POST',
-            'body': body,
-            'headers': header
+export function searchListener() {
+    let $searchBtn = $viewer.querySelector("#search-btn");
+    let $searchInput = $viewer.querySelector("#input-search");
+    
+    $searchBtn.addEventListener('click', (event) => {
+        history.replaceState(null, null, "/");
+        searchCampaigns($searchInput.value);
+        event.preventDefault();
+    });
+}
+
+async function showTop5ByRemaining() {
+    let campaigns = await fetchTop5Campaigns('remaining');
+    generateViewTop5Campaigns(campaigns);
+}
+
+async function showTop5ByDeadline() {
+    let campaigns = await fetchTop5Campaigns('date');
+    generateViewTop5Campaigns(campaigns);
+}
+
+async function showTop5ByLikes() {
+    let campaigns = await fetchTop5Campaigns('like');
+    generateViewTop5Campaigns(campaigns);
+}
+
+function generateViewTop5Campaigns(campaigns) {
+    let $divTopCampaigns = document.querySelector('#home-list-campaigns');
+    $divTopCampaigns.innerHTML = "";
+
+    if (campaigns.length === 0) {
+        let $h3 = document.createElement('h3');
+        $h3.innerText = 'Não existem campanhas cadastradas ativas!';
+        $h3.style.textAlign = 'center';
+        $divTopCampaigns.appendChild($h3);
+        $divTopCampaigns.className = 'top-campaigns';
+    } else {
+        campaigns.forEach(c => {
+            let campaign = document.createElement('div');
+            campaign.className = "top-campaigns";
+            campaign.innerHTML =
+                `<h3 id="name" style="margin: 0.5em; text-align: center;">${c.shortName.toUpperCase()}</h3>
+                <div class="campaign-description">${c.description}</div>
+                    <ul class="ul-info flex-box" style="justify-content: space-between; flex-wrap: wrap">
+                        <li class="flex-box flex-box-row flex-box-align-center" style="justify-content: space-between;">
+                            <img src="images/piggy-bank.svg" title="Meta" width="30px" height="30px" style="margin-right: 0.3em; cursor: default">
+                            <p></strong>${c.received}/${c.goal}</strong></p>
+                        </li>
+                        <li class="flex-box flex-box-row flex-box-align-center" style="justify-content: space-between;">
+                            <img src="images/calendar.svg" title="Deadline" width="30px" height="30px" style="margin-right: 0.3em; cursor: default">
+                            <p></strong>${c.deadline}</strong></p>
+                        </li>
+                        </li>
+                        <li class="flex-box flex-box-row flex-box-align-center" style="justify-content: space-between;">
+                            <img id="img-like" class="img-inverter" src="images/heart.svg" title="Likes" width="30px" height="30px" style="margin-right: 0.3em; cursor: default">
+                            <p><strong id ="like">${c.likes}</strong></p>
+                        </li>
+                        </li>
+                            <li class="flex-box flex-box-row flex-box-align-center" style="justify-content: space-between;">
+                            <img id="img-dislike" class="img-inverter" src="images/broken-heart.svg" title="Dislikes" width="35px" height="35px" style="margin-right: 0.3em; cursor: default">
+                            <p><strong id ="dislike">${c.dislikes}</strong></p>
+                        </li>
+                        <li> 
+                            <a href="#campaign/${c.urlIdentifier}" >Ver mais</a> 
+                        </li>
+                    </ul>
+                </div>`;
+
+            $divTopCampaigns.appendChild(campaign);
         });
-
-        if (response.status == 201) {
-            showConfirmView();
-        } else if (response.status == 400) {
-            showFailureView();
-        }
-    } catch (e) {
-        console.log(e);
     }
 }
-/*
-let $listingCampaignsTemplate, $home;
-async function fetch_templates() {
-    let listingCampaignsTemplate = await (fetch('/html/listingCampaignsTemplate.html').then(r => r.text()));
-    let home = await (fetch('/html/homeTemplate.html').then(r => r.text()));
 
-    let div = document.createElement("div");
+async function fetchTop5Campaigns(orderBy) {
 
-    div.innerHTML = listingCampaignsTemplate;
-    $listingCampaignsTemplate = div.querySelector('#listing-campaigns');
+    let header = {
+        'Content-Type': 'application/json;charset=utf-8'
+    };
 
-    div.innerHTML = home;
-    $home = div.querySelector('#home');
+    let response = await fetch(url + `/home/${orderBy}`, {
+        'method': 'GET',
+        'headers': header
+    });
+
+    let campaigns = await response.json();
+
+    return campaigns;
 }
-
-(async function main() {
-
-    await Promise.all([fetch_templates()]);
-    let hash = location.hash;
-
-    $box.innerHTML = "";
-
-    if (["", "#home"].includes(hash)) {
-        home();
-    }
-    else if (["#listagem"].includes(hash)) {
-        listingCampaigns();
-    }
-
-}());
-
-
-function home() {
-    $box.innerHTML = $home.innerHTML;
-    let $a = document.querySelector('a');
-    $a.addEventListener('click', listingCampaigns);
-}
-
-function listingCampaigns() {
-    $box.innerHTML = $listingCampaignsTemplate.innerHTML;
-    let $a = document.querySelector('a');
-    $a.addEventListener('click', home);
-}
-*/

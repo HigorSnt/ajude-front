@@ -1,5 +1,11 @@
-body {
+@import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
+* {
+    font-family: 'Open Sans', sans-serif;
     margin: 0;
+    padding: 0;
+}
+
+body {
     background: #ADD8E6;
 }
 
@@ -13,13 +19,48 @@ header {
     justify-content: space-between;
     align-items: center;
     top: 0;
+    left: 0;
 }
 
 nav ul {
     list-style: none;
     margin: 4em;
-    padding-right: 1em;
-    flex-wrap: wrap;
+    padding-right: 4em;
+    flex-wrap: nowrap;
+}
+
+#logo-a {
+    cursor: pointer;
+}
+
+#listing {
+    background-color: rgba(0, 0, 0, .3);
+    text-align: justify;
+    width: 50em;
+    height: 10em;
+    margin-bottom: 2em;
+    height: fit-content;
+    box-shadow: 0 .1em .3em #808080;
+}
+
+#listing:last-child {
+    margin-block-end: 6em;
+}
+
+#inform {
+    margin-top: 7em;
+    font-size: .9em;
+}
+
+.campaign-description {
+    border-radius: 10px;
+    width: 95%;
+    background-color: white;
+    padding: .5em;
+}
+
+#listing #name {
+    margin-left: 1em;
 }
 
 #logo {
@@ -35,41 +76,122 @@ nav ul {
     list-style: none;
 }
 
-#menu a:link, #menu a:active, #menu a:visited {
+#campaign-profile, #donations-profile {
+    background-color: rgba(255, 255, 255, 0.6);
+    margin-top:1.5em;
+    padding: 2em;
+    width: 85%;
+    align-items: center;
+}
+
+#user-items {
+    display: flex; 
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+#tittle {
+    text-align: center;
+    margin-top: 6em;
+    border-radius: .5em;
+    align-items: stretch;
+    width: fit-content;
+    padding: .5em;
+    margin-right: auto;
+    margin-left: auto;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+h5+h2 {
+    margin-top: 2em !important;
+}
+
+#menu a:link, #menu a:active, #menu a:visited, .dropdown a:link, .dropdown a:active, .dropdown a:visited {
     color: #af670a;
     text-decoration: none;
 }
 
-#menu a:hover {
-    color: red;
-    border-bottom: 1px solid #535858;
+#menu a:hover, .dropdown a:hover {
+    color: #0091ff;
+    border-bottom: 1px solid #af670a;
 }
 
-#section-register-user {
-    margin-top: 8em;
-    position: relative;
+.ul-info a:hover {
+    color: black;
+    border-bottom: 1px solid #af670a;
 }
 
-#div-register-user {
+.divs-form {
+    box-shadow: 0 .1em .3em #808080;
     width: 50em;
-    height: 25em;
-    background-color: rgba(0, 0, 0, 0.3);
     border-radius: 1.5em;
     flex-direction: column;
     align-items: stretch;
+    background-color: rgba(0, 0, 0, 0.3);
 }
 
-#div-register-user input {
-    height: 2.5em;
-    width: 75%;
-    font-size: 1.2em;
-    margin-bottom: .7em;
-    background-color: #fff;
-    padding-left: 20px;
+#box {
+    width: 80%;
+    padding-top: 1em;
+    padding-bottom: 2em;
+    margin-bottom: 2em;
+    margin-top: 10em;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    box-shadow: 0 .1em .3em #808080;
+}
+
+#box p {
+    margin: 0.3em;
+}
+
+#box h1 {
+    border: 0.9em;
+}
+
+#comment-btn {
+    font-size: 0.8em;
+    color: white;
+    background-color: #FF8C00;
     border: none;
+    padding: 10px 20px;
+    height: 15%;
+    width: 15%;
 }
 
-#div-register-user button {
+#comment-btn:hover {
+    cursor: pointer;
+    background-color: #FF4500;
+}
+
+textarea {
+    margin-top: 1.5em;
+    margin-bottom: 0.2em;
+    width: 80%;
+    outline: none;
+    resize: none;
+    border: none;
+    font-size: 1em;
+}
+
+#div-register-user {
+    padding-top: 1em;
+    padding-bottom: 1em;
+}
+
+#div-register-campaign {
+    height: 25em;
+}
+
+#div-login, #div-change-password {
+    height: 15em;
+}
+
+.divs-form h3 {
+    margin: 1em auto;
+}
+
+button {
     font-size: 16px;
     color: white;
     background-color: #FF8C00;
@@ -79,14 +201,127 @@ nav ul {
     width: 30%;
 }
 
-#div-register-user button:hover {
+button:hover {
     cursor: pointer;
     background-color: #FF4500;
 }
 
-#check-img {
+#attention-img {
     width: 8%;
     height: 8%;
+    margin-top: 5em;
+}
+
+#list-campaigns {
+    font-weight: bolder;
+    size: 10em;
+    text-align: center;
+    margin-top: 1em;
+    min-width: fit-content;
+    padding: 0.7em;
+}
+
+.campaign {
+    margin-top: 1em;
+}
+
+#goal-img[title='Alterar Meta'], #deadline-img[title='Alterar deadline'], #img-like, #img-dislike {
+    cursor: pointer;
+}
+
+.owner-comment {
+    text-decoration: none;
+}
+
+.replies {
+    display: flex;
+    flex-direction: column;
+    margin-left: 3em;
+}
+
+.replies:first-child {
+    margin-top: 1em;
+}
+
+.comment-box {
+    background-color: rgba(255, 255, 255, .8);
+    margin: 1em  2em 0.3em 2em;
+    border-radius: 0.6em;
+}
+
+#comment-text {
+    margin-bottom: 0.6em;
+}
+
+.comment-box a {
+    padding-left: .8em;
+}
+
+.comment-box h4 {
+    padding-left: 0.8em;
+}
+
+#search-campaigns {
+    background-color: #ccc;
+    border-radius: 15px;
+    width: 20em;
+    margin-left: 2em;
+    justify-content: space-between;
+}
+
+#forgot-password {
+    font-size: .8em;
+    margin-top: 1em;
+    color: white;
+}
+
+#forgot-password a:link, #forgot-password a:active, #forgot-password a:visited, 
+.owner-comment:link, .owner-comment:active, .owner-comment:visited {
+    color: black;
+    text-decoration: none;
+}
+
+#box p a:link, #box p a:active, #box p a:visited {
+    color: black;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+#forgot-password a:hover, #box p a:hover {
+    color: #FFD700;
+}
+
+.owner-comment:hover {
+    color: #0091ff;
+}
+
+.ul-info a:hover {
+    color: black;
+    border-bottom: 1px solid #af670a;
+}
+
+#search-btn {
+    padding-right: .6em;
+}
+
+#input-search {
+    background-color: transparent;
+    padding-left: 1.5em;
+    font-size: 1em;
+    border: none;
+    height: 2em;
+    width: 70%;
+    color: black;
+}
+
+#search-btn {
+    padding-right: .6em;
+}
+
+#input-search:focus {
+    box-shadow: 0 0 0 0;
+    border: 0 none;
+    outline: 0;
 }
 
 .center {
@@ -105,6 +340,21 @@ nav ul {
     justify-content: center;
 }
 
+.section-forms {
+    position: relative;
+}
+
+.ul-info {
+    list-style: none;
+    width: 95%;
+    margin-top: 0.8em;
+    margin-bottom: 0.8em;
+}
+
+.x-justify-center {
+    justify-content: center;
+}
+
 .flex-box-row {
     flex-direction: row;
 }
@@ -116,13 +366,216 @@ nav ul {
 .opaque-div {
     position: absolute;
     overflow: auto;
-	left: 0;
-	top: 0;
+    left: 0;
+    top: 0;
     width: 100%;
     min-height: 100%;
     height: auto;
-	z-index: 1;
+    z-index: 1;
     background-color: rgba(0, 0, 0, 0.9);
     color: white;
     font-size: 1.5em;
+}
+
+.confirm-btn {
+    font-size: 16px;
+    color: white;
+    background-color: #FF8C00;
+    border: none;
+    padding: 10px 20px;
+    height: 45px;
+    width: 30%;
+}
+
+.confirm-btn:hover {
+    cursor: pointer;
+    background-color: #FF4500;
+}
+
+.input-form {
+    height: 2.5em;
+    width: 75%;
+    font-size: 1.2em;
+    margin-bottom: .7em;
+    background-color: #fff;
+    padding-left: 20px;
+    border: none;
+    border: none;
+}
+
+.drop-image {
+    color: white;
+    padding: 0 4em;
+    font-size: 1em;
+    border: none;
+    cursor: pointer;
+}
+
+.image-filter {
+    padding: 0 0.3em;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-filter {
+    position: fixed; 
+    display: flex; 
+    align-items: flex-start;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: white;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.3);
+    z-index: 1;
+}
+
+.dropdown-content-filter {
+    padding-left: 0.8em;
+    min-width: 15em;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.3);
+    z-index: 1;
+}
+
+.dropdown-content a {
+    padding: 12px 16px;
+    display: block;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+#filter {
+    margin-top: 1em;
+}
+
+#filter input {
+    margin: 0.5em;
+    height: 1.5em;
+    width: 1.5em;
+}
+
+input [type="text"] {
+    height: 2.5em;
+    width: 75%;
+    font-size: 1.2em;
+    margin-bottom: .7em;
+    background-color: #fff;
+    padding-left: 20px;
+    border: none;
+}
+
+.img-inverter {
+    filter: invert(100%);
+}
+
+#div-top-campaigns {
+    justify-content: space-between;
+    margin: 10em;
+}
+
+#home-filter {
+    padding: 0.8em 0.8em 0.3em 0;
+    background-color: white;
+    border-radius: 0 10em 10em 0;
+    box-shadow: 4px 0 4px 2px rgba(0, 0, 0, 0.1);
+}
+
+.top-campaigns {
+    background-color: rgba(0, 0, 0, 0.4);
+    margin-top: 1.5em;
+    padding: 0.8em;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.3);
+}
+
+.user-campaigns {
+    background-color: rgba(0, 0, 0, 0.4);
+    margin-top: 1.5em;
+    padding: 0.8em;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.3);
+    width: 45%;
+    min-height: 15em;
+    max-height: 30em;
+    margin-left: .6em;
+    text-align: center;
+}
+
+.user-campaigns .ul-info {
+    flex-wrap: wrap;
+}
+
+.top-campaigns .ul-info li a, .ul-info a:link, .ul-info a:active, .ul-info a:visited {
+    padding-top: 30px;
+    color: white;
+    text-decoration: none;
+}
+
+.top-campaigns .ul-info li a:hover, .ul-info a:hover {
+    color: black;
+}
+
+#home-filter h4 {
+    text-align: center;
+    padding-bottom: 1em;
+}
+
+.container {
+    display: block;
+    position: relative;
+    padding-left: 3em;
+    margin-bottom: 0.8em;
+    cursor: pointer;
+    font-size: 1.2em;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #eee;
+    border-radius: 50%;
+}
+
+.container:hover input~.checkmark {
+    background-color: #ccc;
+}
+
+.container input:checked~.checkmark {
+    background-color: #2196F3;
+}
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.container input:checked~.checkmark:after {
+    display: block;
+}
+
+.container .checkmark:after {
+    top: 9px;
+    left: 9px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: white;
 }
