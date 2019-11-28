@@ -77,11 +77,11 @@ function createView(c) {
     </div>
     <ul class="ul-info flex-box" style="justify-content: space-between;">
         <li id="goal" class="flex-box flex-box-row flex-box-align-center" style="justify-content: space-between;">
-            <img id="goal-img" src="images/piggy-bank.svg" class="img-inverter" title="Alterar Meta" width="40px" height="40px" style="margin-right: 0.3em">
+            <img id="goal-img" src="images/piggy-bank.svg" class="img-inverter" title="Doações/Meta" width="40px" height="40px" style="margin-right: 0.3em">
             <p><strong>${c.received}/${c.goal}</strong></p>
         </li>
          <li id="deadline" class="flex-box flex-box-row flex-box-align-center" style="justify-content: space-between;">
-            <img id="deadline-img" src="images/calendar.svg" class="img-inverter" title="Alterar Deadline" width="40px" height="40px" style="margin-right: 0.3em">
+            <img id="deadline-img" src="images/calendar.svg" class="img-inverter" title="Deadline" width="40px" height="40px" style="margin-right: 0.3em">
             <p><strong>${c.deadline}</strong></p>
         </li>
         </li>
@@ -139,13 +139,16 @@ function createView(c) {
 }
 
 function loadComments(comments) {
+    let $div = document.createElement('div');
+
     console.log(comments);
     comments.forEach(comment => {
 
-        if (comment.comment != "") {
+        if (comment.comment !== "") {
             let $commentBox = document.createElement('div');
-            $commentBox.className = "campaign-description";
-            $commentBox.innerHTML = `<h2>${comment.comment}</h2>`
+            $commentBox.className = 'comment-box flex-box flex-box-column';
+            
+            $commentBox.innerHTML = `<h4>${comment.comment}</h4>`;
             let $seeReplies = document.createElement('strong');
             $seeReplies.innerText = "Ver respostas";
             $box.appendChild($commentBox);
@@ -154,7 +157,9 @@ function loadComments(comments) {
             $box.appendChild($seeReplies);
 
         }
-    })
+    });
+    
+    $box.appendChild($div);
 }
 
 function loadReplies(comment) {
@@ -243,6 +248,11 @@ function loadOwnerFunctions() {
     let $goal = document.querySelector('#goal');
     $goal.addEventListener('click', changeGoal);
 
+    let $goalImg = $viewer.querySelector('#goal-img');
+    $goalImg.title = 'Alterar Meta';
+    let $deadlineImg = $viewer.querySelector('#deadline-img');
+    $deadlineImg.title = 'Alterar deadline';
+
     let $deadline = document.querySelector('#deadline');
     $deadline.addEventListener('click', changeDeadline);
 
@@ -294,7 +304,7 @@ function changeDeadline() {
 }
 
 async function setGoal(newGoal) {
-    let token = await sessionStorage.getItem('token');
+    let token = sessionStorage.getItem('token');
 
     let header = {
         'Access-Control-Allow-Origin': url + '/campaign' + campaignURL + '/setGoal',

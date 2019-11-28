@@ -225,6 +225,22 @@ button:hover {
     margin-top: 1em;
 }
 
+#goal-img[title='Alterar Meta'], #deadline-img[title='Alterar deadline'], #img-like, #img-dislike {
+    cursor: pointer;
+}
+
+.comment-box {
+    background-color: rgba(255, 255, 255, .8);
+    margin: 1em  2em 0.3em 2em;
+    width: 80%;
+    border-radius: 0.6em;
+}
+
+.comment-box h4 {
+    padding: 0.5em;
+    font-weight: normal;
+}
+
 #search-campaigns {
     background-color: #ccc;
     border-radius: 15px;
