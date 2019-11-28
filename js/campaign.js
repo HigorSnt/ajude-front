@@ -94,6 +94,7 @@ function createView(c) {
             <img id="img-dislike" class="img-inverter" src="images/broken-heart.svg" title="Dar dislike" width="40px" height="40px" style="margin-right: 0.3em">
             <p><strong id ="dislike">${c.numDislikes}</strong></p>
         </li>
+        
     </ul>`;
 
     $viewer.appendChild($box);
@@ -104,13 +105,21 @@ function createView(c) {
     }
 
     let $div = document.createElement('div');
-    $div.innerHTML = 
-    `<div id="comment-text" class="flex-box flex-box-justify-center flex-box-align-center flex-box-column">
-        <textarea rows="3" cols="100" name="comment" id="form" form="comment-text$" placeholder="Deixe um comentário aqui..."></textarea>
-        <button type="submit" id="comment-btn" width="1.5em" height="1.5em">Comentar</button>
-    </div>`;
-
+    $div.innerHTML =
+        `<div id="comment-text" class="flex-box flex-box-justify-center flex-box-align-center flex-box-column">
+            <textarea rows="3" cols="100" name="comment" id="form" form="comment-text$" placeholder="Deixe um comentário aqui..."></textarea>
+            <button type="submit" id="comment-btn" width="1.5em" height="1.5em">Comentar</button>
+        </div>`;
     $box.appendChild($div);
+
+    let $commentBtn = document.querySelector('#comment-btn');
+    $commentBtn.addEventListener('click', async () => {
+        let $comment = $viewer.querySelector('#form');
+
+        await addComment($comment.value);
+        showCampaign(campaignURL);
+    });
+
 
     loadComments(c.comments);
 
@@ -126,18 +135,11 @@ function createView(c) {
         showCampaign(campaignURL);
     });
 
-    let $commentBtn = document.querySelector('#comment-btn');
-    $commentBtn.addEventListener('click', async () => {
-        let $comment = $viewer.querySelector('#form');
-
-        await addComment($comment.value);
-        showCampaign(campaignURL);
-    });
-
     let $donateBtn = document.querySelector('#donate');
     $donateBtn.addEventListener('click', donate);
 }
 
+//let $commentBox;
 function loadComments(comments) {
     let $div = document.createElement('div');
 
@@ -153,21 +155,42 @@ function loadComments(comments) {
             $seeReplies.innerText = "Ver respostas";
             $box.appendChild($commentBox);
 
-            $seeReplies.addEventListener('click', loadReplies(comment));
+            $seeReplies.addEventListener('click', ()=>loadReplies(comment, $commentBox));
             $box.appendChild($seeReplies);
-
         }
     });
     
     $box.appendChild($div);
 }
 
-function loadReplies(comment) {
-    console.log(comment.comment)
-    while (comment != null) {
-        if (comment.reply != null) console.log(comment.reply.comment);
+function loadReplies(comment, box) {
+    let $repliesBox = document.createElement('div');
+    $repliesBox.id = "replies";
+    let mainComment = comment;
+    while (comment.reply != null) {
+        let $reply = document.createElement('div');
+        $reply.class = "campaign-description";
+        $reply.innerHTML = `<h3>${comment.reply.comment}</h3>`;
+        $repliesBox.appendChild($reply);
         comment = comment.reply;
     }
+    box.appendChild($repliesBox);
+    let $div = document.createElement('div');
+    $div.innerHTML =
+        `<div id="comment-text" class="flex-box flex-box-justify-center flex-box-align-center flex-box-column">
+            <textarea rows="3" cols="100" name="comment" id="reply" form="comment-text$" placeholder="Deixe um comentário aqui..."></textarea>
+            <button type="submit" id="reply-btn" width="1.5em" height="1.5em">Responder</button>
+        </div>`;
+    box.appendChild($div);
+
+    let $commentBtn = document.querySelector('#reply-btn');
+    $commentBtn.addEventListener('click', async () => {
+        let $comment = $viewer.querySelector('#reply');
+        console.log(mainComment.id + ": " + mainComment.comment);
+        await addReply(mainComment.id, $comment.value);
+        showCampaign(campaignURL);
+    });
+
 }
 
 function removeViews() {
@@ -190,7 +213,7 @@ function donate() {
 
 async function addComment(comment) {
     let header = {
-        'Access-Control-Allow-Origin': url + '/campaign' + campaignURL + '/comment',
+        'Access-Control-Allow-Origin': url + '/campaign' + campaignURL + '/comment/',
         'Access-Control-Allow-Credentials': 'true',
         'Access-Control-Allow-Methods': 'POST',
         'Access-Control-Allow-Headers': 'Content-Type',
@@ -205,6 +228,26 @@ async function addComment(comment) {
         'headers': header
     }).then(r => r.json());
 }
+async function addReply(id, comment) {
+    let header = {
+        'Access-Control-Allow-Origin': url + '/campaign' + campaignURL + '/comment/' + id,
+        'Access-Control-Allow-Credentials': 'true',
+        'Access-Control-Allow-Methods': 'POST',
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Content-Type': 'application/json;charset=utf-8',
+        'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+    };
+
+    let data = await fetch(url + '/campaign' + campaignURL + '/comment/' + id, {
+        mode: 'cors',
+        'method': 'POST',
+        'body': `{"comment":"${comment}"}`,
+        'headers': header
+    }).then(r => r.json());
+
+    console.log(data);
+}
+
 
 async function addLike() {
 
